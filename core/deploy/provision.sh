@@ -59,6 +59,10 @@ ELEVENLABS_AGENT_ID="${ELEVENLABS_AGENT_ID:-agent_4301m706m15yez7vmk8k0vc8ebea}"
 # same API key; without the id /v1/voice/agent answers 503.
 VOICE_AGENT_ID="${VOICE_AGENT_ID:-agent_9801m76gmvhke6pbeqm50xq0xp74}"
 ELEVENLABS_VOICE_MALE="${ELEVENLABS_VOICE_MALE:-iP95p4xoKVk53GoZ742B}"
+# Google sign-in (/v1/auth/google) accepts ID tokens for these OAuth client ids; unset answers 503.
+# The website (pecorva-website/shared/pecorva-config.js) and the Orbit app, which signs in through
+# the website's /account/app/ page, both use this web client.
+GOOGLE_CLIENT_IDS="${GOOGLE_CLIENT_IDS:-1058349393837-7091dcna47e9d70lcv8rt73ivl0ccmiv.apps.googleusercontent.com}"
 BILLING_SUCCESS_URL="${BILLING_SUCCESS_URL:-http://localhost:3000/account/?checkout=success}"
 BILLING_CANCEL_URL="${BILLING_CANCEL_URL:-http://localhost:3000/account/?checkout=cancel}"
 PUBLIC_SITE_URL="${PUBLIC_SITE_URL:-http://localhost:3000}"
@@ -332,7 +336,7 @@ ENV_VARS+="|ORDERS_EMAIL=$ORDERS_EMAIL|STRIPE_AUTOMATIC_TAX=$STRIPE_AUTOMATIC_TA
 ENV_VARS+="|CORE_FEEDBACK_EMAIL=$CORE_FEEDBACK_EMAIL"
 ENV_VARS+="|TERMS_VERSION=$TERMS_VERSION|CORE_VERSION=${CORE_VERSION:-unknown}"
 ENV_VARS+="|ELEVENLABS_AGENT_ID=$ELEVENLABS_AGENT_ID|ELEVENLABS_VOICE_MALE=$ELEVENLABS_VOICE_MALE"
-ENV_VARS+="|VOICE_AGENT_ID=$VOICE_AGENT_ID"
+ENV_VARS+="|VOICE_AGENT_ID=$VOICE_AGENT_ID|GOOGLE_CLIENT_IDS=$GOOGLE_CLIENT_IDS"
 SECRETS=""
 for name in DATABASE_URL ELECTRIC_SECRET STRIPE_SECRET_KEY STRIPE_WEBHOOK_SECRET MAIL_API_KEY; do
   SECRETS+="${SECRETS:+,}$name=$(secret_id "$name"):latest"
