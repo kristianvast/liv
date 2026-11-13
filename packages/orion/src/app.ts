@@ -50,7 +50,10 @@ import { FeedbackService } from "./services/feedback";
 import { serveGoogleCallback } from "./services/google-callback";
 import { LOCAL_UI_PREFIX, LocalUiService } from "./services/local-ui";
 import { liveRowsIn, ModulesStore } from "./services/modules";
+import { PageReadError, readPage } from "./services/page-read";
 import { listPages, PAGE_SDK, PAGES_DIR, resolvePageFile } from "./services/pages";
+import { PhoneNotifications } from "./services/phone-notifications";
+import { PhoneRelay, remoteRequestAllowed } from "./services/phone-relay";
 import { Go2rtcRelay } from "./services/relay";
 import { DEFAULT_SKILLS_URL, SkillService } from "./services/skills";
 import { maskKey, SettingsStore } from "./settings";
@@ -109,7 +112,8 @@ function toProtocolError(error: unknown): { code: ErrorCode; message: string; de
     };
   }
   if (error instanceof HubError) return { code: error.code, message: error.message };
-  if (error instanceof AccountError) return { code: error.code, message: error.message };
+  if (error instanceof AccountError || error instanceof PageReadError)
+    return { code: error.code, message: error.message };
   return { code: "internal", message: error instanceof Error ? error.message : String(error) };
 }
 
@@ -133,9 +137,19 @@ export async function startOrion(
   const settings = new SettingsStore(config.dataDir);
   const sockets = new Set<ServerWebSocket<SocketData>>();
   let codeSync: FarmCodeSync | null = null;
+  let phoneRelay: PhoneRelay | null = null;
+  let phoneNotifications: PhoneNotifications | null = null;
+  const remoteSecret = crypto.randomUUID();
 
   const emit = <E extends EventType>(type: E, body: EventBody<E>) => {
     if (type === "agent.settled") void codeSync?.sync();
+    if (
+      (type === "agent.settled" || type === "access.request") &&
+      "sessionId" in body &&
+      typeof body.sessionId === "string"
+    ) {
+      phoneNotifications?.event(type, body.sessionId);
+    }
     const frame = encodeEvent(type, body);
     for (const ws of sockets) {
       switch (ws.data.kind) {
@@ -221,6 +235,7 @@ export async function startOrion(
     runtime: hub.runtime,
     deviceName: `Orbit on ${hostname()}`,
     onStatus: (status) => {
+      phoneRelay?.refresh();
       emit("account.updated", status);
       // Sync only once the hub shows the new person's folder.
       void hub.setOwner(status.user?.id ?? "local").then(() => chats?.accountChanged());
@@ -369,6 +384,7 @@ export async function startOrion(
       provider: useMock ? MOCK_PROVIDER : s.provider,
       model: useMock ? MOCK_MODEL : s.model,
       thinkingLevel: s.thinkingLevel,
+      phoneAccess: s.phoneAccess,
       shareAnonymousData: s.shareAnonymousData,
       toolAccess: s.toolAccess,
       toolAccessAccepted: s.toolAccessAccepted,
@@ -392,6 +408,7 @@ export async function startOrion(
       throw new RequestError("bad_request", `unknown model ${provider}/${model}`);
     }
     settings.update({
+      ...(u.phoneAccess !== undefined ? { phoneAccess: u.phoneAccess } : {}),
       ...(u.provider !== undefined ? { provider: u.provider } : {}),
       ...(u.model !== undefined ? { model: u.model } : {}),
       ...(u.thinkingLevel ? { thinkingLevel: u.thinkingLevel } : {}),
@@ -411,6 +428,7 @@ export async function startOrion(
     // Allowing a tool in Settings also answers the question Orion is waiting on for it.
     for (const [tool, on] of Object.entries(u.toolAccess ?? {}))
       if (on) access.allowed(tool as AccessTool);
+    phoneRelay?.refresh();
     return settingsView();
   };
 
@@ -431,7 +449,10 @@ export async function startOrion(
     return { snapshot, restored: [{ table: "workspace", ids: files }] };
   };
 
-  const handle = async (msg: ClientMessage, owner: object): Promise<unknown> => {
+  const handle = async (
+    msg: ClientMessage,
+    owner: ServerWebSocket<SocketData>,
+  ): Promise<unknown> => {
     switch (msg.type) {
       case "hello":
         return {
@@ -452,14 +473,24 @@ export async function startOrion(
       case "sessions.delete":
         return { deleted: await hub.delete(msg.sessionId) };
       case "chat.prompt":
-        await hub.prompt(msg.sessionId, msg.text, "prompt");
-        return { accepted: true };
       case "chat.steer":
-        await hub.prompt(msg.sessionId, msg.text, "steer");
+      case "chat.followUp": {
+        const starting = !hub.summary(msg.sessionId).streaming;
+        if (starting && owner.data.kind === "protocol" && owner.data.remote)
+          phoneNotifications?.started(msg.sessionId);
+        try {
+          const modes = {
+            "chat.prompt": "prompt",
+            "chat.steer": "steer",
+            "chat.followUp": "followUp",
+          } as const;
+          await hub.prompt(msg.sessionId, msg.text, modes[msg.type]);
+        } catch (error) {
+          if (starting) phoneNotifications?.cancelled(msg.sessionId);
+          throw error;
+        }
         return { accepted: true };
-      case "chat.followUp":
-        await hub.prompt(msg.sessionId, msg.text, "followUp");
-        return { accepted: true };
+      }
       case "chat.abort":
         return { accepted: await hub.abort(msg.sessionId) };
       case "localUi.status":
@@ -478,6 +509,8 @@ export async function startOrion(
         return modules.disable(msg.moduleId);
       case "pages.list":
         return { pages: listPages(workspace.dir, config.token) };
+      case "pages.read":
+        return readPage(workspace.dir, msg.pageId, msg.path);
       case "access.respond":
         return { accepted: access.respond(msg.requestId, msg.allow) };
       case "settings.get":
@@ -600,7 +633,9 @@ export async function startOrion(
     fetch(req, srv) {
       const url = new URL(req.url);
       if (url.pathname === "/ws") {
-        if (srv.upgrade(req, { data: { kind: "protocol", authed: false } })) return undefined;
+        const remote = sameToken(url.searchParams.get("relay") ?? "", remoteSecret);
+        if (srv.upgrade(req, { data: { kind: "protocol", authed: false, remote } }))
+          return undefined;
         return new Response("WebSocket upgrade required", { status: 426 });
       }
       if (url.pathname === "/health") return Response.json({ ok: true, version: SERVER_VERSION });
@@ -687,7 +722,7 @@ export async function startOrion(
         }
         const msg = decoded.value;
         if (!ws.data.authed) {
-          if (msg.type !== "hello" || !sameToken(msg.token, config.token)) {
+          if (msg.type !== "hello" || (!ws.data.remote && !sameToken(msg.token, config.token))) {
             ws.send(
               encodeError(msg.id, { code: "unauthorized", message: "invalid or missing token" }),
             );
@@ -710,6 +745,15 @@ export async function startOrion(
           for (const waiting of access.pending()) ws.send(encodeEvent("access.request", waiting));
           return;
         }
+        if (ws.data.remote && !remoteRequestAllowed(msg.type)) {
+          ws.send(
+            encodeError(msg.id, {
+              code: "forbidden",
+              message: "This request requires the desktop.",
+            }),
+          );
+          return;
+        }
         try {
           ws.send(encodeResult(msg.id, await handle(msg, ws)));
         } catch (error) {
@@ -719,12 +763,26 @@ export async function startOrion(
     },
   });
 
+  phoneNotifications = new PhoneNotifications(
+    account,
+    () => [...sockets].some((ws) => ws.data.kind === "protocol" && ws.data.remote),
+    (sessionId) => hub.summary(sessionId).title,
+  );
+  phoneRelay = new PhoneRelay(
+    account,
+    // Bun also types Unix servers; the server above explicitly binds TCP on 127.0.0.1.
+    { port: server.port as number, token: config.token, secret: remoteSecret },
+    () => settings.get().phoneAccess,
+  );
+  phoneRelay.refresh();
   await relay.start();
 
   return {
     port: server.port as number,
     hub,
     async stop() {
+      phoneRelay?.stop();
+      await phoneNotifications?.stop();
       voice.dispose();
       for (const ws of sockets) ws.close(CloseCode.serverShutdown, "server shutdown");
       await relay.stop();

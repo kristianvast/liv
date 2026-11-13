@@ -11,7 +11,7 @@ export type CameraSocketData = {
 };
 
 export type SocketData =
-  | { readonly kind: "protocol"; authed: boolean }
+  | { readonly kind: "protocol"; authed: boolean; readonly remote: boolean }
   | CameraSocketData
   | VoiceSocketData;
 

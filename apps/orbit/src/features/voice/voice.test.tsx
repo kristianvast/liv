@@ -86,6 +86,7 @@ function createFakeVoiceClient(
             model: "orbit-default",
             thinkingLevel: "off",
             shareAnonymousData: true,
+            phoneAccess: false,
             apiKeys: {},
             availableModels: [{ provider: "orbit-gateway", id: "orbit-default", name: "Orbit" }],
           } as RequestResult<T>;

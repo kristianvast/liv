@@ -1,5 +1,13 @@
 import type { AccessTool, Settings, SettingsUpdate } from "@orbit/protocol";
-import { Globe, HeartHandshake, MousePointer2, Share2, ShieldCheck, Terminal } from "lucide-react";
+import {
+  Globe,
+  HeartHandshake,
+  MousePointer2,
+  Share2,
+  ShieldCheck,
+  Smartphone,
+  Terminal,
+} from "lucide-react";
 import { useState } from "react";
 import { Card, useToast } from "../../design";
 import { type MessageKey, useT } from "../../i18n";
@@ -118,6 +126,26 @@ export function PrivacyCard({ settings, onSettings }: SettingsCardProps) {
           disabled={!settings || saving}
           onChange={(shareAnonymousData) => void update({ shareAnonymousData })}
           testId="settings-share-anonymous-data"
+        />
+      </div>
+    </Card>
+  );
+}
+
+export function PhoneAccessCard({ settings, onSettings }: SettingsCardProps) {
+  const t = useT();
+  const { saving, update } = useSettingsUpdate(onSettings, "settings.phone.saveFailed");
+  return (
+    <Card>
+      <div className="settings-rows">
+        <SwitchRow
+          icon={Smartphone}
+          label={t("settings.phone.title")}
+          hint={t("settings.phone.hint")}
+          checked={settings?.phoneAccess ?? false}
+          disabled={!settings || saving}
+          onChange={(phoneAccess) => void update({ phoneAccess })}
+          testId="settings-phone-access"
         />
       </div>
     </Card>

@@ -31,6 +31,7 @@ export const ErrorCode = Type.Enum([
   "bad_request",
   "unauthorized",
   "not_found",
+  "too_large",
   "conflict",
   "rule_violation",
   "busy",
@@ -135,6 +136,7 @@ export const ToolAccess = Type.Object({
 export type ToolAccess = Static<typeof ToolAccess>;
 
 export const Settings = Type.Object({
+  phoneAccess: Type.Boolean(),
   provider: Type.Union([Type.String(), Type.Null()]),
   model: Type.Union([Type.String(), Type.Null()]),
   thinkingLevel: ThinkingLevel,
@@ -157,6 +159,7 @@ export const Settings = Type.Object({
 export type Settings = Static<typeof Settings>;
 
 export const SettingsUpdate = Type.Object({
+  phoneAccess: Type.Optional(Type.Boolean()),
   provider: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   model: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   thinkingLevel: Type.Optional(ThinkingLevel),

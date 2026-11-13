@@ -115,6 +115,14 @@ export const Requests = {
   "chat.abort": { params: SessionRef, result: Accepted },
   /** Pages Orion built in the farm workspace. */
   "pages.list": { params: Empty, result: Type.Object({ pages: Type.Array(CustomPage) }) },
+  "pages.read": {
+    params: Type.Object({ pageId: Type.String(), path: Type.String() }),
+    result: Type.Object({
+      contentType: Type.String(),
+      data: Type.String(),
+      size: Type.Integer({ minimum: 0 }),
+    }),
+  },
   /** Whether a checked local build of the UI exists (see LocalUiState). */
   "localUi.status": { params: Empty, result: LocalUiStatus },
   /** The shipped UI is about to hand off to the local build. */

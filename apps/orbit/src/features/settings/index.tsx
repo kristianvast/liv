@@ -6,7 +6,7 @@ import { Card, Select, useToast } from "../../design";
 import { isLocale, LOCALE_NAMES, LOCALES, type MessageKey, useI18n } from "../../i18n";
 import { useOrion, useOrionEvent } from "../../lib/orion";
 import { AboutCard } from "./AboutCard";
-import { AccessCard, PrivacyCard } from "./AccessCard";
+import { AccessCard, PhoneAccessCard, PrivacyCard } from "./AccessCard";
 import {
   AccountCard,
   AccountSection,
@@ -177,6 +177,7 @@ export default function SettingsPage() {
               </div>
               <div className="settings-stack">
                 <FarmTeamSection />
+                <PhoneAccessCard settings={settings} onSettings={setSettings} />
                 <PrivacyCard settings={settings} onSettings={setSettings} />
               </div>
             </div>

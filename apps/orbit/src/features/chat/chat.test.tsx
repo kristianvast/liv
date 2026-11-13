@@ -56,6 +56,7 @@ function createMockClient(
     model: "mock-1",
     thinkingLevel: "off",
     shareAnonymousData: true,
+    phoneAccess: false,
     toolAccess: { shell: false, browser: false, computer: false },
     toolAccessAccepted: { shell: false, browser: false, computer: false },
     apiKeys: {

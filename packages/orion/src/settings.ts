@@ -4,6 +4,7 @@ import type { ThinkingLevel, ToolAccess } from "@orbit/protocol";
 import type { Species } from "@orbit/schema/enums";
 
 export interface StoredSettings {
+  phoneAccess: boolean;
   provider: string | null;
   model: string | null;
   thinkingLevel: ThinkingLevel;
@@ -23,6 +24,7 @@ export interface StoredSettings {
 const VERSION = 2;
 
 const DEFAULTS: StoredSettings = {
+  phoneAccess: false,
   provider: null,
   model: null,
   thinkingLevel: "medium",
