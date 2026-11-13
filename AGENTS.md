@@ -16,6 +16,7 @@ All workspaces use `"type": "module"`, `"license": "AGPL-3.0-only"`, and source-
 | `@orbit/app`        | [`apps/orbit`](apps/orbit)                   | Tauri 2 shell (`src-tauri`) + React/TS/Vite UI + design system ([DESIGN.md](apps/orbit/DESIGN.md))                                                                  |
 | `@core/api`         | [`core/api`](core/api)                       | Hono cloud API (`/v1/changes`, `/v1/shape`, `/v1/llm/*`, `/v1/voice/*`, `/v1/auth/*`, `/v1/billing/*`, `/v1/feedback`, `/v1/submissions`, `/admin`) + PG migrations |
 | `@orbit/e2e`        | `packages/e2e`                               | Playwright e2e suite against the Vite web build and live Orion sidecar                                                                                              |
+| Orbit Android       | [`apps/android`](apps/android)               | Native Kotlin/Compose phone app (Gradle, not a Bun workspace): Orion by voice and text through Core's relay, push, widget, farm pages                               |
 
 ## Commands
 
@@ -28,6 +29,7 @@ All workspaces use `"type": "module"`, `"license": "AGPL-3.0-only"`, and source-
 - **Test all:** `bun run test` (or per package: `bun run --filter '@orion/agent' test`)
 - **Dev servers:** `bun run --filter '@orion/agent' dev` (`127.0.0.1:7717`, token `dev`) and `bun run --filter '@orbit/app' dev`
 - **Schema migrations:** `cd packages/schema && bun run generate` (runs `drizzle-kit` for SQLite + PG and embeds SQLite SQL into `src/migrations.gen.ts`).
+- **Android app:** `cd apps/android && ./gradlew :app:assembleDebug :app:testDebugUnitTest` (JDK 17 and Android SDK 36; Firebase values go in the git-ignored `local.properties`, see [apps/android/README.md](apps/android/README.md)).
 - **Skills catalog index:** `bun run skills:index` (regenerates `skills/index.json`; `bun run skills:index --check` verifies it).
 
 ## Contracts & data flow
@@ -38,6 +40,7 @@ All workspaces use `"type": "module"`, `"license": "AGPL-3.0-only"`, and source-
   - Local-only (SQLite): `outbox`, `snapshots` (undo log for DB + `isomorphic-git` workspace commits), `sync_state`.
 - **Feedback & shared builds:** Orion relays `feedback.send` (`POST /v1/feedback`, works signed out) and `shared.list` / `share_build` / `share_status` (`POST` & `GET /v1/submissions`, requires sign-in, refuses files matching secret patterns; reviewed via `/v1/admin/*` and `/admin` using `CORE_ADMIN_TOKEN`).
 - **Voice:** The app runs the ElevenLabs client SDK against Orion's own socket (`/voice/<token>/<voiceId>` from `voice.start`); Orion relays it to Core's `/v1/voice/agent` and no key reaches the app. Finished turns and tool calls go through `voice.turn` / `voice.tool` and are saved in the conversation like chat. The agent's prompt and its five client tools live in `core/api/src/orion-voice-agent.ts` and must stay in step with `packages/protocol/src/voice.ts` and the `app` tool in `apps/orbit/src/features/guide`.
+- **Phone:** Orion dials out to Core's `/v1/relay/host` only while signed in with phone access on (`Settings.phoneAccess`, default off); the Android app connects to `/v1/relay/client` with the same account. A relayed socket is marked remote and may only use the request types in `remoteRequestAllowed` (`packages/orion/src/services/phone-relay.ts`); add a request there only when a phone may safely make it. Push goes through `/v1/push/*` and FCM (`FCM_PROJECT_ID`). See "Orbit on the phone" in [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 - **Protocol handshake:** First frame on `ws://127.0.0.1:<port>/ws` must be `hello { token, protocolVersion: 1 }`. Bad token closes with `4401` (terminal, do not reconnect).
 
 ## Hard invariants

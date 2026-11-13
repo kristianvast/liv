@@ -45,6 +45,7 @@ license also available.
 | `@orbit/app`        | apps/orbit          | Tauri 2 shell + React UI                                  |
 | `@core/api`         | core/api            | Cloud write API, LLM gateway, Postgres migrations         |
 | `@orbit/e2e`        | packages/e2e        | Playwright end-to-end tests against the web build + Orion |
+| Orbit Android       | apps/android        | Native Kotlin phone app: Orion by voice and text, alerts  |
 
 All packages are `"type": "module"` and export TypeScript source (`"exports": {".": "./src/index.ts"}`),
 so workspace packages need no build step between them.
@@ -81,7 +82,7 @@ The transport is one JSON object per WebSocket text frame. There are three frame
 - Event (server to client, no id): `{ type, ...body }`. Every chat event carries `sessionId`.
 
 Requests: `hello`, `sessions.list|create|open|fork|rename|delete`,
-`chat.prompt|steer|followUp|abort`, `modules.list|enable|disable`, `pages.list`, `localUi.status|launched|booted|disable`, `settings.get|update`, `auth.providers|login|respond|cancel|logout`, `account.*`, `members.*`, `invites.*`, `billing.plans|status|checkout|portal`, `feedback.send`, `shared.list`, `voice.start|stop|turn|tool`, `db.query`,
+`chat.prompt|steer|followUp|abort`, `modules.list|enable|disable`, `pages.list`, `pages.read`, `localUi.status|launched|booted|disable`, `settings.get|update`, `auth.providers|login|respond|cancel|logout`, `account.*`, `members.*`, `invites.*`, `billing.plans|status|checkout|portal`, `feedback.send`, `shared.list`, `voice.start|stop|turn|tool`, `db.query`,
 `db.mutate`, `snapshots.list|undo`.
 
 - `sessions.open` returns the transcript as UI-ready `TranscriptItem`s:
@@ -488,6 +489,87 @@ While a call is live in the open conversation, the chat composer sends into the 
 starting a chat run. `features/guide` runs the `app` tool on the app's own screen (a numbered
 listing of what is visible, highlight, pointer, click and navigation; buttons that destroy or
 sign out are highlight-only) and renders the `browser.view` pictures.
+
+## Orbit on the phone
+
+The Android app (`apps/android`, native Kotlin and Compose, application id `no.agrointel.orbit`) is
+a small client for Orion: one screen to talk or type, plus chats, alerts, farm pages and
+notifications. It holds no farm data and runs no agent. Orion stays on the farm PC, and the phone
+reaches it through a relay in Core.
+
+### Relay
+
+- **Orion dials out** (`packages/orion/src/services/phone-relay.ts`) to `GET /v1/relay/host` with
+  the account session and `x-orbit-farm`, only while it is signed in, a cloud farm is open and
+  phone access is on (`Settings.phoneAccess`, off by default, switched at the PC). It reconnects
+  with backoff from 1 to 30 seconds. Core ends every relay socket after 60 minutes, which is a
+  normal reconnect.
+- **The phone connects** to `GET /v1/relay/client` with its own session for the same account and
+  farm. Core (`core/api/src/relay.ts`) keeps hosts in memory under `<userId>:<farmId>`, so a phone
+  reaches only a PC signed in to the same account. Without a host the answer is 409 `pc_offline`;
+  `GET /v1/relay/status` answers `{online}`.
+- **Envelopes:** Core pipes text frames between each phone socket and the host as
+  `{t:"open",ch,channel,voiceId?}`, `{t:"data",ch,d}` and `{t:"close",ch,code?,reason?}`. A host
+  carries at most 8 phone sockets, a frame over 8 MiB closes its channel with 4413, a replaced host
+  is closed with 4409 and a lost host closes its phones with 4410.
+- **Loopback:** for each `open` Orion connects to its own server: channel `protocol` to `/ws`,
+  marked remote by a secret made at start that never leaves the process, and channel `voice` to
+  `/voice/<token>/<voiceId>`. A remote socket still starts with `hello`; its token is ignored and
+  the protocol version is checked.
+- **What a phone may do:** a remote socket may use `sessions.*`, `chat.*`, `voice.*`, `pages.list`,
+  `pages.read`, `modules.list`, `settings.get`, `db.query`, `db.mutate`, `snapshots.list`,
+  `snapshots.undo` and `account.status` (`remoteRequestAllowed`). Everything else answers
+  `forbidden`: settings, provider keys, access grants, members, invites, billing and farm switching
+  stay at the PC. A new request type is local-only until it is added to that list.
+- **Pages:** `pages.read { pageId, path }` returns a page file as base64 (`_orbit.css` and `_fonts`
+  are reserved page ids; the limit is 4 MiB). The app's web view loads pages through it and
+  supplies its own `window.orbit` over the relay socket.
+- **One instance:** the registry is in memory, so host and phone must reach the same Core
+  instance. Running several instances needs a shared bus first.
+
+### Calls
+
+The app calls `voice.start` on the relayed protocol socket and opens a second relay socket with
+`channel=voice&voiceId=<id>`. It speaks the same ElevenLabs agent frames as the desktop SDK in
+WebSocket mode, so Orion's voice session, turn saving, client tools and Core's metering are reused
+unchanged. The audio path is phone, Core relay, Orion, Core `/v1/voice/agent`, ElevenLabs: one hop
+more than on the PC. The `app` client tool has no meaning on the phone and answers that.
+
+### Push
+
+- `POST` and `DELETE /v1/push/devices` (user session) keep one row per device token in
+  `push_devices` (`0012_push_devices.sql`); a token moves to whoever registers it last.
+- Core sends through FCM HTTP v1 when `FCM_PROJECT_ID` is set, with the existing Google token
+  provider (`core/api/src/push.ts`). Without it, device routes work and nothing is sent. A token FCM
+  reports as unregistered is deleted.
+- Messages carry Android `title_loc_key` / `body_loc_key` so the phone shows them in its own
+  language, on channel `alerts` or `orion`, plus string-only `data` (`kind`, `farmId`, and the
+  observation or conversation id).
+- **Herd alerts:** when `/v1/changes` inserts an observation of an alert kind (`ALERT_KINDS`) that is
+  not deleted and no older than 24 hours, Core pushes to every device of every member of that farm,
+  after the response.
+- **Orion:** when a chat run started from the phone settles or asks for access while no phone is
+  connected, Orion posts `POST /v1/push/notify` (session + `x-orbit-farm`) and Core pushes
+  `orion_done` or `orion_needs_you` to that person's own devices, at most once per conversation per
+  30 seconds.
+
+### Getting in quickly, and the lock screen
+
+The home and lock screen widget (`widgetCategory="home_screen|keyguard"`), the assistant gesture
+(`android.intent.action.ASSIST`) and an optional ongoing notification all start a call through one
+action, `no.agrointel.orbit.action.TALK`. Nothing in the app shows over the lock screen: on a
+locked phone that action asks the system to dismiss the keyguard and the call starts only after
+the unlock. Lock screen widgets exist on phones from Android 16 QPR1 and the person adds them in
+the phone's settings.
+
+### Not on the phone yet
+
+- Sign-in is email and password; Google sign-in is desktop and website only.
+- Without the PC the app shows "PC is off"; it does not read past chats from Core on its own.
+- `orbit.cameraFrame()` returns an empty address in phone pages, because the relay carries no
+  camera pictures.
+- The app keeps its relay socket only while it is on screen or in a call, so Orion's own
+  notifications reach a phone that is in the pocket through push.
 
 ## Building the desktop app
 
