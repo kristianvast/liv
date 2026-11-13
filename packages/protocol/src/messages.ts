@@ -97,6 +97,19 @@ export const Requests = {
     params: Type.Object({ sessionId: Type.String(), text: Type.String({ minLength: 1 }) }),
     result: Accepted,
   },
+  /**
+   * Interrupts the running turn with a new instruction (Pi steer). Text matching a queued
+   * follow-up moves that message out of the follow-up queue, so a queued message can be steered.
+   */
+  "chat.steer": {
+    params: Type.Object({ sessionId: Type.String(), text: Type.String({ minLength: 1 }) }),
+    result: Accepted,
+  },
+  /** Queues a message delivered after the current run finishes (Pi followUp). */
+  "chat.followUp": {
+    params: Type.Object({ sessionId: Type.String(), text: Type.String({ minLength: 1 }) }),
+    result: Accepted,
+  },
   "chat.abort": { params: SessionRef, result: Accepted },
   /** Pages Orion built in the farm workspace. */
   "pages.list": { params: Empty, result: Type.Object({ pages: Type.Array(CustomPage) }) },

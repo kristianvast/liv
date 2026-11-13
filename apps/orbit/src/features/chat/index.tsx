@@ -17,15 +17,15 @@ import { Button, Dialog, useToast } from "../../design";
 import { type MessageKey, useT } from "../../i18n";
 import { useOrion } from "../../lib/orion";
 import { useVoice, VoiceStage } from "../voice";
-import { Composer } from "./Composer";
+import { Composer, type SendMode } from "./Composer";
 import { forgetChat, lastChat, rememberChat } from "./last-chat";
 import { classifyPlanError, PlanErrorCard } from "./PlanErrorCard";
-import { chatReducer, createInitialChatState } from "./reducer";
+import { chatReducer, createInitialChatState, type QueuedMessage } from "./reducer";
 import { ThreadSidebar } from "./Sidebar";
 import { Timeline } from "./Timeline";
 import { isListedSession } from "./turns";
 
-export { Composer } from "./Composer";
+export { Composer, type SendMode } from "./Composer";
 export { parseMarkdownBlocks, SafeMarkdown } from "./markdown";
 export {
   classifyPlanError,
@@ -38,6 +38,7 @@ export {
   type ChatState,
   chatReducer,
   createInitialChatState,
+  type QueuedMessage,
 } from "./reducer";
 export { ThreadSidebar } from "./Sidebar";
 export { Timeline } from "./Timeline";
@@ -367,7 +368,7 @@ export default function ChatPage() {
     return created.session.id;
   }, [chatState.sessionId, client, setSessionParam, upsertSession]);
 
-  const send = async (override?: string) => {
+  const send = async (mode: SendMode, override?: string) => {
     const text = (override ?? composerText).trim();
     if (!client || !text) return;
     if (voice.isLive && chatState.sessionId !== null && voice.sessionId === chatState.sessionId) {
@@ -377,24 +378,38 @@ export default function ChatPage() {
       await voice.sendText(text);
       return;
     }
-    if (sendingPrompt || chatState.streaming) return;
-    setSendingPrompt(true);
+    if (mode === "prompt") {
+      if (sendingPrompt) return;
+      setSendingPrompt(true);
+    }
     let sessionId = chatState.sessionId;
     const optimisticId = `optimistic-${crypto.randomUUID()}`;
     try {
       if (!sessionId) {
         sessionId = await ensureSession();
       }
-      dispatch({ type: "optimistic.user_message", text, id: optimisticId });
-      setComposerText("");
-      setAtBottom(true);
-      await client.request("chat.prompt", { sessionId, text });
+      if (mode === "prompt") {
+        dispatch({ type: "optimistic.user_message", text, id: optimisticId });
+        setComposerText("");
+        setAtBottom(true);
+        await client.request("chat.prompt", { sessionId, text });
+      } else {
+        const id = crypto.randomUUID();
+        dispatch({ type: "queue.add", message: { id, text, mode: "followUp" } });
+        setComposerText("");
+        try {
+          await client.request("chat.followUp", { sessionId, text });
+        } catch (err) {
+          dispatch({ type: "queue.remove", id });
+          throw err;
+        }
+      }
     } catch (err) {
       const code = err instanceof OrionRequestError ? err.code : undefined;
       const msg = errorText(err);
       const planCode = classifyPlanError(code, msg);
       // Orion refused the prompt, so no run started: undo the optimistic turn and hand the text back.
-      dispatch({ type: "optimistic.rollback", id: optimisticId });
+      if (mode === "prompt") dispatch({ type: "optimistic.rollback", id: optimisticId });
       setComposerText((current) => current || text);
       if (planCode) {
         dispatch({ type: "error.set", code: planCode, message: msg });
@@ -406,7 +421,7 @@ export default function ChatPage() {
         });
       }
     } finally {
-      setSendingPrompt(false);
+      if (mode === "prompt") setSendingPrompt(false);
     }
   };
   const sendRef = useRef(send);
@@ -415,8 +430,21 @@ export default function ChatPage() {
   useEffect(() => {
     if (!autoSend || !client || connState !== "open") return;
     setAutoSend(null);
-    void sendRef.current(autoSend);
+    void sendRef.current("prompt", autoSend);
   }, [autoSend, client, connState]);
+
+  /** Sends a queued follow-up now as a steer; Orion takes it out of its follow-up queue. */
+  const steerQueued = async (message: QueuedMessage) => {
+    const sessionId = chatState.sessionId;
+    if (!client || !sessionId) return;
+    dispatch({ type: "queue.mode", id: message.id, mode: "steer" });
+    try {
+      await client.request("chat.steer", { sessionId, text: message.text });
+    } catch (err) {
+      dispatch({ type: "queue.mode", id: message.id, mode: "followUp" });
+      pushToast({ title: t("chat.toast.sendFailed"), description: errorText(err), tone: "danger" });
+    }
+  };
 
   const stopRun = async () => {
     const sessionId = chatState.sessionId;
@@ -583,7 +611,7 @@ export default function ChatPage() {
                         key={starter.id}
                         type="button"
                         className="orbit-starter-btn"
-                        onClick={() => void send(t(starter.promptKey))}
+                        onClick={() => void send("prompt", t(starter.promptKey))}
                         data-testid={`starter-prompt-${starter.id}`}
                       >
                         <span className="orbit-starter-btn__category">
@@ -658,12 +686,14 @@ export default function ChatPage() {
             <Composer
               value={composerText}
               onChange={setComposerText}
-              onSend={() => void send()}
+              onSend={(mode) => void send(mode)}
+              onSteer={(message) => void steerQueued(message)}
               onStop={() => void stopRun()}
               onStartVoice={() => void handleToggleVoice()}
               voiceOpen={voiceActiveHere}
               streaming={chatState.streaming}
               sendingPrompt={sendingPrompt}
+              queued={chatState.queued}
               modelLabel={modelLabel}
               inputRef={composerRef}
             />

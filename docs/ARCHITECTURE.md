@@ -82,7 +82,7 @@ The transport is one JSON object per WebSocket text frame. There are three frame
 - Event (server to client, no id): `{ type, ...body }`. Every chat event carries `sessionId`.
 
 Requests: `hello`, `sessions.list|create|open|rename|delete`,
-`chat.prompt|abort`, `modules.list|enable|disable`, `pages.list`, `pages.read`, `localUi.status|launched|booted|disable`, `settings.get|update`, `auth.providers|login|respond|cancel|logout`, `account.*`, `members.*`, `invites.*`, `billing.plans|status|checkout|portal`, `feedback.send`, `shared.list`, `voice.start|stop|turn|tool`, `db.query`,
+`chat.prompt|steer|followUp|abort`, `modules.list|enable|disable`, `pages.list`, `pages.read`, `localUi.status|launched|booted|disable`, `settings.get|update`, `auth.providers|login|respond|cancel|logout`, `account.*`, `members.*`, `invites.*`, `billing.plans|status|checkout|portal`, `feedback.send`, `shared.list`, `voice.start|stop|turn|tool`, `db.query`,
 `db.mutate`, `snapshots.list|undo`.
 
 - `sessions.open` returns the transcript as UI-ready `TranscriptItem`s:

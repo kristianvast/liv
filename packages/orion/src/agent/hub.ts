@@ -986,9 +986,25 @@ export class SessionHub {
     process.stderr.write(`orion: naming the conversation failed: ${failure}\n`);
   }
 
-  async prompt(id: string, text: string) {
+  async prompt(id: string, text: string, mode: "prompt" | "steer" | "followUp" = "prompt") {
     const live = this.getLive(id);
-    if (live.streaming) throw new HubError("busy", "Orion is still working on this conversation");
+    if (live.streaming) {
+      if (mode === "prompt")
+        throw new HubError("busy", "Orion is still working on this conversation");
+      const agent = live.agent as AgentSession;
+      if (mode === "followUp") {
+        await agent.followUp(text);
+        return;
+      }
+      // Steering a queued follow-up takes it out of the follow-up queue first.
+      const queued = agent.clearQueue();
+      const at = queued.followUp.indexOf(text);
+      const followUps = at < 0 ? queued.followUp : queued.followUp.filter((_, i) => i !== at);
+      for (const s of queued.steering) await agent.steer(s);
+      await agent.steer(text);
+      for (const f of followUps) await agent.followUp(f);
+      return;
+    }
     await this.opts.beforePrompt?.();
     this.starting++;
     let agent: AgentSession;

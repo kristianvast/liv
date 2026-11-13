@@ -470,12 +470,19 @@ export async function startOrion(
         return { session: hub.rename(msg.sessionId, msg.title) };
       case "sessions.delete":
         return { deleted: await hub.delete(msg.sessionId) };
-      case "chat.prompt": {
+      case "chat.prompt":
+      case "chat.steer":
+      case "chat.followUp": {
         const starting = !hub.summary(msg.sessionId).streaming;
         if (starting && owner.data.kind === "protocol" && owner.data.remote)
           phoneNotifications?.started(msg.sessionId);
         try {
-          await hub.prompt(msg.sessionId, msg.text);
+          const modes = {
+            "chat.prompt": "prompt",
+            "chat.steer": "steer",
+            "chat.followUp": "followUp",
+          } as const;
+          await hub.prompt(msg.sessionId, msg.text, modes[msg.type]);
         } catch (error) {
           if (starting) phoneNotifications?.cancelled(msg.sessionId);
           throw error;
