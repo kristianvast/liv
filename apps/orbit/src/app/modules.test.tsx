@@ -339,7 +339,10 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
       </MemoryRouter>,
     );
 
-    fireEvent.click(await screen.findByTestId("home-setup-create"));
+    const signIn = await screen.findByTestId("home-setup-sign-in");
+    const create = screen.getByTestId("home-setup-create");
+    expect(signIn.compareDocumentPosition(create) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    fireEvent.click(create);
     expect(screen.queryByTestId("home-ask-input")).not.toBeInTheDocument();
 
     expect(await screen.findByTestId("account-mode-register")).toHaveAttribute(

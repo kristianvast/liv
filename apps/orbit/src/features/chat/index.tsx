@@ -4,7 +4,6 @@ import {
   AlertCircle,
   ArrowDown,
   Camera,
-  GitBranch,
   LayoutDashboard,
   Orbit as OrbitIcon,
   PanelLeft,
@@ -18,7 +17,7 @@ import { Button, Dialog, useToast } from "../../design";
 import { type MessageKey, useT } from "../../i18n";
 import { useOrion } from "../../lib/orion";
 import { useVoice, VoiceStage } from "../voice";
-import { Composer, type SendMode } from "./Composer";
+import { Composer } from "./Composer";
 import { forgetChat, lastChat, rememberChat } from "./last-chat";
 import { classifyPlanError, PlanErrorCard } from "./PlanErrorCard";
 import { chatReducer, createInitialChatState } from "./reducer";
@@ -26,7 +25,7 @@ import { ThreadSidebar } from "./Sidebar";
 import { Timeline } from "./Timeline";
 import { isListedSession } from "./turns";
 
-export { Composer, type SendMode } from "./Composer";
+export { Composer } from "./Composer";
 export { parseMarkdownBlocks, SafeMarkdown } from "./markdown";
 export {
   classifyPlanError,
@@ -39,7 +38,6 @@ export {
   type ChatState,
   chatReducer,
   createInitialChatState,
-  type QueuedMessage,
 } from "./reducer";
 export { ThreadSidebar } from "./Sidebar";
 export { Timeline } from "./Timeline";
@@ -109,7 +107,8 @@ export const STARTER_PROMPTS: StarterPrompt[] = [
 const SESSION_PARAM = "s";
 
 function shortModel(model: string | null | undefined): string | null {
-  if (!model) return null;
+  // The Orbit subscription model has no name worth showing.
+  if (!model || model === "orbit-default" || model.startsWith("orbit-gateway/")) return null;
   const slash = model.indexOf("/");
   return slash >= 0 ? model.slice(slash + 1) : model;
 }
@@ -368,7 +367,7 @@ export default function ChatPage() {
     return created.session.id;
   }, [chatState.sessionId, client, setSessionParam, upsertSession]);
 
-  const send = async (mode: SendMode, override?: string) => {
+  const send = async (override?: string) => {
     const text = (override ?? composerText).trim();
     if (!client || !text) return;
     if (voice.isLive && chatState.sessionId !== null && voice.sessionId === chatState.sessionId) {
@@ -378,41 +377,24 @@ export default function ChatPage() {
       await voice.sendText(text);
       return;
     }
-    if (mode === "prompt") {
-      if (sendingPrompt) return;
-      setSendingPrompt(true);
-    }
+    if (sendingPrompt || chatState.streaming) return;
+    setSendingPrompt(true);
     let sessionId = chatState.sessionId;
     const optimisticId = `optimistic-${crypto.randomUUID()}`;
     try {
       if (!sessionId) {
         sessionId = await ensureSession();
       }
-      if (mode === "prompt") {
-        dispatch({ type: "optimistic.user_message", text, id: optimisticId });
-        setComposerText("");
-        setAtBottom(true);
-        await client.request("chat.prompt", { sessionId, text });
-      } else {
-        const id = crypto.randomUUID();
-        dispatch({ type: "queue.add", message: { id, text, mode } });
-        setComposerText("");
-        try {
-          await client.request(mode === "steer" ? "chat.steer" : "chat.followUp", {
-            sessionId,
-            text,
-          });
-        } catch (err) {
-          dispatch({ type: "queue.remove", id });
-          throw err;
-        }
-      }
+      dispatch({ type: "optimistic.user_message", text, id: optimisticId });
+      setComposerText("");
+      setAtBottom(true);
+      await client.request("chat.prompt", { sessionId, text });
     } catch (err) {
       const code = err instanceof OrionRequestError ? err.code : undefined;
       const msg = errorText(err);
       const planCode = classifyPlanError(code, msg);
       // Orion refused the prompt, so no run started: undo the optimistic turn and hand the text back.
-      if (mode === "prompt") dispatch({ type: "optimistic.rollback", id: optimisticId });
+      dispatch({ type: "optimistic.rollback", id: optimisticId });
       setComposerText((current) => current || text);
       if (planCode) {
         dispatch({ type: "error.set", code: planCode, message: msg });
@@ -424,7 +406,7 @@ export default function ChatPage() {
         });
       }
     } finally {
-      if (mode === "prompt") setSendingPrompt(false);
+      setSendingPrompt(false);
     }
   };
   const sendRef = useRef(send);
@@ -433,7 +415,7 @@ export default function ChatPage() {
   useEffect(() => {
     if (!autoSend || !client || connState !== "open") return;
     setAutoSend(null);
-    void sendRef.current("prompt", autoSend);
+    void sendRef.current(autoSend);
   }, [autoSend, client, connState]);
 
   const stopRun = async () => {
@@ -474,29 +456,6 @@ export default function ChatPage() {
     } catch (err) {
       pushToast({
         title: t("chat.toast.renameFailed"),
-        description: errorText(err),
-        tone: "danger",
-      });
-    }
-  };
-
-  const forkSession = async (sessionId: string, fromItemId?: string) => {
-    if (!client) return;
-    try {
-      const forked = await client.request("sessions.fork", {
-        sessionId,
-        ...(fromItemId ? { fromItemId } : {}),
-      });
-      upsertSession(forked.session);
-      await openSession(forked.session.id);
-      pushToast({
-        title: t("chat.toast.branched"),
-        description: t("chat.toast.branchedDescription", { title: forked.session.title }),
-        tone: "ok",
-      });
-    } catch (err) {
-      pushToast({
-        title: t("chat.toast.branchFailed"),
         description: errorText(err),
         tone: "danger",
       });
@@ -565,7 +524,6 @@ export default function ChatPage() {
           onNew={startDraft}
           onOpen={(id) => void openSession(id)}
           onRename={renameSession}
-          onFork={(id) => void forkSession(id)}
           onDelete={setDeletingSession}
         />
         {sidebarOpen && (
@@ -601,20 +559,6 @@ export default function ChatPage() {
                 {t("chat.page.working")}
               </span>
             )}
-            <div className="orbit-thread-pane__actions">
-              {activeSessionId && chatState.items.length > 0 && (
-                <button
-                  type="button"
-                  className="orbit-thread__icon"
-                  title={t("chat.page.branch")}
-                  aria-label={t("chat.page.branch")}
-                  onClick={() => void forkSession(activeSessionId)}
-                  data-testid="chat-header-fork-button"
-                >
-                  <GitBranch size={15} aria-hidden="true" />
-                </button>
-              )}
-            </div>
           </header>
 
           {voiceActiveHere && <VoiceStage />}
@@ -639,7 +583,7 @@ export default function ChatPage() {
                         key={starter.id}
                         type="button"
                         className="orbit-starter-btn"
-                        onClick={() => void send("prompt", t(starter.promptKey))}
+                        onClick={() => void send(t(starter.promptKey))}
                         data-testid={`starter-prompt-${starter.id}`}
                       >
                         <span className="orbit-starter-btn__category">
@@ -657,9 +601,6 @@ export default function ChatPage() {
                 items={chatState.items}
                 streaming={chatState.streaming}
                 runStartedAt={chatState.runStartedAt}
-                {...(activeSessionId
-                  ? { onFork: (itemId: string) => void forkSession(activeSessionId, itemId) }
-                  : {})}
               />
             )}
 
@@ -717,13 +658,12 @@ export default function ChatPage() {
             <Composer
               value={composerText}
               onChange={setComposerText}
-              onSend={(mode) => void send(mode)}
+              onSend={() => void send()}
               onStop={() => void stopRun()}
               onStartVoice={() => void handleToggleVoice()}
               voiceOpen={voiceActiveHere}
               streaming={chatState.streaming}
               sendingPrompt={sendingPrompt}
-              queued={chatState.queued}
               modelLabel={modelLabel}
               inputRef={composerRef}
             />

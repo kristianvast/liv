@@ -135,19 +135,16 @@ test("an inner frame over 8 MiB closes only its channel with 4413", async () => 
   expect((await remote.request("settings.get")).phoneAccess).toBe(true);
 });
 
-test.each(["chat.prompt", "chat.steer", "chat.followUp"] as const)(
-  "%s keeps not_found for an unknown session",
-  async (type) => {
-    const fixture = await phoneFixture();
-    const error = await fixture.local
-      .request(type, { sessionId: "unknown-session", text: "Hello" })
-      .catch((error: unknown) => error);
-    expect(error).toMatchObject({
-      code: "not_found",
-      message: "session unknown-session not found",
-    });
-  },
-);
+test("chat.prompt keeps not_found for an unknown session", async () => {
+  const fixture = await phoneFixture();
+  const error = await fixture.local
+    .request("chat.prompt", { sessionId: "unknown-session", text: "Hello" })
+    .catch((error: unknown) => error);
+  expect(error).toMatchObject({
+    code: "not_found",
+    message: "session unknown-session not found",
+  });
+});
 
 test("binary host frames are refused with 4415", async () => {
   const fixture = await phoneFixture();

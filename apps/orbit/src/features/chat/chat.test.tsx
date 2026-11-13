@@ -170,17 +170,6 @@ function createMockClient(
           };
           return { session: updated } as RequestResult<T>;
         }
-        case "sessions.fork": {
-          const p = params as RequestParams<"sessions.fork">;
-          const forked: SessionSummary = {
-            ...baseSession,
-            id: "sess-forked",
-            title: `${baseSession.title} (copy)`,
-            parentSessionId: p.sessionId,
-          };
-          sessions.unshift(forked);
-          return { session: forked } as RequestResult<T>;
-        }
         case "sessions.delete":
           return { deleted: true } as RequestResult<T>;
         case "chat.prompt":
@@ -188,9 +177,6 @@ function createMockClient(
           return { accepted: true } as RequestResult<T>;
         case "chat.abort":
           return { accepted: options.abortAccepted ?? true } as RequestResult<T>;
-        case "chat.steer":
-        case "chat.followUp":
-          return { accepted: true } as RequestResult<T>;
         case "settings.get":
           return settings as RequestResult<T>;
         case "settings.update": {
@@ -725,9 +711,6 @@ describe("ChatPage and SettingsPage integration", () => {
     });
     expect(requestMock).toHaveBeenCalledWith("sessions.create", {});
     expect(screen.getByTestId("session-item-sess-2")).toHaveAttribute("data-active", "true");
-
-    expect(screen.getByTestId("chat-steer-button")).toBeInTheDocument();
-    expect(screen.getByTestId("chat-followup-button")).toBeInTheDocument();
   });
 
   it("New chat never persists an empty session and hides never-started ones from history", async () => {
@@ -796,101 +779,6 @@ describe("ChatPage and SettingsPage integration", () => {
     expect(requestMock).toHaveBeenCalledWith("chat.abort", { sessionId: "sess-1" });
     expect(screen.queryByTestId("chat-streaming-indicator")).not.toBeInTheDocument();
     expect(screen.getByTestId("chat-send-button")).toBeInTheDocument();
-  });
-
-  it("queues Enter as a follow-up and Ctrl+Enter as a steer while the prompt request is still pending", async () => {
-    const { client, requestMock, emit } = createMockClient([], { promptNeverResolves: true });
-
-    render(
-      <MemoryRouter initialEntries={["/chat?s=sess-1"]}>
-        <AppProviders initialClient={client}>
-          <ChatPage />
-        </AppProviders>
-      </MemoryRouter>,
-    );
-
-    await waitFor(() => {
-      expect(screen.getByTestId("session-item-sess-1")).toHaveAttribute("data-active", "true");
-    });
-    fireEvent.change(screen.getByTestId("chat-composer-input"), {
-      target: { value: "List cows" },
-    });
-    fireEvent.click(screen.getByTestId("chat-send-button"));
-    await waitFor(() => {
-      expect(requestMock).toHaveBeenCalledWith("chat.prompt", {
-        sessionId: "sess-1",
-        text: "List cows",
-      });
-    });
-    act(() =>
-      emit({
-        type: "session.updated",
-        sessionId: "sess-1",
-        session: { ...baseSession, streaming: true },
-      }),
-    );
-    await waitFor(() => {
-      expect(screen.getByTestId("chat-composer-stop-button")).toBeInTheDocument();
-    });
-
-    const input = screen.getByTestId("chat-composer-input");
-    fireEvent.change(input, { target: { value: "Then check the heifers" } });
-    fireEvent.keyDown(input, { key: "Enter" });
-    await waitFor(() => {
-      expect(requestMock).toHaveBeenCalledWith("chat.followUp", {
-        sessionId: "sess-1",
-        text: "Then check the heifers",
-      });
-    });
-    expect(screen.getByTestId("queued-message")).toHaveTextContent("Then check the heifers");
-
-    fireEvent.change(input, { target: { value: "Only the milking group" } });
-    fireEvent.keyDown(input, { key: "Enter", ctrlKey: true });
-    await waitFor(() => {
-      expect(requestMock).toHaveBeenCalledWith("chat.steer", {
-        sessionId: "sess-1",
-        text: "Only the milking group",
-      });
-    });
-    expect(screen.getAllByTestId("queued-message")).toHaveLength(2);
-
-    act(() => {
-      emit({ type: "message.start", sessionId: "sess-1", messageId: "msg_u1", role: "user" });
-      emit({ type: "message.start", sessionId: "sess-1", messageId: "msg_u2", role: "user" });
-      emit({ type: "message.start", sessionId: "sess-1", messageId: "msg_a2", role: "assistant" });
-      emit({
-        type: "message.end",
-        sessionId: "sess-1",
-        messageId: "msg_a2",
-        item: {
-          kind: "assistant",
-          id: "entry-a2",
-          ts: new Date().toISOString(),
-          text: "Milking group only.",
-        },
-      });
-    });
-    await waitFor(() => {
-      expect(screen.getAllByTestId("queued-message")).toHaveLength(1);
-    });
-    act(() =>
-      emit({
-        type: "message.end",
-        sessionId: "sess-1",
-        messageId: "msg_u2",
-        item: {
-          kind: "user",
-          id: "entry-u2",
-          ts: new Date().toISOString(),
-          text: "Only the milking group",
-        },
-      }),
-    );
-    const steered = await screen.findByTestId("message-user-entry-u2");
-    expect(steered).toHaveTextContent("Only the milking group");
-    const reply = screen.getByTestId("message-assistant-entry-a2");
-    expect(steered.compareDocumentPosition(reply) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    expect(screen.getAllByTestId("queued-message")).toHaveLength(1);
   });
 
   it("adds an API key through the sign-in dialog without ever showing it, and undoes a snapshot", async () => {

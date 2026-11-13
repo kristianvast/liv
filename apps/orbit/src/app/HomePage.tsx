@@ -277,19 +277,19 @@ export function HomePage() {
               <div className="orbit-setup__actions">
                 <Button
                   variant="primary"
+                  onClick={() => void navigate("/settings#account")}
+                  data-testid="home-setup-sign-in"
+                >
+                  {t("home.setup.signIn")}
+                </Button>
+                <Button
+                  variant="secondary"
                   onClick={() =>
                     void navigate("/settings#account", { state: { accountMode: "register" } })
                   }
                   data-testid="home-setup-create"
                 >
                   {t("home.setup.create")}
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() => void navigate("/settings#account")}
-                  data-testid="home-setup-sign-in"
-                >
-                  {t("home.setup.signIn")}
                 </Button>
               </div>
               <Link

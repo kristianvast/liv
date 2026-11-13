@@ -9,17 +9,9 @@ export interface ChatState {
   lastError: string | null;
   lastErrorCode: string | null;
   settledReason: "completed" | "aborted" | "error" | null;
-  /** Messages sent while a run was going; they leave the list when Orion delivers them. */
-  queued: QueuedMessage[];
   runStartedAt: string | null;
   /** True from sending a prompt until the server announces that prompt's user message. */
   awaitingPromptStart: boolean;
-}
-
-export interface QueuedMessage {
-  id: string;
-  text: string;
-  mode: "steer" | "followUp";
 }
 
 export type ChatAction =
@@ -46,14 +38,6 @@ export type ChatAction =
       event: ServerEvent;
     }
   | {
-      type: "queue.add";
-      message: QueuedMessage;
-    }
-  | {
-      type: "queue.remove";
-      id: string;
-    }
-  | {
       type: "error.set";
       code?: string;
       message: string;
@@ -71,7 +55,6 @@ export function createInitialChatState(sessionId: string | null = null): ChatSta
     lastError: null,
     lastErrorCode: null,
     settledReason: null,
-    queued: [],
     runStartedAt: null,
     awaitingPromptStart: false,
   };
@@ -98,20 +81,10 @@ function applyMessageStart(state: ChatState, ev: EventFrame<"message.start">): C
     };
     if (state.awaitingPromptStart) return { ...base, awaitingPromptStart: false };
     if (state.items.some((it) => it.id === ev.messageId)) return base;
-    // A queued message is being delivered mid-run. Its message.end only arrives after the
-    // replies, so hold its place now; Pi hands over steers before follow-ups.
-    const delivered = state.queued.find((q) => q.mode === "steer") ?? state.queued[0];
-    const placeholder: TranscriptItem = {
-      kind: "user",
-      id: ev.messageId,
-      ts: now,
-      text: delivered?.text ?? "",
-    };
-    return {
-      ...base,
-      items: [...state.items, placeholder],
-      queued: delivered ? state.queued.filter((q) => q !== delivered) : state.queued,
-    };
+    // A message sent from elsewhere (another device). Its message.end may only arrive after the
+    // replies, so hold its place now.
+    const placeholder: TranscriptItem = { kind: "user", id: ev.messageId, ts: now, text: "" };
+    return { ...base, items: [...state.items, placeholder] };
   }
 
   const exists = state.items.some((it) => it.id === ev.messageId);
@@ -175,16 +148,9 @@ function applyMessageDelta(state: ChatState, ev: EventFrame<"message.delta">): C
   };
 }
 
-function dequeueDelivered(state: ChatState, text: string): ChatState {
-  const idx = state.queued.findIndex((q) => q.text.trim() === text.trim());
-  if (idx < 0) return state;
-  return { ...state, queued: state.queued.filter((_, i) => i !== idx) };
-}
+function applyMessageEnd(baseState: ChatState, ev: EventFrame<"message.end">): ChatState {
+  if (baseState.sessionId && ev.sessionId !== baseState.sessionId) return baseState;
 
-function applyMessageEnd(prev: ChatState, ev: EventFrame<"message.end">): ChatState {
-  if (prev.sessionId && ev.sessionId !== prev.sessionId) return prev;
-
-  const baseState = ev.item.kind === "user" ? dequeueDelivered(prev, ev.item.text) : prev;
   const isVoiceTurn =
     (ev.item.kind === "user" || ev.item.kind === "assistant") && ev.item.voice === true;
   const state: ChatState = isVoiceTurn
@@ -353,7 +319,6 @@ function applyAgentSettled(state: ChatState, ev: EventFrame<"agent.settled">): C
     lastError: ev.errorMessage ?? state.lastError,
     lastErrorCode: planCode ?? state.lastErrorCode,
     items: nextItems,
-    queued: [],
     runStartedAt: null,
     awaitingPromptStart: false,
   };
@@ -370,7 +335,6 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         lastError: null,
         lastErrorCode: null,
         settledReason: null,
-        queued: [],
         runStartedAt: action.session.streaming ? lastUserTs(action.items) : null,
         awaitingPromptStart: false,
       };
@@ -403,10 +367,6 @@ export function chatReducer(state: ChatState, action: ChatAction): ChatState {
         runStartedAt: null,
         awaitingPromptStart: false,
       };
-    case "queue.add":
-      return { ...state, queued: [...state.queued, action.message] };
-    case "queue.remove":
-      return { ...state, queued: state.queued.filter((q) => q.id !== action.id) };
     case "error.set": {
       const planCode = classifyPlanError(action.code, action.message);
       return {

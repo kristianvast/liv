@@ -1,15 +1,5 @@
 import type { AssistantItem, ToolItem, TranscriptItem } from "@orbit/protocol";
-import {
-  AlertCircle,
-  Brain,
-  Check,
-  ChevronRight,
-  Copy,
-  GitBranch,
-  Loader2,
-  Mic,
-  Wrench,
-} from "lucide-react";
+import { AlertCircle, Brain, Check, ChevronRight, Copy, Loader2, Mic, Wrench } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useT } from "../../i18n";
 import { SafeMarkdown } from "./markdown";
@@ -210,12 +200,10 @@ function TurnView({
   turn,
   live,
   runStartedAt,
-  onFork,
 }: {
   turn: Turn;
   live: boolean;
   runStartedAt: string | null;
-  onFork?: (itemId: string) => void;
 }) {
   const t = useT();
   const blocks = buildTurnBlocks(turn.steps);
@@ -226,8 +214,6 @@ function TurnView({
   });
   const markerAt = duration === null ? -1 : finalReplyIdx >= 0 ? finalReplyIdx : blocks.length;
   const user = turn.user;
-  const canFork =
-    Boolean(onFork) && user && !user.id.startsWith("optimistic-") && !user.id.startsWith("msg_");
 
   return (
     <section className="orbit-turn" data-testid={`turn-${turn.id}`}>
@@ -251,20 +237,6 @@ function TurnView({
             )}
             {user.text}
           </div>
-          {canFork && (
-            <div className="orbit-msg-actions orbit-msg-actions--end">
-              <button
-                type="button"
-                className="orbit-msg-action"
-                title={t("chat.timeline.branchHere")}
-                aria-label={t("chat.timeline.branchHereLabel")}
-                onClick={() => onFork?.(user.id)}
-                data-testid={`message-fork-${user.id}`}
-              >
-                <GitBranch size={13} aria-hidden="true" />
-              </button>
-            </div>
-          )}
         </article>
       )}
       {blocks.map((block, i) => (
@@ -291,10 +263,9 @@ export interface TimelineProps {
   items: TranscriptItem[];
   streaming: boolean;
   runStartedAt: string | null;
-  onFork?: (itemId: string) => void;
 }
 
-export function Timeline({ items, streaming, runStartedAt, onFork }: TimelineProps) {
+export function Timeline({ items, streaming, runStartedAt }: TimelineProps) {
   const turns = buildTurns(items);
   return (
     <div className="orbit-timeline">
@@ -304,7 +275,6 @@ export function Timeline({ items, streaming, runStartedAt, onFork }: TimelinePro
           turn={turn}
           live={streaming && i === turns.length - 1}
           runStartedAt={runStartedAt}
-          {...(onFork ? { onFork } : {})}
         />
       ))}
       {streaming && turns.length === 0 && <WorkingLine since={runStartedAt} />}

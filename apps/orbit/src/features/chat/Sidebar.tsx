@@ -1,5 +1,5 @@
 import type { SessionSummary } from "@orbit/protocol";
-import { Check, GitBranch, Pencil, Search, SquarePen, Trash2, X } from "lucide-react";
+import { Check, Pencil, Search, SquarePen, Trash2, X } from "lucide-react";
 import { useMemo, useState } from "react";
 import { type I18nContextValue, useI18n } from "../../i18n";
 import { groupSessionsByRecency } from "./turns";
@@ -29,7 +29,6 @@ export interface ThreadSidebarProps {
   onNew: () => void;
   onOpen: (sessionId: string) => void;
   onRename: (sessionId: string, title: string) => Promise<void>;
-  onFork: (sessionId: string) => void;
   onDelete: (session: SessionSummary) => void;
 }
 
@@ -42,7 +41,6 @@ export function ThreadSidebar({
   onNew,
   onOpen,
   onRename,
-  onFork,
   onDelete,
 }: ThreadSidebarProps) {
   const i18n = useI18n();
@@ -195,16 +193,6 @@ export function ThreadSidebar({
                           data-testid={`session-rename-button-${session.id}`}
                         >
                           <Pencil size={13} aria-hidden="true" />
-                        </button>
-                        <button
-                          type="button"
-                          className="orbit-thread__icon"
-                          title={t("chat.page.branch")}
-                          aria-label={t("chat.sidebar.branchLabel", { title: session.title })}
-                          onClick={() => onFork(session.id)}
-                          data-testid={`session-fork-button-${session.id}`}
-                        >
-                          <GitBranch size={13} aria-hidden="true" />
                         </button>
                         <button
                           type="button"

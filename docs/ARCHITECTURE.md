@@ -81,8 +81,8 @@ The transport is one JSON object per WebSocket text frame. There are three frame
 - Response: `{ type: "response", id, ok: true, result }` or `{ type: "response", id, ok: false, error: { code, message, details? } }`.
 - Event (server to client, no id): `{ type, ...body }`. Every chat event carries `sessionId`.
 
-Requests: `hello`, `sessions.list|create|open|fork|rename|delete`,
-`chat.prompt|steer|followUp|abort`, `modules.list|enable|disable`, `pages.list`, `pages.read`, `localUi.status|launched|booted|disable`, `settings.get|update`, `auth.providers|login|respond|cancel|logout`, `account.*`, `members.*`, `invites.*`, `billing.plans|status|checkout|portal`, `feedback.send`, `shared.list`, `voice.start|stop|turn|tool`, `db.query`,
+Requests: `hello`, `sessions.list|create|open|rename|delete`,
+`chat.prompt|abort`, `modules.list|enable|disable`, `pages.list`, `pages.read`, `localUi.status|launched|booted|disable`, `settings.get|update`, `auth.providers|login|respond|cancel|logout`, `account.*`, `members.*`, `invites.*`, `billing.plans|status|checkout|portal`, `feedback.send`, `shared.list`, `voice.start|stop|turn|tool`, `db.query`,
 `db.mutate`, `snapshots.list|undo`.
 
 - `sessions.open` returns the transcript as UI-ready `TranscriptItem`s:
@@ -292,7 +292,7 @@ the sender's base back into the cloud.
 ## Agent design (`@orion/agent`)
 
 - **One Pi session per conversation.** Sessions are created with `createAgentSession` and stored
-  as JSONL under `<data-dir>/sessions`. Session fork, rename and switch are handled with
+  as JSONL under `<data-dir>/sessions`. Session rename and switch are handled with
   `AgentSessionRuntime`. Pi events are translated into protocol events: `message_update` becomes
   `message.delta`, tool execution start/update/end become `tool.*`, `message_end` becomes
   `message.end`, and `agent_settled` becomes `agent.settled`.

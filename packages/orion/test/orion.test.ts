@@ -68,7 +68,7 @@ describe("protocol handshake", () => {
 });
 
 describe("sessions", () => {
-  test("create, list and fork persist across a restart", async () => {
+  test("create and list persist across a restart", async () => {
     const dir = tempDir();
     cleanups.push(() => removeDir(dir));
     let app: OrionApp = await startApp(dir);
@@ -80,11 +80,6 @@ describe("sessions", () => {
     const opened = await client.request("sessions.open", { sessionId: session.id });
     const user = opened.items.find((i): i is UserItem => i.kind === "user");
     expect(user?.text).toBe("hello orion");
-    const { session: fork } = await client.request("sessions.fork", {
-      sessionId: session.id,
-      fromItemId: user?.id,
-    });
-    expect(fork.parentSessionId).toBe(session.id);
     client.close();
     await app.stop();
 
@@ -95,9 +90,9 @@ describe("sessions", () => {
       await app.stop();
     });
     const { sessions } = await client.request("sessions.list", {});
-    expect(sessions.map((s) => s.id).sort()).toEqual([session.id, fork.id].sort());
-    expect(sessions.find((s) => s.id === session.id)?.title).toBe("Morning check");
-    const reopened = await client.request("sessions.open", { sessionId: fork.id });
+    expect(sessions.map((s) => s.id)).toEqual([session.id]);
+    expect(sessions[0]?.title).toBe("Morning check");
+    const reopened = await client.request("sessions.open", { sessionId: session.id });
     expect(
       reopened.items.filter((i) => i.kind === "user").map((i) => (i as UserItem).text),
     ).toEqual(["hello orion"]);

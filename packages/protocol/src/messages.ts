@@ -87,11 +87,6 @@ export const Requests = {
     params: SessionRef,
     result: Type.Object({ session: SessionSummary, items: Type.Array(TranscriptItem) }),
   },
-  /** Forks a session; with fromItemId the fork keeps history up to and including that user item. */
-  "sessions.fork": {
-    params: Type.Object({ sessionId: Type.String(), fromItemId: Type.Optional(Type.String()) }),
-    result: Type.Object({ session: SessionSummary }),
-  },
   "sessions.rename": {
     params: Type.Object({ sessionId: Type.String(), title: Type.String({ minLength: 1 }) }),
     result: Type.Object({ session: SessionSummary }),
@@ -99,16 +94,6 @@ export const Requests = {
   "sessions.delete": { params: SessionRef, result: Type.Object({ deleted: Type.Boolean() }) },
   /** Starts a run. Resolves once accepted; output streams as events. Fails with busy while streaming. */
   "chat.prompt": {
-    params: Type.Object({ sessionId: Type.String(), text: Type.String({ minLength: 1 }) }),
-    result: Accepted,
-  },
-  /** Interrupts the running turn with a new instruction (Pi steer). */
-  "chat.steer": {
-    params: Type.Object({ sessionId: Type.String(), text: Type.String({ minLength: 1 }) }),
-    result: Accepted,
-  },
-  /** Queues a message delivered after the current run finishes (Pi followUp). */
-  "chat.followUp": {
     params: Type.Object({ sessionId: Type.String(), text: Type.String({ minLength: 1 }) }),
     result: Accepted,
   },
