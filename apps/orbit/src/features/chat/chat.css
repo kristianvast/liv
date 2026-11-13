@@ -1,5 +1,11 @@
 /* ------------------------------------------------------------------ layout */
 
+/* Chat fills the whole main area, edge to edge, instead of sitting as a card inside its padding. */
+.orbit-main-scroll:has(> .orbit-chat-page) {
+  padding: 0;
+  overflow: hidden;
+}
+
 .orbit-container.orbit-chat-page {
   max-inline-size: none;
   block-size: 100%;
@@ -11,10 +17,7 @@
   display: grid;
   grid-template-columns: 16.5rem minmax(0, 1fr);
   block-size: 100%;
-  min-block-size: 28rem;
   background-color: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
   overflow: hidden;
 }
 
@@ -272,8 +275,13 @@
   background-color: var(--bg-surface);
 }
 
+/* The voice stage yields height first so the composer always stays on screen. */
 .orbit-thread-pane[data-voice="on"] {
-  grid-template-rows: auto auto minmax(13rem, 1fr) auto;
+  grid-template-rows: auto minmax(0, auto) minmax(6rem, 1fr) auto;
+}
+
+.orbit-thread-pane[data-voice="on"] > .orbit-voice-stage {
+  min-block-size: 0;
 }
 
 .orbit-thread-pane__header {
@@ -437,7 +445,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
-  max-inline-size: 48rem;
+  max-inline-size: 60rem;
   margin-inline: auto;
 }
 
@@ -614,7 +622,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-2);
-  max-inline-size: 48rem;
+  max-inline-size: 60rem;
   margin: var(--space-4) auto 0;
   padding: var(--space-2) var(--space-2) var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
@@ -639,7 +647,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  max-inline-size: 48rem;
+  max-inline-size: 60rem;
   margin: var(--space-4) auto 0;
   padding: var(--space-4);
   border-radius: var(--radius-lg);
@@ -879,7 +887,7 @@
 /* ------------------------------------------------------------------ composer */
 
 .orbit-composer-wrap {
-  max-inline-size: 48rem;
+  max-inline-size: 60rem;
   margin-inline: auto;
   display: flex;
   flex-direction: column;
@@ -1178,10 +1186,6 @@
 
   .orbit-thread-pane__toggle {
     display: inline-flex;
-  }
-
-  .orbit-thread-pane[data-voice="on"] {
-    grid-template-rows: auto auto minmax(9.5rem, 1fr) auto;
   }
 
   .orbit-thread-pane__header,
