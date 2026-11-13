@@ -179,6 +179,7 @@ async function resolveBindingConflicts(
 export interface ApplyOptions {
   clock?: Hlc;
   now?: () => Date;
+  onObservationInserted?: (id: string) => void;
 }
 
 export function createChangeApplier(db: CoreDb, options: ApplyOptions = {}) {
@@ -206,7 +207,8 @@ export function createChangeApplier(db: CoreDb, options: ApplyOptions = {}) {
     const tableName = change.table as SyncedTable;
     const table = tableOf(tableName);
     try {
-      return await db.transaction(async (tx) => {
+      let insertedObservation: string | undefined;
+      const result = await db.transaction(async (tx): Promise<ChangeResult> => {
         const [existing] = await tx
           .select({ hlc: table.hlc, farmId: table.farmId })
           .from(table)
@@ -220,6 +222,17 @@ export function createChangeApplier(db: CoreDb, options: ApplyOptions = {}) {
         }
         if (tableName === "device_bindings") {
           values = await resolveBindingConflicts(tx, clock, values, now);
+        }
+        if (tableName === "observations" && !existing) {
+          const [inserted] = await tx
+            .insert(table)
+            .values(values as typeof table.$inferInsert)
+            .onConflictDoNothing({ target: table.id })
+            .returning({ id: table.id });
+          if (inserted) {
+            insertedObservation = inserted.id;
+            return { seq: change.seq, status: "applied" };
+          }
         }
         const set = Object.fromEntries(
           Object.entries(getTableColumns(table))
@@ -236,6 +249,8 @@ export function createChangeApplier(db: CoreDb, options: ApplyOptions = {}) {
           });
         return { seq: change.seq, status: "applied" };
       });
+      if (insertedObservation) options.onObservationInserted?.(insertedObservation);
+      return result;
     } catch (err) {
       if (err instanceof ValidationError) {
         return { seq: change.seq, status: "rejected", error: err.message };

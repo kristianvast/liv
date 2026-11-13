@@ -1,3 +1,4 @@
+import { createHlc } from "@orbit/schema";
 import { sql } from "drizzle-orm";
 import { type Context, Hono, type Next } from "hono";
 import { cors } from "hono/cors";
@@ -16,6 +17,8 @@ import { createFarmCodeRoutes } from "./farm-code";
 import { createFeedbackRoutes } from "./feedback";
 import { handleLlm, type LlmGatewayOptions } from "./llm";
 import { createLogMailer, type EmailLinks, type Mailer } from "./mailer";
+import { afterResponse, createPush, type PushOptions } from "./push";
+import { createPushRoutes } from "./push-routes";
 import { type FetchLike, proxyShape } from "./shape";
 import type { StripeOptions } from "./stripe";
 import { registerVoiceDemoRoutes, VOICE_DEMO_DEFAULTS, type VoiceDemoOptions } from "./voice-demo";
@@ -42,6 +45,7 @@ export interface AppOptions {
   adminToken?: string;
   feedbackEmail?: string;
   voiceDemo?: Partial<Omit<VoiceDemoOptions, "db" | "fetch" | "now">>;
+  push?: PushOptions;
 }
 
 export const DEFAULT_LINKS: EmailLinks = {
@@ -58,7 +62,9 @@ export function createApp(options: AppOptions) {
   const app = new Hono<Env>();
   const doFetch: FetchLike = options.fetch ?? ((input, init) => fetch(input, init));
   const now = options.now ?? (() => new Date());
-  const applyChanges = createChangeApplier(options.db, { now, ...options.apply });
+  const clock = options.apply?.clock ?? createHlc("cloud", { maxDriftMs: 86_400_000 });
+  const push = createPush(options.db, options.push);
+  app.route("/v1/push", createPushRoutes(options.db, push, now));
   const mailer = options.mailer ?? createLogMailer();
   const links: EmailLinks = { ...DEFAULT_LINKS, ...options.links };
   const llmOptions: LlmGatewayOptions = {
@@ -214,8 +220,16 @@ export function createApp(options: AppOptions) {
         400,
       );
     }
+    const inserted: string[] = [];
+    const applyChanges = createChangeApplier(options.db, {
+      now,
+      ...options.apply,
+      clock,
+      onObservationInserted: (id) => inserted.push(id),
+    });
     const { farmId, role } = c.get("principal");
     const results = await applyChanges(changes, farmId, role);
+    afterResponse(() => push.observations(inserted, now()));
     return c.json({ results });
   });
 

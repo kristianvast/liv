@@ -3,6 +3,7 @@ import { createTokenResolver } from "./auth";
 import type { CoreDb } from "./db";
 import { createGoogleTokenProvider } from "./google-auth";
 import { createMailer } from "./mailer";
+import { createPhoneRelay, isRelaySocket, type RelayConnection } from "./relay";
 import { createVoiceGateway, type VoiceConnection } from "./voice";
 import { createVoiceAgentGateway } from "./voice-agent";
 import { VOICE_DEMO_DEFAULTS } from "./voice-demo";
@@ -60,6 +61,9 @@ export function serveCore(db: CoreDb, defaultPort: number) {
       defaultMonthlyTokenBudget: Number(process.env.LLM_MONTHLY_TOKEN_BUDGET ?? 2_000_000),
     },
     version: process.env.CORE_VERSION,
+    push: process.env.FCM_PROJECT_ID
+      ? { projectId: process.env.FCM_PROJECT_ID, accessToken }
+      : undefined,
     voiceDemo: {
       apiKey: process.env.ELEVENLABS_API_KEY || undefined,
       agentId: process.env.ELEVENLABS_AGENT_ID || undefined,
@@ -87,17 +91,41 @@ export function serveCore(db: CoreDb, defaultPort: number) {
     apiKey: process.env.ELEVENLABS_API_KEY || undefined,
     agentId: process.env.VOICE_AGENT_ID || undefined,
   });
-  const server = Bun.serve<VoiceConnection>({
+  const relay = createPhoneRelay(db);
+  const server = Bun.serve<VoiceConnection | RelayConnection>({
     port: Number(process.env.PORT ?? defaultPort),
     idleTimeout: 120,
     fetch(request, server) {
+      if (new URL(request.url).pathname.startsWith("/v1/relay/"))
+        return relay.handle(request, server);
       if (new URL(request.url).pathname === "/v1/voice/live") return voice.upgrade(request, server);
       if (new URL(request.url).pathname === "/v1/voice/agent")
         return voiceAgent.upgrade(request, server);
       return app.fetch(request);
     },
-    websocket: voice.websocket,
+    websocket: {
+      // Keep Bun's default 16 MiB cap for all sockets; relay channels also enforce an 8 MiB limit.
+      maxPayloadLength: 16 * 1024 * 1024,
+      open(ws) {
+        if (isRelaySocket(ws)) relay.websocket.open(ws);
+        else if (isVoiceSocket(ws)) voice.websocket.open(ws);
+      },
+      message(ws, message) {
+        if (isRelaySocket(ws)) relay.websocket.message(ws, message);
+        else if (isVoiceSocket(ws)) voice.websocket.message(ws, message);
+      },
+      close(ws, code, reason) {
+        if (isRelaySocket(ws)) relay.websocket.close(ws, code, reason);
+        else if (isVoiceSocket(ws)) return voice.websocket.close(ws);
+      },
+    },
   });
   console.log(`@core/api listening on :${server.port}`);
   return server;
+}
+
+function isVoiceSocket(
+  ws: import("bun").ServerWebSocket<VoiceConnection | RelayConnection>,
+): ws is import("bun").ServerWebSocket<VoiceConnection> {
+  return "upstream" in ws.data;
 }

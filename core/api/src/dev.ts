@@ -4,7 +4,9 @@ import { type CoreDb, coreSchema } from "./db";
 import { migrate } from "./migrate";
 import { serveCore } from "./runtime";
 
-const client = new PGlite(new URL("../.dev-data/", import.meta.url).pathname);
+const client = new PGlite(
+  process.env.CORE_DEV_DATA ?? new URL("../.dev-data/", import.meta.url).pathname,
+);
 const db: CoreDb = drizzle({ client, schema: coreSchema });
 await migrate(db);
 const server = serveCore(db, 8787);

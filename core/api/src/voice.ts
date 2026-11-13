@@ -77,7 +77,7 @@ export function createVoiceRelay(db: CoreDb, options: RelayOptions) {
   return {
     async upgrade(
       request: Request,
-      server: Server<VoiceConnection>,
+      server: Pick<Server<VoiceConnection>, "upgrade">,
     ): Promise<Response | undefined> {
       const token = /^Bearer\s+(.+)$/i.exec(request.headers.get("authorization") ?? "")?.[1] ?? "";
       const user = await resolveSession(db, token, now());

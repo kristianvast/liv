@@ -298,7 +298,22 @@ export const feedbackRateEvents = pgTable(
   (t) => [index("feedback_rate_events_identity_created_idx").on(t.identity, t.createdAt)],
 );
 
+export const pushDevices = pgTable(
+  "push_devices",
+  {
+    token: text("token").primaryKey(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    platform: text("platform", { enum: ["android"] }).notNull(),
+    locale: text("locale"),
+    updatedAt: ts("updated_at").notNull().defaultNow(),
+  },
+  (t) => [index("push_devices_user_idx").on(t.userId)],
+);
+
 export const coreSchema = {
+  pushDevices,
   ...pg.pgSchema,
   chatEntries,
   chatSessions,
