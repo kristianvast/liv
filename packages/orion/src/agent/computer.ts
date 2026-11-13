@@ -344,8 +344,11 @@ export function macPointerScript(a: ComputerAction): string {
   }
 }
 
+// Request, not just preflight: macOS shows its own Screen Recording / Accessibility prompt for Orbit
+// the first time, and answers with the current grant afterwards. JXA's bridge does not expose
+// CGRequestScreenCaptureAccess, so it is bound by hand.
 const JXA_PERMISSIONS =
-  "ObjC.import('CoreGraphics');ObjC.import('ApplicationServices');JSON.stringify({screen:typeof $.CGPreflightScreenCaptureAccess==='function'?$.CGPreflightScreenCaptureAccess():null,input:typeof $.AXIsProcessTrusted==='function'?$.AXIsProcessTrusted():null})";
+  "ObjC.import('CoreGraphics');ObjC.import('ApplicationServices');ObjC.bindFunction('CGRequestScreenCaptureAccess',['bool',[]]);JSON.stringify({screen:$.CGRequestScreenCaptureAccess(),input:typeof $.AXIsProcessTrustedWithOptions==='function'?$.AXIsProcessTrustedWithOptions($({AXTrustedCheckOptionPrompt:true})):null})";
 
 const macBackend: Backend = {
   async screenshot(signal) {

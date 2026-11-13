@@ -9,6 +9,9 @@
   <true/>
   <key>com.apple.security.cs.disable-library-validation</key>
   <true/>
+  <!-- Talking to Orion: the hardened runtime blocks the microphone without this. -->
+  <key>com.apple.security.device.audio-input</key>
+  <true/>
   <!-- Orion's computer tool drives other programs when the farmer asks it to. -->
   <key>com.apple.security.automation.apple-events</key>
   <true/>
