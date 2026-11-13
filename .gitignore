@@ -14,3 +14,11 @@ playwright-report/
 !.env.example
 *.sqlite
 *.sqlite-*
+
+# Native Android
+apps/android/**/build/
+apps/android/.gradle/
+apps/android/.kotlin/
+apps/android/local.properties
+apps/android/**/*.keystore
+apps/android/**/google-services.json
