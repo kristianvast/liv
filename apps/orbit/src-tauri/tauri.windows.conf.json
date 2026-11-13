@@ -1,5 +1,16 @@
 {
   "bundle": {
-    "resources": { "resources/mingit": "mingit" }
+    "resources": { "resources/mingit": "mingit" },
+    "windows": {
+      "nsis": {
+        "installerIcon": "icons/icon.ico",
+        "headerImage": "windows/nsis-header.bmp",
+        "sidebarImage": "windows/nsis-sidebar.bmp"
+      },
+      "wix": {
+        "bannerPath": "windows/wix-banner.bmp",
+        "dialogImagePath": "windows/wix-dialog.bmp"
+      }
+    }
   }
 }
