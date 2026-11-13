@@ -1,5 +1,5 @@
 import type { AssistantItem, ToolItem, TranscriptItem } from "@orbit/protocol";
-import { AlertCircle, Brain, Check, ChevronRight, Copy, Loader2, Mic, Wrench } from "lucide-react";
+import { AlertCircle, Brain, Check, ChevronRight, Copy, Mic, Wrench } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useT } from "../../i18n";
 import { SafeMarkdown } from "./markdown";
@@ -10,6 +10,7 @@ import {
   collapseToolRuns,
   formatElapsed,
   selectLiveTool,
+  splitTurnWork,
   summarizeToolGroup,
   type Turn,
   turnDurationMs,
@@ -48,21 +49,24 @@ function WorkedFor({ ms }: { ms: number }) {
   );
 }
 
-function ToolGroup({ tools, live }: { tools: ToolItem[]; live: boolean }) {
+/**
+ * All of a turn's work in one fold: while Orion works it shows the latest command's description,
+ * and the commands themselves only when the farmer opens it.
+ */
+function WorkGroup({
+  steps,
+  live,
+  since,
+}: {
+  steps: Turn["steps"];
+  live: boolean;
+  since: string | null;
+}) {
   const t = useT();
-  const running = tools.some((tool) => tool.status === "running");
-  const isLiveRunning = live || running;
-  const [open, setOpen] = useState(false);
-  const expanded = open;
-
-  const first = tools[0];
-  if (tools.length === 1 && first && !isLiveRunning) {
-    return (
-      <div className="orbit-tools">
-        <ToolCard item={first} />
-      </div>
-    );
-  }
+  const tools = steps.filter((step): step is ToolItem => step.kind === "tool");
+  const isLiveRunning = live || tools.some((tool) => tool.status === "running");
+  const elapsed = useElapsedLabel(since, isLiveRunning);
+  const [expanded, setOpen] = useState(false);
 
   const activeTool = selectLiveTool(tools);
   const activeMeta = activeTool ? getFriendlyToolMeta(t, activeTool.name, activeTool.label) : null;
@@ -75,9 +79,7 @@ function ToolGroup({ tools, live }: { tools: ToolItem[]; live: boolean }) {
 
   const summary = summarizeToolGroup(tools);
   const kindSummary = summary.kinds.map((k) => t(k.labelKey, { count: k.count })).join(", ");
-  const collapsedRuns = collapseToolRuns(tools, (tool) =>
-    summarizeToolArgs(tool.name, tool.args, t),
-  );
+  const blocks = buildTurnBlocks(steps);
 
   return (
     <div className="orbit-tools" data-expanded={expanded ? "true" : "false"}>
@@ -90,13 +92,20 @@ function ToolGroup({ tools, live }: { tools: ToolItem[]; live: boolean }) {
       >
         {isLiveRunning ? (
           <>
-            <Loader2 size={13} className="orbit-spin" aria-hidden="true" />
-            <span className="orbit-tools__live" data-testid="tool-group-live">
-              {liveText}
+            <span className="orbit-working__pulse" aria-hidden="true" />
+            <span className="orbit-working__label" data-testid="thinking-indicator">
+              {elapsed}
             </span>
-            <span className="orbit-tools__count tabular-nums" data-testid="tool-group-steps">
-              {t("chat.timeline.steps", { count: tools.length })}
-            </span>
+            {liveText && (
+              <>
+                <span className="orbit-tools__sep" aria-hidden="true">
+                  -
+                </span>
+                <span className="orbit-tools__live" data-testid="tool-group-live">
+                  {liveText}
+                </span>
+              </>
+            )}
           </>
         ) : (
           <>
@@ -121,9 +130,23 @@ function ToolGroup({ tools, live }: { tools: ToolItem[]; live: boolean }) {
       </button>
       {expanded && (
         <div className="orbit-tools__list" data-testid="tool-group-list">
-          {collapsedRuns.map((run) => (
-            <ToolCard key={run.key} item={run.item} repeatCount={run.count} />
-          ))}
+          {blocks.map((block) =>
+            block.kind === "tools" ? (
+              collapseToolRuns(block.tools, (tool) =>
+                summarizeToolArgs(tool.name, tool.args, t),
+              ).map((run) => <ToolCard key={run.key} item={run.item} repeatCount={run.count} />)
+            ) : block.item.kind === "assistant" ? (
+              <AssistantMessage key={block.item.id} item={block.item} />
+            ) : (
+              <div
+                key={block.item.id}
+                className="orbit-msg-system"
+                data-testid={`message-system-${block.item.id}`}
+              >
+                {block.item.text}
+              </div>
+            ),
+          )}
         </div>
       )}
     </div>
@@ -206,13 +229,10 @@ function TurnView({
   runStartedAt: string | null;
 }) {
   const t = useT();
-  const blocks = buildTurnBlocks(turn.steps);
+  const { work, after } = splitTurnWork(turn.steps);
   const duration = live ? null : turnDurationMs(turn);
-  let finalReplyIdx = -1;
-  blocks.forEach((b, i) => {
-    if (b.kind === "step" && b.item.kind === "assistant" && b.item.text) finalReplyIdx = i;
-  });
-  const markerAt = duration === null ? -1 : finalReplyIdx >= 0 ? finalReplyIdx : blocks.length;
+  const finalReplyIdx = after.findLastIndex((s) => s.kind === "assistant" && Boolean(s.text));
+  const markerAt = duration === null ? -1 : finalReplyIdx >= 0 ? finalReplyIdx : after.length;
   const user = turn.user;
 
   return (
@@ -239,22 +259,25 @@ function TurnView({
           </div>
         </article>
       )}
-      {blocks.map((block, i) => (
-        <div key={block.kind === "tools" ? block.id : block.item.id} className="orbit-turn__block">
+      {work.length > 0 && (
+        <div className="orbit-turn__block">
+          <WorkGroup steps={work} live={live} since={runStartedAt} />
+        </div>
+      )}
+      {after.map((step, i) => (
+        <div key={step.id} className="orbit-turn__block">
           {i === markerAt && duration !== null && <WorkedFor ms={duration} />}
-          {block.kind === "tools" ? (
-            <ToolGroup tools={block.tools} live={live} />
-          ) : block.item.kind === "assistant" ? (
-            <AssistantMessage item={block.item} />
-          ) : (
-            <div className="orbit-msg-system" data-testid={`message-system-${block.item.id}`}>
-              {block.item.text}
+          {step.kind === "assistant" ? (
+            <AssistantMessage item={step} />
+          ) : step.kind === "system" ? (
+            <div className="orbit-msg-system" data-testid={`message-system-${step.id}`}>
+              {step.text}
             </div>
-          )}
+          ) : null}
         </div>
       ))}
-      {markerAt === blocks.length && duration !== null && <WorkedFor ms={duration} />}
-      {live && <WorkingLine since={runStartedAt} />}
+      {markerAt === after.length && duration !== null && <WorkedFor ms={duration} />}
+      {live && work.length === 0 && <WorkingLine since={runStartedAt} />}
     </section>
   );
 }

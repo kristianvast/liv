@@ -53,6 +53,18 @@ export function buildTurnBlocks(steps: Turn["steps"]): TurnBlock[] {
 }
 
 /**
+ * Splits a turn into Orion's work (every step up to its last tool call, narration included) and
+ * the steps after it, which carry the reply.
+ */
+export function splitTurnWork(steps: Turn["steps"]): {
+  work: Turn["steps"];
+  after: Turn["steps"];
+} {
+  const last = steps.findLastIndex((step) => step.kind === "tool");
+  return { work: steps.slice(0, last + 1), after: steps.slice(last + 1) };
+}
+
+/**
  * Elapsed time from the prompt to the turn's last step, from real timestamps only.
  * Null when the turn has no work yet, timestamps are missing, or it took under a second.
  */

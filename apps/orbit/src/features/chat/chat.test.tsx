@@ -601,6 +601,47 @@ describe("turn grouping", () => {
     expect(screen.getAllByTestId(/^tool-card-toggle-/)).toHaveLength(2);
     expect(screen.getByTestId("tool-card-repeat-t3")).toHaveTextContent("x2");
   });
+
+  it("folds every command of a turn, and the narration between them, into one group above the reply", () => {
+    const { client } = createMockClient();
+    const ts = "2026-11-03T07:00:01.000Z";
+    const bash = (id: string, description: string): ToolItem => ({
+      kind: "tool",
+      id,
+      ts,
+      toolCallId: id,
+      name: "bash",
+      label: "bash",
+      args: { command: "true", description },
+      status: "done",
+    });
+    render(
+      <AppProviders initialClient={client}>
+        <Timeline
+          items={[
+            { kind: "user", id: "u1", ts: "2026-11-03T07:00:00.000Z", text: "Check" },
+            bash("t1", "Checking git"),
+            { kind: "assistant", id: "a1", ts, text: "Git is there, now the files." },
+            bash("t2", "Listing files"),
+            { kind: "assistant", id: "a2", ts, text: "All good." },
+          ]}
+          streaming={false}
+          runStartedAt={null}
+        />
+      </AppProviders>,
+    );
+
+    expect(screen.getAllByTestId("tool-group-toggle")).toHaveLength(1);
+    expect(screen.getByTestId("tool-group-steps")).toHaveTextContent("2");
+    expect(screen.queryByTestId("message-assistant-a1")).not.toBeInTheDocument();
+    expect(screen.getByTestId("message-assistant-a2")).toHaveTextContent("All good.");
+
+    fireEvent.click(screen.getByTestId("tool-group-toggle"));
+    expect(screen.getByTestId("tool-group-list")).toContainElement(
+      screen.getByTestId("message-assistant-a1"),
+    );
+    expect(screen.getAllByTestId(/^tool-card-toggle-/)).toHaveLength(2);
+  });
 });
 
 describe("ToolCard states and animal mini-table", () => {
