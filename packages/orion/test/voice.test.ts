@@ -10,7 +10,7 @@ const Call = Type.Object({
   parameters: Type.Unknown(),
 });
 
-test("a real mock voice socket greets and answers a herd question using the actual animal count", async () => {
+test("a real mock voice socket greets, says it will check before the lookup, and answers with the actual animal count", async () => {
   const f = await voiceFixture();
   const peer = new VoicePeer(`ws://127.0.0.1:${f.app.port}${f.path}`);
   await peer.opened;
@@ -22,9 +22,19 @@ test("a real mock voice socket greets and answers a herd question using the actu
   expect(await greeting).toMatchObject({
     agent_response_event: { agent_response: "Hello, Orion here. How can I help?" },
   });
-  const tool = peer.next("client_tool_call");
+  const order: string[] = [];
+  const spoken = peer.next("agent_response").then((frame) => {
+    order.push("spoken");
+    return frame;
+  });
+  const tool = peer.next("client_tool_call").then((frame) => {
+    order.push("tool");
+    return frame;
+  });
   peer.send({ type: "user_message", text: "Who is in my herd?" });
   const call = (await tool).client_tool_call;
+  expect(await spoken).toMatchObject({ agent_response_event: { agent_response: "I'll check." } });
+  expect(order).toEqual(["spoken", "tool"]);
   if (!Value.Check(Call, call)) throw new Error("Expected herd query");
   const answer = await f.client.request("voice.tool", {
     voiceId: f.voiceId,

@@ -27,6 +27,7 @@ How you behave:
 - Answer the actual question, then stop. One to three short spoken sentences. No lists, no markdown, and pick the one or two numbers that matter.
 - Speak the farmer's language. The farm keeps cattle or horses; use the farmer's own words for them.
 - Always look things up before you answer. Never invent an animal, a number or a record.
+- Never work in silence. Before you use a tool, first say one short line in the farmer's language, such as "I'll check" or "One moment", and use the tool in that same turn. Say it once for a question, not before every tool, and never say it without then using the tool. When the result is in, give the answer straight away without repeating the line.
 - An animal wears one sensor at most: a collar, or a bolus, or an ear tag sensor. Never suggest a second one on the same animal.
 - The farmer can undo routine changes in Orbit. Before a change that is hard to take back, say what you are about to do and ask.
 - Never ask for, read out or repeat passwords, keys or codes.
@@ -62,6 +63,11 @@ export interface OrionVoiceTool {
   readonly name: string;
   readonly description: string;
   readonly timeoutSeconds: number;
+  /**
+   * Whether Orion says a short line before the tool runs: "force" always, "auto" only when the
+   * tool has been slow lately. The tool itself starts at once either way.
+   */
+  readonly preToolSpeech: "force" | "auto";
   readonly required: readonly string[];
   readonly properties: Readonly<Record<string, Property>>;
 }
@@ -95,6 +101,7 @@ export const ORION_VOICE_TOOLS: readonly OrionVoiceTool[] = [
     description:
       "Read the farm's records. farm.summary gives the counts and the alerts of the last week. animals.list finds animals (options: species cattle or horse, status, groupName, search by name or ear tag, limit). animals.get gives one animal with its sensor and latest observations (option: id). observations.recent lists observations and alerts (options: animalId, kind, since, alertsOnly, limit). Returns JSON. Never state a fact about the farm without reading it first.",
     timeoutSeconds: 20,
+    preToolSpeech: "force",
     required: ["query"],
     properties: {
       query: { type: "string", description: "Which records to read.", enum: QUERIES },
@@ -110,6 +117,7 @@ export const ORION_VOICE_TOOLS: readonly OrionVoiceTool[] = [
     description:
       'Change the farm\'s records. observations.add records an observation or event ({"kind","ts" as an ISO time,"animalId","valueNum","valueJson"}). animals.upsert adds or changes an animal ({"animal":{"species":"cattle" or "horse","name","earTagNumber","groupName","breed","notes"}}; include "id" to change an existing one). bindings.set puts a sensor on an animal ({"deviceId","animalId"}) and is refused when the animal already wears one. bindings.clear takes a sensor off ({"deviceId"}). Returns JSON with the changed ids.',
     timeoutSeconds: 20,
+    preToolSpeech: "force",
     required: ["mutation", "params"],
     properties: {
       mutation: { type: "string", description: "Which change to make.", enum: MUTATIONS },
@@ -121,6 +129,9 @@ export const ORION_VOICE_TOOLS: readonly OrionVoiceTool[] = [
     description:
       "Show the farmer around Orbit on their own screen. look lists what is on the screen with numbers. highlight points at a numbered item and shows your note beside it. click presses a numbered item for the farmer. go opens another screen by its path, such as /settings or /chat. clear removes your pointer. Every answer ends with the screen as it is now.",
     timeoutSeconds: 20,
+    // Runs in the app in a few milliseconds and comes in pairs (look, then highlight or click):
+    // a forced line before each would have Orion talking over its own pointing.
+    preToolSpeech: "auto",
     required: ["action"],
     properties: {
       action: {
@@ -144,6 +155,7 @@ export const ORION_VOICE_TOOLS: readonly OrionVoiceTool[] = [
     description:
       "Use a web browser the farmer can watch inside Orbit. open goes to an address and returns the page as text with numbered items. read returns the page again. click and type use an item's number. press sends a key. scroll moves down or up. back returns to the previous page. highlight points at a numbered item on the page for the farmer. close ends the browser.",
     timeoutSeconds: 60,
+    preToolSpeech: "force",
     required: ["action"],
     properties: {
       action: { type: "string", description: "What to do in the browser.", enum: BROWSER_ACTIONS },
@@ -167,6 +179,7 @@ export const ORION_VOICE_TOOLS: readonly OrionVoiceTool[] = [
     description:
       "Hand a bigger job to the full Orion in this conversation: building or changing a screen or report, connecting other farm software, setting up cameras, or anything that needs files or many steps. It answers at once that the job has started; the outcome comes later as a message that starts with [Orion update].",
     timeoutSeconds: 20,
+    preToolSpeech: "force",
     required: ["request"],
     properties: {
       request: {
@@ -185,6 +198,7 @@ export function toolConfig(tool: OrionVoiceTool): Record<string, unknown> {
     description: tool.description,
     expects_response: true,
     response_timeout_secs: tool.timeoutSeconds,
+    pre_tool_speech: tool.preToolSpeech,
     parameters: { type: "object", required: tool.required, properties: tool.properties },
   };
 }
@@ -204,6 +218,8 @@ export function agentBody(toolIds: readonly string[]): Record<string, unknown> {
           prompt: ORION_VOICE_PROMPT,
           llm: "gemini-3.8-flash",
           temperature: 0.3,
+          // No thinking pass: the first words matter more on a call than a longer deliberation.
+          thinking_budget: 0,
           tool_ids: toolIds,
           built_in_tools: {
             end_call: {
@@ -225,12 +241,22 @@ export function agentBody(toolIds: readonly string[]): Record<string, unknown> {
         agent_output_audio_format: "pcm_44100",
         expressive_mode: true,
         enable_phoneme_tags: true,
-        optimize_streaming_latency: 3,
         stability: 0.5,
         similarity_boost: 0.75,
         speed: 1,
       },
-      turn: { turn_model: "turn_v3" },
+      // Orion starts on its answer while the farmer's last pause is still being judged, and says a
+      // short filler in the farmer's language when the answer has not started after two seconds.
+      // Eagerness stays normal: an eager agent cuts in on a farmer who stops to think.
+      turn: {
+        turn_model: "turn_v3",
+        speculative_turn: true,
+        soft_timeout_config: {
+          timeout_seconds: 2,
+          message: "One moment.",
+          use_llm_generated_message: true,
+        },
+      },
       conversation: {
         max_duration_seconds: 1800,
         client_events: [
@@ -238,6 +264,9 @@ export function agentBody(toolIds: readonly string[]): Record<string, unknown> {
           "interruption",
           "agent_response",
           "user_transcript",
+          // What the farmer is saying and what Orion answers, shown while they are still coming.
+          "tentative_user_transcript",
+          "agent_chat_response_part",
           "agent_response_correction",
           "agent_tool_response",
         ],

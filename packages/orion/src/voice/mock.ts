@@ -12,7 +12,10 @@ const ToolResult = Type.Object({
 const Herd = Type.Object({ total: Type.Number() });
 type Result = { readonly result: string; readonly is_error?: boolean };
 
-/** Deterministic ElevenLabs client-tool peer; no audio or upstream credentials. */
+/**
+ * Deterministic ElevenLabs client-tool peer; no audio or upstream credentials. Like the real agent
+ * it says a short line before it uses a tool, so the farmer never waits in silence.
+ */
 export class MockVoiceTransport implements VoiceTransport {
   private receive: ((frame: string) => void) | null = null;
   private initiated = false;
@@ -77,6 +80,7 @@ export class MockVoiceTransport implements VoiceTransport {
       this.say(`Good news. ${text.slice("[Orion update]".length).trim()}`);
     } else if (/\bopen settings\b/i.test(text) || /settings/i.test(text)) {
       const click = /\bopen settings\b/i.test(text);
+      this.say("Let me show you.");
       this.tool("app", { action: "look" }, ({ result }) => {
         const ref = /^\[(\d+)\] .*settings/im.exec(result)?.[1];
         if (!ref) {
@@ -100,16 +104,19 @@ export class MockVoiceTransport implements VoiceTransport {
       });
     } else if (/https?:\/\/\S+/.test(text)) {
       const url = /https?:\/\/\S+/.exec(text)?.[0];
+      this.say("I'll open it.");
       this.tool("browser", { action: "open", url }, () =>
         this.tool("browser", { action: "highlight", ref: 1, note: "Start here." }, () =>
           this.say("I opened the page and marked where to start."),
         ),
       );
     } else if (/\b(build|make|create)\b/i.test(text)) {
+      this.say("On it.");
       this.tool("orion_task", { request: text }, () =>
         this.say("I have started on that. I will tell you when it is ready."),
       );
     } else {
+      this.say("I'll check.");
       this.tool("db_query", { query: "animals.list", params: {} }, (reply) => {
         let herd: unknown;
         try {
