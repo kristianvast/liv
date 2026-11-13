@@ -43,6 +43,22 @@ export function streamKeyFor(meta: {
   return null;
 }
 
+/**
+ * The finished message does not always carry the id its streamed parts had. It is still the reply
+ * that was streaming last, so it must take that caption's place instead of showing twice.
+ */
+function lastStreamedCaption(
+  state: CaptionStoreState,
+  finishedText: string,
+): { readonly captionId: string } | undefined {
+  const last = state.entries.at(-1);
+  if (last?.role !== "assistant") return undefined;
+  if (last.final && last.text !== finishedText) return undefined;
+  return Object.values(state.streamMap).some((stream) => stream.captionId === last.id)
+    ? { captionId: last.id }
+    : undefined;
+}
+
 export function captionReducer(state: CaptionStoreState, action: CaptionAction): CaptionStoreState {
   switch (action.type) {
     case "reset":
@@ -141,7 +157,9 @@ export function captionReducer(state: CaptionStoreState, action: CaptionAction):
         };
       }
 
-      const tracked = action.streamKey ? state.streamMap[action.streamKey] : undefined;
+      const tracked =
+        (action.streamKey ? state.streamMap[action.streamKey] : undefined) ??
+        lastStreamedCaption(state, clean);
       if (tracked) {
         const idx = state.entries.findIndex((e) => e.id === tracked.captionId);
         if (idx >= 0) {
