@@ -25,7 +25,15 @@ Today, Orion scaffolds connectors in `<data-dir>/workspace/connectors/<name>` an
 
 ## 3. Barnstar vision models on a Jetson edge box
 
-Orbit discovers ONVIF cameras on the barn LAN (`camera_discover`) and streams them through the bundled `go2rtc` relay onto the barn map. Next, we are connecting barn cameras to Barnstar computer-vision models:
+Orbit discovers ONVIF cameras on the barn LAN (`camera_discover`), reads each camera's stream address from the camera itself, and streams them through the bundled `go2rtc` relay onto the barn map. Orbit does not analyse the video yet. Next, we are connecting barn cameras to Barnstar computer-vision models:
 
 - Local inference on an NVIDIA Jetson edge box on the farm LAN (or via Core for farms without an edge box).
 - Continuous posture, gait, calving, and health observations for cattle and horses written into `observations` and surfaced in Orion and on Home.
+
+## 4. Cloud that grows with the farms
+
+Core runs as a separate production environment behind `api.barnstar.dev`, on 1 to 10 instances with a backed-up database, and limits sign-ups and reset requests per network address. Next:
+
+- Move the phone relay's registry out of one instance's memory, so the phone and the farm PC meet whichever instance each reaches.
+- Reserve model and voice allowance before a call starts instead of checking it, so calls that start together cannot overspend.
+- Retention for usage rows, sessions and rate events, and request limits per session on the model gateway.

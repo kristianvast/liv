@@ -16,6 +16,14 @@ Actions, so you do not need to own a Windows PC. Your own machine runs only the 
 
 The desktop build needs Rust and the Tauri prerequisites; everything else needs only Bun.
 
+### Cameras without a camera
+
+`packages/orion/test/cameras.test.ts` starts a small HTTP server that answers the ONVIF calls of a
+first-generation (Profile S) camera, and saves a camera with only that server's address: the real
+`onvif` library asks it for the stream address, so the lookup is tested end to end without
+hardware. `ORION_FAKE_CAMERAS` (a JSON list) replaces the network search in the web specs. Live
+video from a real camera is not covered by any automated test.
+
 ## Web e2e (Playwright)
 
 ```sh
@@ -40,6 +48,17 @@ These ports leave 7717 and 5173 free for your normal `bun run dev`. To change th
 | `pages.spec.ts`      | `make a page` writes a custom page that appears under "Your pages" and shows `24 cattle` read through `_orbit.js`                                                                                                                                                                                                                                                                                      |
 | `farm-views.spec.ts` | The seeded farm has the catalog's ready-made views: Home shows a card each for Herd, Calendar and Camera wall and a card opens its page; the herd view filters to the 3 animals with alerts and opens an animal's panel; the calendar lists calvings, dry-offs and pregnancy checks worked out from the seeded inseminations; the camera wall shows pictures for online cameras (the relay is stubbed) |
 | `chat.spec.ts`       | `list cows` streams an answer with a `done` `herd_query` tool card. `find cameras` runs `camera_discover` straight away (no approval prompt). A new session survives a page reload                                                                                                                                                                                                                     |
+
+Chat folds a turn's commands into one line, so a spec reads a command's card with
+`expectTool(page, name, status)` from `web/helpers.ts`: it opens the list and reads the card as one
+step and repeats that step, because the list closes again when the turn settles. Commands run in
+`bash`, or in PowerShell on a Windows PC with no bash beside Orion (the CI runners), so shell
+checks pass `SHELL_TOOL`.
+
+A failure that only shows on a slow machine can be reproduced locally by slowing the browser from
+inside a spec: `const cdp = await page.context().newCDPSession(page)` and
+`await cdp.send("Emulation.setCPUThrottlingRate", { rate: 8 })`, then
+`bunx playwright test <spec> --repeat-each 15`.
 
 Tests wait on locators only; there are no fixed sleeps. On failure, the trace, screenshot and video
 go to `packages/e2e/test-results`, and the HTML report goes to `packages/e2e/playwright-report`
