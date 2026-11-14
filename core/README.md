@@ -340,7 +340,16 @@ behind it can change without a new release. Production uses the live Stripe key 
 for the places the account is registered in (Stripe dashboard, Tax > Registrations), and it picks
 the rate from the buyer's billing country. Every price is the amount before tax:
 `stripe-setup.ts` gives prices `tax_behavior=exclusive`, plans the business-software tax code and
-the box and cameras the physical-goods one, so tax is always added on top of the listed price. Staging keeps its own test-mode Stripe key. To ship a
+the box and cameras the physical-goods one, so tax is always added on top of the listed price.
+
+Registrations decide who is charged. Norway (`standard`) is listed. A company outside the EU owes
+the buyer's country's VAT on plans sold to EU buyers without a VAT number from the first sale, and
+one EU non-Union one-stop-shop registration covers all 27 countries (Irish Revenue takes it at
+`ros.ie/vatoss-web`). Once it is held, list it with
+`POST /v1/tax/registrations` (`country=IE`, `country_options[ie][type]=oss_non_union`,
+`active_from=now`, or the country it was made in): buyers without a VAT number then get their own
+country's rate and buyers with a valid one get reverse charge. Check any country with
+`POST /v1/tax/calculations` and a billing country before and after. Staging keeps its own test-mode Stripe key. To ship a
 commit to production, run the workflow by hand with `environment=production`, or re-converge
 with the image built for that commit:
 
