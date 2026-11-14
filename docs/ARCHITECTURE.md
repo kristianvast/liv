@@ -433,6 +433,13 @@ against the real device before showing their data or controls; validated catalog
 `cameraLayout.get` and `cameraLayout.save` use Orion's normal snapshot, HLC and outbox write path.
 The layout row uses the farm UUID so independent devices converge through row-level LWW.
 
+`camera_discover` finds ONVIF cameras with WS-Discovery and returns each one's device address.
+Saving a camera with that address and no stream address (`cameras.upsert`, from `camera_add` or
+the camera form) makes Orion ask the camera for the RTSP address of its first video profile
+(`resolveStreamUrl` in `services/cameras.ts`), with the login given or the one already kept, and
+store it without credentials. A camera that does not answer is still saved; it has no live picture
+until it is saved again with a login that works or an RTSP address.
+
 Orion owns an optional go2rtc v1.9.15 child process. It resolves `ORION_GO2RTC_BIN`, a binary
 beside Orion, `<data-dir>/bin/go2rtc`, then `go2rtc` on PATH. Packaged desktop builds include it.
 The API binds to a free loopback port; RTSP, WebRTC and SRTP listeners are disabled. Orion

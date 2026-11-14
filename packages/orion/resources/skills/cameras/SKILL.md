@@ -11,7 +11,12 @@ description: Find and add barn cameras on the farm network (ONVIF / RTSP). Use w
 2. Read back what was found in plain words: maker, model and address. If nothing answered,
    suggest checking power, that the camera is on the same network, and that ONVIF is enabled.
 3. Ask where each camera hangs (e.g. "calving pen") and for its login, then `camera_add` with
-   name, location, `onvifXaddr` and the login. The password goes to the system keychain.
+   name, location, `onvifXaddr` and the login. The password goes to the system keychain, and
+   Orbit asks the camera for its stream address, so nobody has to type one.
+4. Read what `camera_add` answered. If it says the camera has no live picture yet, the login was
+   probably wrong or ONVIF is off: ask the farmer to check both and add it again. Only if that
+   still fails, ask for the camera's RTSP address (it is in the camera's own settings or manual)
+   and pass it as `rtspUrl`.
 
 Rules
 - Never show or repeat a camera password. Never put credentials inside an RTSP URL you save.

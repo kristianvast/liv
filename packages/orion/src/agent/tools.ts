@@ -476,14 +476,23 @@ export function createFarmTools(
         name: Type.String(),
         location: OptStr("Where it hangs, e.g. Calving pen"),
         onvifXaddr: OptStr("ONVIF device service URL from camera_discover"),
-        rtspUrl: OptStr("RTSP stream URL without credentials"),
+        rtspUrl: OptStr(
+          "RTSP stream URL without credentials. Leave it out when onvifXaddr is given: the camera is asked for it.",
+        ),
         username: OptStr("Camera login user"),
         password: OptStr("Camera login password"),
       }),
       async run(p, origin) {
         const r = await farm.mutate({ mutation: "cameras.upsert", params: { camera: p } }, origin);
+        const live = farm.repo
+          .query("cameras.list", {})
+          .rows.find((c) => c.id === r.ids[0])?.rtspUrl;
         return text(
-          `Saved camera "${p.name}"${p.password ? " with its login stored in the keychain" : ""} (id ${r.ids[0]}).`,
+          `Saved camera "${p.name}"${p.password ? " with its login stored in the keychain" : ""} (id ${r.ids[0]}). ${
+            live
+              ? "Its live picture is ready on the Cameras screen."
+              : "It has no live picture yet: the camera gave no stream address. Check the login and that ONVIF is switched on, or ask for the camera's RTSP address and save it again with rtspUrl."
+          }`,
           { ids: r.ids, snapshotId: r.snapshotId },
         );
       },

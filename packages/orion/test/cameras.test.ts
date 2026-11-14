@@ -6,6 +6,7 @@ import { cameraLayouts, outbox } from "@orbit/schema";
 import { eq } from "drizzle-orm";
 import { openDatabase } from "../src/db/open";
 import { EncryptedFileStore } from "../src/secrets";
+import { CameraService } from "../src/services/cameras";
 import { Go2rtcRelay, resolveRelayBinary } from "../src/services/relay";
 import { connect, removeDir, startApp, TOKEN, tempDir, waitFor } from "./helpers";
 
@@ -128,4 +129,64 @@ test("an absent relay reports unavailable while authenticated camera routes retu
       (await fetch(`http://127.0.0.1:${app.port}/camera/${TOKEN}/barn/${endpoint}`)).status,
     ).toBe(503);
   }
+});
+
+/** A camera that answers the ONVIF calls Orion makes, the way a first-generation (Profile S) camera does. */
+function onvifCamera(logins: string[]) {
+  const envelope = (body: string) =>
+    `<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:tds="http://www.onvif.org/ver10/device/wsdl" xmlns:trt="http://www.onvif.org/ver10/media/wsdl" xmlns:tt="http://www.onvif.org/ver10/schema"><s:Body>${body}</s:Body></s:Envelope>`;
+  return Bun.serve({
+    port: 0,
+    async fetch(request): Promise<Response> {
+      const asked = await request.text();
+      const login = /<Username>([^<]*)<\/Username>/.exec(asked)?.[1];
+      if (login) logins.push(login);
+      const media = `${new URL(request.url).origin}/onvif/media`;
+      const reply = asked.includes("<GetSystemDateAndTime")
+        ? "<tds:GetSystemDateAndTimeResponse><tds:SystemDateAndTime><tt:UTCDateTime><tt:Time><tt:Hour>12</tt:Hour><tt:Minute>0</tt:Minute><tt:Second>0</tt:Second></tt:Time><tt:Date><tt:Year>2026</tt:Year><tt:Month>11</tt:Month><tt:Day>14</tt:Day></tt:Date></tt:UTCDateTime></tds:SystemDateAndTime></tds:GetSystemDateAndTimeResponse>"
+        : asked.includes("<GetCapabilities")
+          ? `<tds:GetCapabilitiesResponse><tds:Capabilities><tt:Media><tt:XAddr>${media}</tt:XAddr></tt:Media></tds:Capabilities></tds:GetCapabilitiesResponse>`
+          : asked.includes("<GetProfiles")
+            ? '<trt:GetProfilesResponse><trt:Profiles token="main" fixed="true"><tt:Name>main</tt:Name></trt:Profiles></trt:GetProfilesResponse>'
+            : asked.includes("<GetStreamUri") && asked.includes("<ProfileToken>main</ProfileToken>")
+              ? "<trt:GetStreamUriResponse><trt:MediaUri><tt:Uri>rtsp://farmer:barn@127.0.0.1:554/stream1</tt:Uri></trt:MediaUri></trt:GetStreamUriResponse>"
+              : null;
+      return new Response(
+        envelope(
+          reply ??
+            "<s:Fault><s:Code><s:Value>s:Sender</s:Value></s:Code><s:Reason><s:Text>not supported</s:Text></s:Reason></s:Fault>",
+        ),
+        { status: reply ? 200 : 400, headers: { "content-type": "application/soap+xml" } },
+      );
+    },
+  });
+}
+
+test("a camera saved with only its ONVIF address gets its stream address from the camera", async () => {
+  const dir = tempDir();
+  cleanups.push(() => removeDir(dir));
+  const db = openDatabase(dir, { seed: true });
+  cleanups.push(() => db.close());
+  const logins: string[] = [];
+  const camera = onvifCamera(logins);
+  cleanups.push(() => camera.stop(true));
+  const onvifXaddr = `http://127.0.0.1:${camera.port}/onvif/device_service`;
+  const cameras = new CameraService(db.repo, new EncryptedFileStore(dir));
+  const saved = (id: string | undefined) =>
+    db.repo.query("cameras.list", {}).rows.find((row) => row.id === id);
+
+  const found = await cameras.upsert({
+    name: "Calving pen",
+    onvifXaddr,
+    username: "farmer",
+    password: "barn",
+  });
+  // The login reaches the camera, and the saved address carries none.
+  expect(logins).toContain("farmer");
+  expect(saved(found.ids[0])?.rtspUrl).toBe("rtsp://127.0.0.1:554/stream1");
+
+  // A camera that does not answer is still saved, without a stream address.
+  await camera.stop(true);
+  const silent = await cameras.upsert({ name: "Yard", onvifXaddr });
+  expect(saved(silent.ids[0])).toMatchObject({ name: "Yard", rtspUrl: null });
 });
