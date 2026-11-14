@@ -1,0 +1,22 @@
+{
+  "route": "/settings/account",
+  "locale": "nb",
+  "theme": "dark",
+  "viewports": [
+    {
+      "width": 1280,
+      "height": 820,
+      "phoneChecked": true,
+      "scrollers": [],
+      "documentScroll": false
+    },
+    {
+      "width": 1024,
+      "height": 700,
+      "phoneChecked": true,
+      "scrollers": [],
+      "documentScroll": false
+    }
+  ],
+  "visual": "Both captures inspected: no overlapping content or page scrolling."
+}

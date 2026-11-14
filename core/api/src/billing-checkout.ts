@@ -1,6 +1,6 @@
 import { resolveSession } from "./auth";
 import type { CoreDb } from "./db";
-import { currency, hardware } from "./plans";
+import { currency, hardware, type PaidPlanId, planFor } from "./plans";
 import {
   BillingError,
   object,
@@ -85,7 +85,7 @@ export function redirectUrl(
   }
   // A link to Stripe that returns the buyer to a stranger's site is a phishing tool.
   if (supplied && !redirectOrigins(options).has(url.origin))
-    throw new BillingError(400, "bad_request", "Redirect URL must point at the Pecorva website");
+    throw new BillingError(400, "bad_request", "Redirect URL must point at the Barnstar website");
   return url.href;
 }
 
@@ -107,8 +107,8 @@ export function hardwareSelection(body: Record<string, unknown>) {
     !Number.isSafeInteger(cameras) ||
     box < 0 ||
     cameras < 0 ||
-    box > 20 ||
-    cameras > 64
+    box > 2 ||
+    cameras > 16
   )
     throw new BillingError(
       400,
@@ -116,6 +116,37 @@ export function hardwareSelection(body: Record<string, unknown>) {
       "Choose whole hardware quantities within the order limits",
     );
   return { box, cameras } as const;
+}
+
+const euros = (amount: number) =>
+  new Intl.NumberFormat("en-IE", {
+    style: "currency",
+    currency: "EUR",
+    maximumFractionDigits: 0,
+  }).format(Math.round(amount));
+
+/**
+ * The website quotes every plan per month, also when yearly billing is picked. A yearly
+ * checkout says so next to the pay button: what is due today, that it covers a year, and
+ * how to switch back to monthly.
+ */
+export function addYearlyNote(
+  form: URLSearchParams,
+  plan: PaidPlanId,
+  selection: ReturnType<typeof hardwareSelection>,
+  options: StripeOptions,
+) {
+  const { name, monthly, yearly } = planFor(plan);
+  const hardwareTotal = selection.box * hardware[0].price + selection.cameras * hardware[1].price;
+  const due = euros(yearly + hardwareTotal) + (options.automaticTax ? " before VAT" : "");
+  const covers =
+    hardwareTotal > 0 ? "a year of your plan plus your hardware" : "a year of your plan";
+  form.set(
+    "custom_text[submit][message]",
+    `Due today: ${due}, for ${covers}. The pricing page showed ${name} at ${euros(yearly / 12)} a month; here it is billed yearly at ${euros(yearly)}. To pay ${euros(
+      monthly,
+    )} every month instead, go back to the previous page and pick Monthly.`,
+  );
 }
 
 export async function addHardware(

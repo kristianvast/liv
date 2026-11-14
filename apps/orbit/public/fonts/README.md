@@ -1,6 +1,6 @@
 # Fonts
 
-These fonts are not covered by the project's AGPL-3.0 license. They match the type system of the Pecorva website (`pecorva-website/shared/tokens.css`).
+These fonts are not covered by the project's AGPL-3.0 license. They match the type system of the Barnstar website (`pecorva-website/shared/tokens.css`).
 
 | File                                   | Family      | License                                                                                              |
 | -------------------------------------- | ----------- | ---------------------------------------------------------------------------------------------------- |

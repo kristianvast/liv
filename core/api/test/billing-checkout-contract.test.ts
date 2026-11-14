@@ -26,6 +26,12 @@ test.each([
   ["cam4", "year", "pecorva_cam4_yearly"],
   ["cam6", "month", "pecorva_cam6_monthly"],
   ["cam6", "year", "pecorva_cam6_yearly"],
+  ["cam8", "month", "pecorva_cam8_monthly"],
+  ["cam8", "year", "pecorva_cam8_yearly"],
+  ["cam12", "month", "pecorva_cam12_monthly"],
+  ["cam12", "year", "pecorva_cam12_yearly"],
+  ["cam16", "month", "pecorva_cam16_monthly"],
+  ["cam16", "year", "pecorva_cam16_yearly"],
 ])("checkout uses the Stripe lookup for %s/%s", async (plan, interval, key) => {
   const forms: URLSearchParams[] = [];
   const response = await app({ fetch: stripeFake(forms) }).request("/v1/billing/checkout", {
@@ -71,12 +77,12 @@ for (const path of ["/v1/billing/checkout", "/v1/billing/hardware-checkout"]) {
   test.each([
     { box: -1 },
     { box: 0.5 },
-    { box: 21 },
+    { box: 3 },
     { box: "1" },
     { box: null },
     { cameras: -1 },
     { cameras: 1.5 },
-    { cameras: 65 },
+    { cameras: 17 },
     { cameras: "2" },
     { cameras: null },
   ])(`${path} rejects invalid hardware quantities %j`, async (quantity) => {
@@ -87,6 +93,26 @@ for (const path of ["/v1/billing/checkout", "/v1/billing/hardware-checkout"]) {
     });
     expect(response.status).toBe(400);
     expect(await response.json()).toMatchObject({ error: { code: "bad_request" } });
+  });
+}
+
+for (const path of ["/v1/billing/checkout", "/v1/billing/hardware-checkout"]) {
+  test(`${path} caps hardware at 2 boxes and 16 cameras`, async () => {
+    const order = (box: number, cameras: number) =>
+      app({ fetch: stripeFake([]) }).request(path, {
+        method: "POST",
+        headers: headers(),
+        body: JSON.stringify({ plan: "cam16", interval: "month", box, cameras }),
+      });
+    for (const [box, cameras] of [
+      [3, 16],
+      [2, 17],
+    ] as const) {
+      const response = await order(box, cameras);
+      expect(response.status).toBe(400);
+      expect(await response.json()).toMatchObject({ error: { code: "bad_request" } });
+    }
+    expect((await order(2, 16)).status).toBe(200);
   });
 }
 
@@ -114,6 +140,22 @@ test("combined checkout adds hardware, shipping and buyer metadata to the subscr
   });
 });
 
+test("a yearly checkout states what is due today; a monthly one carries no note", async () => {
+  const forms: URLSearchParams[] = [];
+  for (const interval of ["year", "month"]) {
+    const response = await app({ fetch: stripeFake(forms) }).request("/v1/billing/checkout", {
+      method: "POST",
+      headers: headers(),
+      body: JSON.stringify({ plan: "cam12", interval, box: 2, cameras: 12 }),
+    });
+    expect(response.status).toBe(200);
+  }
+  const [yearly, monthly] = forms;
+  // 1370 for the year + 2 x 920 + 12 x 150 of hardware
+  expect(yearly?.get("custom_text[submit][message]")).toContain("Due today: €5,010");
+  expect(monthly?.has("custom_text[submit][message]")).toBe(false);
+});
+
 test.each([undefined, "Bearer invalid", "Bearer orb_s_invalid"])(
   "hardware checkout requires a session (%s)",
   async (authorization) => {
@@ -135,8 +177,8 @@ test("hardware checkout uses the account email and supplied redirects without a 
       method: "POST",
       headers: { authorization: headers().authorization },
       body: JSON.stringify({
-        box: 20,
-        cameras: 64,
+        box: 2,
+        cameras: 16,
         email: "other@example.test",
         successUrl: "http://localhost:3000/account/?checkout=success&order=hardware",
         cancelUrl: "http://localhost:3000/pricing/?checkout=cancel",
@@ -149,8 +191,8 @@ test("hardware checkout uses the account email and supplied redirects without a 
     customer_email: "owner@example.test",
     success_url: "http://localhost:3000/account/?checkout=success&order=hardware",
     cancel_url: "http://localhost:3000/pricing/?checkout=cancel",
-    "line_items[0][quantity]": "20",
-    "line_items[1][quantity]": "64",
+    "line_items[0][quantity]": "2",
+    "line_items[1][quantity]": "16",
     "metadata[user_id]": session.userId,
   });
 });
@@ -215,18 +257,18 @@ test("a configured website origin may receive the buyer even when the defaults p
   const forms: URLSearchParams[] = [];
   const response = await app({
     fetch: stripeFake(forms),
-    corsOrigins: ["https://pecorva.test"],
+    corsOrigins: ["https://barnstar.test"],
   }).request("/v1/billing/checkout", {
     method: "POST",
     headers: headers(),
     body: JSON.stringify({
       plan: "orion",
       interval: "year",
-      successUrl: "https://pecorva.test/account/?checkout=success",
+      successUrl: "https://barnstar.test/account/?checkout=success",
     }),
   });
   expect(response.status).toBe(200);
-  expect(forms[0]?.get("success_url")).toBe("https://pecorva.test/account/?checkout=success");
+  expect(forms[0]?.get("success_url")).toBe("https://barnstar.test/account/?checkout=success");
   expect(forms[0]?.get("cancel_url")).toBe("http://localhost:3000/account/");
 });
 

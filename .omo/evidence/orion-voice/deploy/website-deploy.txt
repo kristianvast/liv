@@ -1,0 +1,13 @@
+before:
+orion-voice/orion-voice.css?v=5
+orion-voice/orion-voice.js?v=13
+
+deploy:
+
+> deploy
+> bash scripts/deploy.sh
+
+Deploying 78d4126 auto: update 3 file(s): shared/orion-voice/orion-halo.js,shared/orion-voice/orion-voice.css shared/orion-voice/orion-voice.js to pecorva.com
+Build log: https://console.cloud.google.com/cloud-build/builds;region=europe-west1?project=agrointel-dd8f6
+EXIT=0
+live now: 78d4126

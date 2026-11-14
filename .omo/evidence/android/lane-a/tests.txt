@@ -1,0 +1,564 @@
+bun test v1.4.4 (38afee6c8)
+
+test/billing-trial.test.ts:
+(pass) the free month grants Orion allowances and reports its end while plan stays free [40.11ms]
+(pass) an unconfirmed owner gets no free month until the address is confirmed [46.32ms]
+(pass) the free month permits the LLM gateway and records usage [16.54ms]
+(pass) the free month is over at 2026-11-19T12:00:00Z and blocks the model [14.58ms]
+(pass) the free month is over at 2026-11-20T12:00:00Z and blocks the model [22.17ms]
+(pass) status clears trialEndsAt after the free month [19.91ms]
+(pass) free month status counts the single token and voice pool from the owner's creation date [20.71ms]
+(pass) the gateway refuses an exhausted free pool from the previous calendar month [15.69ms]
+(pass) the earliest owner account starts the month even if another owner joined later [19.88ms]
+(pass) a farm without an owner has no free month [17.67ms]
+(pass) a paid active plan supersedes the free month [15.79ms]
+(pass) a paid trialing plan supersedes the free month [17.57ms]
+(pass) a farm budget override still grants model access after the free month [15.07ms]
+(pass) a zero budget override exhausts an available free allowance [13.39ms]
+(pass) a zero budget override exhausts an available cam2 allowance [12.48ms]
+
+test/farm-code.test.ts:
+(pass) a commit restores its manifest and only that farm can fetch its blobs [24.12ms]
+(pass) members with role owner read but only code editors push [12.33ms]
+(pass) members with role manager read but only code editors push [13.78ms]
+(pass) members with role worker read but only code editors push [11.58ms]
+(pass) members with role viewer read but only code editors push [10.83ms]
+(pass) legacy tokens cannot read or write farm code [7.87ms]
+(pass) concurrent commits with one parent cannot overwrite each other [22.46ms]
+(pass) refuses unsafe path .env [8.37ms]
+(pass) refuses unsafe path ../secret [9.45ms]
+(pass) refuses unsafe path /absolute [8.93ms]
+(pass) refuses unsafe path node_modules/lib.js [8.95ms]
+(pass) refuses unsafe path pages/x/.git/config [11.92ms]
+(pass) rejects secret content or an oversized file [10.54ms]
+(pass) rejects secret content or an oversized file [9.39ms]
+(pass) rejects secret content or an oversized file [12.88ms]
+(pass) rejects absent and incorrectly hashed blobs without advancing the head [13.17ms]
+(pass) bounds expanded file bytes even when many paths reuse one blob [12.52ms]
+
+test/push.test.ts:
+(pass) device tokens move on upsert and only their owner can delete them [15.02ms]
+(pass) notify orion_done delivers only to caller devices with exact FCM shape [12.41ms]
+(pass) notify orion_needs_you delivers only to caller devices with exact FCM shape [12.98ms]
+(pass) notify refuses unauthorized principal 401 [6.32ms]
+(pass) notify refuses unauthorized principal 403 [6.60ms]
+(pass) notify refuses unauthorized principal 403 [7.73ms]
+(pass) notify refuses unauthorized principal 400 [7.42ms]
+(pass) FCM 404 UNREGISTERED removes the device [9.71ms]
+(pass) FCM 400 UNREGISTERED removes the device [10.01ms]
+(pass) device routes work and sends skip without a project id [8.25ms]
+(pass) device input requires an Android token and notify validates its payload [8.85ms]
+Push delivery failed {
+  error: "Simulated FCM network failure",
+}
+(pass) notify responds before FCM completes and survives delivery rejection [10.02ms]
+
+test/feedback.test.ts:
+(pass) feedback > stores feedback with optional session: %s [8.36ms]
+(pass) feedback > stores feedback with optional session: %s [10.66ms]
+(pass) feedback > ignores a farm the user cannot act on: 00000000-0000-4000-8000-0000000000b2 [6.08ms]
+(pass) feedback > ignores a farm the user cannot act on: not-a-uuid [7.71ms]
+(pass) feedback > rejects invalid feedback 0 [13.83ms]
+(pass) feedback > rejects invalid feedback %# [7.64ms]
+(pass) feedback > rejects invalid feedback 2 [5.01ms]
+(pass) feedback > rejects invalid feedback 3 [5.25ms]
+(pass) feedback > rejects invalid feedback 4 [5.56ms]
+(pass) feedback > rejects invalid feedback 5 [4.77ms]
+(pass) feedback > rejects invalid feedback 6 [5.30ms]
+(pass) feedback > rejects invalid feedback 7 [8.69ms]
+(pass) feedback > rejects invalid feedback 8 [5.99ms]
+(pass) feedback > rejects invalid feedback 9 [6.75ms]
+(pass) feedback > malformed JSON returns the error envelope [5.84ms]
+(pass) feedback > enforces rolling persistent limits, including parallel calls: %s [25.13ms]
+(pass) feedback > enforces rolling persistent limits, including parallel calls: %s [38.83ms]
+(pass) feedback > changing a client supplied forwarded hop cannot bypass the IP limit [21.14ms]
+(pass) submissions > requires a valid session: %s [6.90ms]
+(pass) submissions > requires a valid session: legacy-farm-token [5.34ms]
+(pass) submissions > requires a valid session: orb_s_invalid [5.41ms]
+(pass) submissions > stores UTF-8 bytes and the member farm [7.20ms]
+(pass) submissions > rejects unsafe file paths: /absolute.ts [6.47ms]
+(pass) submissions > rejects unsafe file paths: ../secret [6.25ms]
+(pass) submissions > rejects unsafe file paths: src/../secret [6.09ms]
+(pass) submissions > rejects unsafe file paths: src//file [5.71ms]
+(pass) submissions > rejects unsafe file paths: ./file [7.80ms]
+(pass) submissions > rejects unsafe file paths: C:/file [7.05ms]
+(pass) submissions > rejects unsafe file paths: src\file [7.35ms]
+(pass) submissions > rejects unsafe file paths: -file [5.84ms]
+(pass) submissions > rejects unsafe file paths: src/.hidden [5.40ms]
+(pass) submissions > rejects unsafe file paths: src/file..ts [5.79ms]
+(pass) submissions > rejects unsafe file paths: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx [5.45ms]
+(pass) submissions > rejects unsafe file paths: src/ [5.86ms]
+(pass) submissions > rejects invalid builds 0 [6.32ms]
+(pass) submissions > rejects invalid builds 1 [5.55ms]
+(pass) submissions > rejects invalid builds 2 [5.59ms]
+(pass) submissions > rejects invalid builds 3 [5.57ms]
+(pass) submissions > rejects invalid builds 4 [10.25ms]
+(pass) submissions > rejects invalid builds 5 [7.68ms]
+(pass) submissions > rejects invalid builds 6 [6.52ms]
+(pass) submissions > rejects invalid builds 7 [7.91ms]
+(pass) submissions > rejects invalid builds 8 [6.16ms]
+(pass) submissions > rejects invalid builds 9 [5.07ms]
+(pass) submissions > rejects invalid builds 10 [5.80ms]
+(pass) submissions > accepts exactly 512 KiB and rejects larger UTF-8 content across files [12.72ms]
+(pass) submissions > lists only the caller's own submissions newest first without bodies [9.34ms]
+(pass) owner review > disabled admin returns 404: GET /v1/admin/feedback [4.86ms]
+(pass) owner review > disabled admin returns 404: PATCH /v1/admin/feedback/00000000-0000-4000-8000-0000000000b1 [5.99ms]
+(pass) owner review > disabled admin returns 404: GET /v1/admin/submissions [5.19ms]
+(pass) owner review > disabled admin returns 404: GET /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [4.91ms]
+(pass) owner review > disabled admin returns 404: PATCH /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [5.65ms]
+(pass) owner review > wrong admin token returns 401: GET /v1/admin/feedback [5.76ms]
+(pass) owner review > wrong admin token returns 401: PATCH /v1/admin/feedback/00000000-0000-4000-8000-0000000000b1 [5.30ms]
+(pass) owner review > wrong admin token returns 401: GET /v1/admin/submissions [5.20ms]
+(pass) owner review > wrong admin token returns 401: GET /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [4.97ms]
+(pass) owner review > wrong admin token returns 401: PATCH /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [4.81ms]
+(pass) owner review > admin HTML is disabled without a token and served without assets when enabled [7.27ms]
+(pass) owner review > lists feedback, changes status and filters the result [7.66ms]
+(pass) owner review > reviews builds with metadata lists and file bodies only in detail [7.21ms]
+(pass) owner review > rejects invalid review input and missing resources [8.78ms]
+(pass) sends notifications through the log mailer without submission file bodies [7.49ms]
+(pass) a failed notification still persists and accepts both requests [7.93ms]
+(pass) allows website CORS on /v1/feedback [4.53ms]
+(pass) allows website CORS on /v1/submissions [7.66ms]
+
+test/multi-user-voice.test.ts:
+(pass) voice without farm permission meters personal seconds with farm header %s [14.84ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i__RezHL5b6Ub7Xu0uOtC5Ctg3JTKbWIjN
+
+The invite works for 7 days.
+(pass) voice without farm permission meters personal seconds with farm header %s [14.06ms]
+(pass) voice uses the personal account's exhausted allowance without a farm [11.77ms]
+(pass) a personal free month requires a confirmed email before voice access [11.53ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_aoHk77G-xAmP1QxFhjy6E43su50GHFsM
+
+The invite works for 7 days.
+(pass) a zero member cap blocks farm billed voice [14.77ms]
+
+test/billing-webhook-contract.test.ts:
+(pass) subscription webhook accepts orion from metadata [8.19ms]
+(pass) subscription webhook accepts orion from lookup-month [7.04ms]
+(pass) subscription webhook accepts orion from lookup-year [7.32ms]
+(pass) subscription webhook accepts cam2 from metadata [6.44ms]
+(pass) subscription webhook accepts cam2 from lookup-month [8.23ms]
+(pass) subscription webhook accepts cam2 from lookup-year [7.42ms]
+(pass) subscription webhook accepts cam4 from metadata [9.14ms]
+(pass) subscription webhook accepts cam4 from lookup-month [8.53ms]
+(pass) subscription webhook accepts cam4 from lookup-year [7.10ms]
+(pass) subscription webhook accepts cam6 from metadata [6.77ms]
+(pass) subscription webhook accepts cam6 from lookup-month [6.76ms]
+(pass) subscription webhook accepts cam6 from lookup-year [6.92ms]
+(pass) subscription webhook rejects invalid metadata plan pen [6.37ms]
+(pass) subscription webhook rejects invalid metadata plan barn [6.18ms]
+(pass) subscription webhook rejects invalid metadata plan free [7.16ms]
+(pass) subscription webhook rejects invalid metadata plan cam3 [5.63ms]
+(pass) subscription webhook rejects invalid metadata plan unknown [7.30ms]
+(pass) subscription webhook rejects invalid lookup key pecorva_pen_monthly [9.24ms]
+(pass) subscription webhook rejects invalid lookup key pecorva_barn_yearly [7.11ms]
+(pass) subscription webhook rejects invalid lookup key pecorva_cam3_monthly [6.37ms]
+(pass) subscription webhook rejects invalid lookup key other_cam2_monthly [6.93ms]
+(pass) a paid subscription checkout records hardware and mails once alongside the plan [8.02ms]
+(pass) delayed subscription hardware payment mails once even with distinct success events [9.64ms]
+
+test/billing.test.ts:
+(pass) a signed subscription update changes billing status and allowances [9.22ms]
+(pass) invalid signature t=1,v1=bad does not apply an event [5.40ms]
+(pass) invalid signature t=1793966400,v1=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa does not apply an event [6.74ms]
+(pass) invalid signature  does not apply an event [5.35ms]
+(pass) a correctly signed event outside the five minute window is rejected [5.22ms]
+(pass) replaying a signed event cannot overwrite a newer subscription [8.60ms]
+(pass) an older subscription event delivered late never overwrites newer state [7.10ms]
+(pass) the Stripe customer link decides the farm even when metadata names an old farm id [11.90ms]
+(pass) hardware orders keep shipping, wait for delayed payments and email once when paid [8.89ms]
+(pass) a completed plan checkout emails the buyer how to sign in to Orbit [6.68ms]
+
+test/multi-user-migration.test.ts:
+(pass) multi-user migration preserves existing access and backfills both billing ledgers [341.30ms]
+
+test/voice-demo.test.ts:
+(pass) POST /v1/voice/demo/session > webrtc (default) returns a conversation token [2.13ms]
+(pass) POST /v1/voice/demo/session > websocket returns a signed url [1.32ms]
+(pass) POST /v1/voice/demo/session > bad body is 400 without an upstream call [0.64ms]
+(pass) POST /v1/voice/demo/session > missing key or agent is 503 not_configured [0.76ms]
+voice demo: ElevenLabs /v1/convai/conversation/token returned 401
+(pass) POST /v1/voice/demo/session > upstream failure is 502 and does not leak the upstream body [1.23ms]
+(pass) POST /v1/voice/demo/session > per-IP limit returns 429 with Retry-After, then recovers after the window [6.88ms]
+(pass) POST /v1/voice/demo/session > daily cap returns 429 until the next UTC day [2.80ms]
+(pass) POST /v1/voice/demo/session > CORS preflight from https://barnstar.dev is allowed [0.78ms]
+(pass) voice demo allowance (180 s per 25 h per visitor) > hanging up keeps the remaining time: a verified 30 s call leaves 150 s for the next one [2.13ms]
+(pass) voice demo allowance (180 s per 25 h per visitor) > used up: 429 allowance_used until the first call leaves the 25 h window [2.75ms]
+(pass) voice demo allowance (180 s per 25 h per visitor) > a client that talks past max_seconds is charged the real length [2.34ms]
+(pass) voice demo allowance (180 s per 25 h per visitor) > spoofed leading X-Forwarded-For hops, the same IPv6 /64 and a new app instance do not reset it [3.68ms]
+(pass) voice demo allowance (180 s per 25 h per visitor) > parallel requests from one visitor never grant more than the allowance [2.22ms]
+(pass) voice demo allowance (180 s per 25 h per visitor) > an open call blocks the next one with call_active [1.53ms]
+(pass) voice demo allowance (180 s per 25 h per visitor) > a credential that never became a call is refunded after 15 min, not before [2.15ms]
+(pass) voice demo allowance (180 s per 25 h per visitor) > a failing conversation lookup fails closed and keeps the reservation [1.60ms]
+voice demo: ElevenLabs /v1/convai/conversation/token returned 500
+(pass) voice demo allowance (180 s per 25 h per visitor) > an upstream mint failure does not consume the allowance [1.91ms]
+(pass) voice demo allowance (180 s per 25 h per visitor) > client address is the last X-Forwarded-For hop; IPv6 groups by /64 [0.43ms]
+
+test/push-alerts.test.ts:
+(pass) new calving_alert alerts reach all farm members with localized animal body [10.44ms]
+(pass) new health_event alerts reach all farm members with localized animal body [9.53ms]
+(pass) new heat_alert alerts reach all farm members with localized animal body [9.58ms]
+(pass) alerts use tag body when an animal name is absent [9.23ms]
+(pass) alerts use unnamed body when an animal name is absent [8.55ms]
+(pass) old deleted nonalert repeated and updated observations send nothing [12.47ms]
+
+test/orion-voice-agent.test.ts:
+(pass) without an agent id it creates every tool and then the agent that uses them [0.38ms]
+(pass) with an agent id it updates that agent's own tools and creates only the missing ones [0.11ms]
+(pass) when the agent is refused, the tools made in that run are removed again [0.09ms]
+(pass) a refusal from ElevenLabs stops the sync and names the request [0.02ms]
+
+test/multi-user-billing.test.ts:
+(pass) personal billing status works without a farm header [6.95ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_7lXVLUNGC50qRzoqFtlmiP-W0-NT55vu
+
+The invite works for 7 days.
+(pass) a worker may manage personal checkout while on a farm [7.68ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_M17PH5uAHZX_kfCYcguQLAc__fuW3oDS
+
+The invite works for 7 days.
+(pass) a worker may manage personal portal while on a farm [7.31ms]
+(pass) an owner can explicitly choose personal checkout despite having a farm header [6.36ms]
+(pass) personal portal works without a farm header [5.40ms]
+(pass) subscription webhooks resolve a personal customer to the user account [5.97ms]
+(pass) deleting an account refuses a running personal subscription [119.32ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_h126oPjr-981Td_uPoE9zejZCmj59cH6
+
+The invite works for 7 days.
+(pass) me reports membership billing settings and the personal paid plan [15.43ms]
+
+test/relay.test.ts:
+(pass) client pipes verbatim frames both ways and propagates client close [9.80ms]
+(pass) client?channel=voice&voiceId=voice-1 pipes verbatim frames both ways and propagates client close [7.11ms]
+(pass) host channel close 4003 preserves application codes or maps to offline [6.21ms]
+(pass) host channel close 1000 preserves application codes or maps to offline [7.65ms]
+(pass) replacing a host closes the old host with 4409 and its clients with 4410 [8.16ms]
+(pass) host disconnect closes clients and status becomes offline [7.48ms]
+(pass) another member of the same farm cannot reach this account's host [7.15ms]
+(pass) refuses missing session before upgrade [5.36ms]
+(pass) refuses nonmember before upgrade [6.21ms]
+(pass) refuses bad farm before upgrade [5.51ms]
+(pass) refuses offline before upgrade [5.79ms]
+(pass) refuses invalid channel before upgrade [5.56ms]
+(pass) refuses missing voice id before upgrade [5.44ms]
+(pass) requires upgrade and farm header while status remains ordinary HTTP [7.57ms]
+(pass) ninth client is refused with 429 too_many [10.54ms]
+(pass) binary closes only its channel with the required code [7.31ms]
+(pass) oversize closes only its channel with the required code [7.37ms]
+(pass) host-oversize closes only its channel with the required code [7.08ms]
+
+test/accounts.test.ts:
+(pass) registration and sign-in > eight-character passwords register; seven characters fail weak_password [64.44ms]
+(pass) registration and sign-in > register signs in, stores only an argon2id hash and a hashed session token [64.35ms]
+(pass) registration and sign-in > duplicate emails, weak passwords and bad addresses are refused [117.76ms]
+(pass) registration and sign-in > wrong passwords and unknown emails get the same 401, then 429 after repeated failures [362.70ms]
+(pass) registration and sign-in > logout revokes the session and expired sessions stop working [158.02ms]
+(pass) Google sign-in > creates a verified passwordless user, consent and device session without email [11.16ms]
+(pass) Google sign-in > returning subjects sign in without terms even when their Google email changes [11.15ms]
+(pass) Google sign-in > links an existing password account by lowercase email and verifies it [193.36ms]
+(pass) Google sign-in > rejects wrong audience tokens [7.21ms]
+(pass) Google sign-in > rejects expired tokens [7.15ms]
+(pass) Google sign-in > rejects future issued tokens [7.98ms]
+(pass) Google sign-in > rejects wrong issuer tokens [6.89ms]
+(pass) Google sign-in > rejects missing subject tokens [7.19ms]
+(pass) Google sign-in > rejects a bad signature and malformed credentials [27.14ms]
+(pass) Google sign-in > requires a verified email: {"email_verified":false} [7.99ms]
+(pass) Google sign-in > requires a verified email: {"email_verified":"true"} [6.93ms]
+(pass) Google sign-in > requires a verified email: {"email":null} [8.91ms]
+(pass) Google sign-in > new users must accept terms and missing configuration disables sign-in [9.07ms]
+(pass) Google sign-in > passwordless login and change fail cleanly; reset can set an eight-character password [303.60ms]
+(pass) Google sign-in > permits the Barnstar website CORS preflight and response [7.42ms]
+(pass) farms and members > claiming a local farm id makes the caller owner; a second claim is refused [127.88ms]
+(pass) farms and members > creating a new farm writes the farm row and lists it in /v1/me [64.04ms]
+(pass) farms and members > owners and managers manage members within their rank; the last owner stays [191.72ms]
+(pass) invites > only the invited email can accept, once, before expiry; revoked codes stop working [355.06ms]
+(pass) invites > workers cannot invite and managers cannot invite owners [190.95ms]
+(pass) farm data with user sessions > roles decide which tables a member may change [197.28ms]
+(pass) farm data with user sessions > sessions need the farm header and a membership; legacy farm tokens still work [120.81ms]
+(pass) farm data with user sessions > the cloud model alias maps to Core's default upstream model and is metered per farm [124.80ms]
+(pass) account lifecycle > sign-up requires accepting the terms and records the data-sharing choice [68.47ms]
+(pass) account lifecycle > a verify link works once, only before it expires, and gates invite acceptance [136.90ms]
+(pass) account lifecycle > password reset never reveals accounts, signs out everywhere and works once [355.09ms]
+(pass) account lifecycle > sessions are listed per device and can be revoked one by one [150.85ms]
+(pass) account lifecycle > deleting an account needs the plan cancelled, wipes the sole-owned cloud farm and keeps exports [275.60ms]
+(pass) account lifecycle > an Orbit farm adopts the empty cloud farm bought on the website, plan included [137.16ms]
+(pass) account lifecycle > a cloud farm that already holds data is never adopted [74.27ms]
+
+test/billing-gateway.test.ts:
+(pass) a free session farm gets plan_required before calling a model [7.12ms]
+(pass) a paid farm at its allowance gets budget_exceeded [6.94ms]
+(pass) a farm budget override wins over its paid plan allowance [8.26ms]
+(pass) Vertex thinking tokens count toward the farm allowance [7.16ms]
+(pass) billing status includes metered voice usage [8.76ms]
+
+test/voice-agent.test.ts:
+(pass) agent relays opaque frames in order before upstream opens and meters on client close [9.52ms]
+(pass) agent persists periodic usage and closes both sockets at the shared allowance [1009.62ms]
+(pass) upstream closing ends the agent client connection [10.29ms]
+
+test/billing-voice-trial.test.ts:
+(pass) the free month grants voice access [9.68ms]
+(pass) previous calendar month voice consumes the free pool [7.54ms]
+(pass) day 31 ends free voice access [6.25ms]
+
+test/billing-checkout.test.ts:
+(pass) workers cannot start a farm checkout [5.90ms]
+(pass) checkout resolves a lookup price and attaches the farm to session and subscription [5.44ms]
+(pass) website preflight reaches account route /v1/me/sessions [4.66ms]
+(pass) website preflight reaches account route /v1/me/export [4.59ms]
+(pass) website preflight reaches account route /v1/me/password [4.52ms]
+(pass) website preflight and public plans use the allowed origin [4.71ms]
+(pass) unverified accounts cannot start a checkout [5.15ms]
+(pass) with automatic tax on, checkouts collect VAT ids and billing addresses [5.48ms]
+(pass) without automatic tax the checkout carries no tax fields [5.30ms]
+(pass) checkout without x-orbit-farm buys a personal plan without creating a farm [5.21ms]
+
+test/multi-user.test.ts:
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_Pxan-hRUatnKe2B8t5bBio9LuXAF9Ylu
+
+The invite works for 7 days.
+(pass) accepted invite without farm permission bills the member's personal free month [9.76ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_zbONWFfKovt07pNk7dQDqlbkvRTmONSU
+
+The invite works for 7 days.
+(pass) granting farm permission changes the next request's billing account [9.08ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_FE0scS2jhiGEoP3xi5byMBcpdYX-_ilY
+
+The invite works for 7 days.
+(pass) member list splits farm and own tokens and hides other people's usage from workers [8.67ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_cTuCqsF8xn4bKZ1NKVWX7SPgfyPjPZwg
+
+The invite works for 7 days.
+(pass) member cap rejects a request at the calendar month's farm token limit [9.60ms]
+(pass) owners cannot be restricted with {"useFarmPlan":false} [5.66ms]
+(pass) owners cannot be restricted with {"monthlyTokenLimit":0} [5.61ms]
+(pass) a session without a farm uses its own confirmed free month [6.11ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_sj9-Nju83J17ItChKu6rUgbAy6heP0T1
+
+The invite works for 7 days.
+(pass) choosing own source routes farm requests to personal billing and reports both accounts [10.28ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_3yKT1NzBOtZNRCEDm8BuKORuUNLIYbWJ
+
+The invite works for 7 days.
+(pass) automatic source falls back to personal when the farm has no allowance [8.12ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_-SvGaJWhPaYLAWLnQIlfQGRhpj9FF8-i
+
+The invite works for 7 days.
+(pass) explicit farm source without permission still charges personal [12.36ms]
+[mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+You have been invited to join a farm as worker.
+
+1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+2. Sign in or create an account with this email address (member@example.test).
+3. In Settings > Account, enter this invite code:
+
+orb_i_yb10m0SooAXKfAfWsc5r3pXJ49ZS7Hkj
+
+The invite works for 7 days.
+(pass) promotion to owner restores unlimited farm permission [7.22ms]
+
+test/relay-runtime.test.ts:
+@core/api listening on :64418
+(pass) production runtime serves relay alongside both voice upgrade routes [9.86ms]
+
+test/billing-checkout-contract.test.ts:
+(pass) checkout uses the Stripe lookup for orion/month [6.14ms]
+(pass) checkout uses the Stripe lookup for orion/year [5.42ms]
+(pass) checkout uses the Stripe lookup for cam2/month [5.98ms]
+(pass) checkout uses the Stripe lookup for cam2/year [5.29ms]
+(pass) checkout uses the Stripe lookup for cam4/month [4.99ms]
+(pass) checkout uses the Stripe lookup for cam4/year [5.62ms]
+(pass) checkout uses the Stripe lookup for cam6/month [4.84ms]
+(pass) checkout uses the Stripe lookup for cam6/year [5.21ms]
+(pass) checkout rejects invalid plan pen [5.62ms]
+(pass) checkout rejects invalid plan barn [6.97ms]
+(pass) checkout rejects invalid plan free [4.96ms]
+(pass) checkout rejects invalid plan cam3 [5.66ms]
+(pass) checkout rejects invalid plan unknown [4.75ms]
+(pass) checkout rejects invalid plan %s [4.57ms]
+(pass) checkout rejects invalid plan %s [4.87ms]
+(pass) checkout rejects invalid interval monthly [5.19ms]
+(pass) checkout rejects invalid interval  [4.83ms]
+(pass) checkout rejects invalid interval %s [4.56ms]
+(pass) checkout rejects invalid interval %s [5.66ms]
+(pass) /v1/billing/checkout rejects invalid hardware quantities {"box":-1} [4.80ms]
+(pass) /v1/billing/checkout rejects invalid hardware quantities {"box":0.5} [4.89ms]
+(pass) /v1/billing/checkout rejects invalid hardware quantities {"box":21} [5.73ms]
+(pass) /v1/billing/checkout rejects invalid hardware quantities {"box":"1"} [5.35ms]
+(pass) /v1/billing/checkout rejects invalid hardware quantities {"box":null} [5.05ms]
+(pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":-1} [5.12ms]
+(pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":1.5} [5.06ms]
+(pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":65} [4.83ms]
+(pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":"2"} [4.92ms]
+(pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":null} [5.36ms]
+(pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":-1} [4.97ms]
+(pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":0.5} [6.82ms]
+(pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":21} [5.21ms]
+(pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":"1"} [4.75ms]
+(pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":null} [4.49ms]
+(pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":-1} [4.83ms]
+(pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":1.5} [4.68ms]
+(pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":65} [4.76ms]
+(pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":"2"} [4.40ms]
+(pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":null} [4.85ms]
+(pass) combined checkout adds hardware, shipping and buyer metadata to the subscription [5.42ms]
+(pass) hardware checkout requires a session (%s) [7.13ms]
+(pass) hardware checkout requires a session (Bearer invalid) [5.11ms]
+(pass) hardware checkout requires a session (Bearer orb_s_invalid) [4.95ms]
+(pass) hardware checkout uses the account email and supplied redirects without a farm header [4.62ms]
+(pass) /v1/billing/checkout rejects unsafe successUrl [6.05ms]
+(pass) /v1/billing/checkout rejects unsafe cancelUrl [7.24ms]
+(pass) /v1/billing/checkout refuses to send the buyer to a foreign https site via successUrl [5.97ms]
+(pass) /v1/billing/checkout refuses to send the buyer to a foreign https site via cancelUrl [5.18ms]
+(pass) /v1/billing/hardware-checkout rejects unsafe successUrl [4.64ms]
+(pass) /v1/billing/hardware-checkout rejects unsafe cancelUrl [4.80ms]
+(pass) /v1/billing/hardware-checkout refuses to send the buyer to a foreign https site via successUrl [5.08ms]
+(pass) /v1/billing/hardware-checkout refuses to send the buyer to a foreign https site via cancelUrl [4.83ms]
+(pass) checkout passes a website redirect with its own path and query through to Stripe [5.58ms]
+(pass) a configured website origin may receive the buyer even when the defaults point elsewhere [5.59ms]
+(pass) the billing portal returns to the website and refuses a foreign return address [6.05ms]
+
+test/billing-migration.test.ts:
+(pass) 0007 maps legacy subscriptions and replaces the plan CHECK [303.38ms]
+
+test/api.test.ts:
+(pass) basics > /healthz reports ok without a token [4.12ms]
+(pass) basics > /health reports ok without a token [3.89ms]
+(pass) basics > v1 routes require a valid bearer token [5.06ms]
+(pass) basics > issued tokens are stored hashed and resolve to their farm [4.41ms]
+(pass) basics > migrate is idempotent [3.82ms]
+(pass) POST /v1/changes > camera layouts migrate and accept farm-scoped JSON updates with row LWW [4.86ms]
+(pass) POST /v1/changes > applies a valid row, then LWW: equal/older is stale, newer wins [6.07ms]
+(pass) POST /v1/changes > rejects rows for another farm, bad enums and malformed values [4.38ms]
+(pass) POST /v1/changes > soft deletes keep the row; delete ops without deleted_at are rejected [4.63ms]
+(pass) POST /v1/changes > rejects oversized and malformed requests [3.07ms]
+(pass) single active wearable per animal > a newer wearable binding ends the older one with a cloud HLC [6.88ms]
+(pass) single active wearable per animal > an older conflicting binding is stored already ended [5.63ms]
+(pass) single active wearable per animal > the wearable flag must match the device kind [5.87ms]
+(pass) GET /v1/shape > animals forces the farm filter and forwards Electric headers [4.21ms]
+(pass) GET /v1/shape > camera_layouts forces the farm filter and forwards Electric headers [4.02ms]
+(pass) GET /v1/shape > refuses non-synced tables [4.53ms]
+(pass) POST /v1/llm/* > forwards with Core's key and records usage from a JSON response [5.78ms]
+(pass) POST /v1/llm/* > meters streamed (SSE) responses and asks OpenAI-style streams for usage [8.10ms]
+(pass) POST /v1/llm/* > refuses farms over their monthly budget without calling upstream [4.61ms]
+(pass) POST /v1/llm/* > returns 503 when no upstream is configured [3.49ms]
+
+test/chats.test.ts:
+(pass) chat history is private to its author even for other farm members [11.57ms]
+(pass) every chat route requires a user session and farm membership [9.29ms]
+(pass) append unions immutable entry IDs and pages a readable transcript [12.09ms]
+(pass) rename persists and deletion cannot be resurrected by an offline append [11.04ms]
+(pass) chat writes reject malformed entries and oversized requests [7.28ms]
+(pass) deleting an author removes their chat history without affecting other authors [135.86ms]
+
+test/billing-plans.test.ts:
+(pass) plans return the complete EUR catalog publicly without requiring a session (%s) [6.71ms]
+(pass) plans return the complete EUR catalog publicly without requiring a session (Bearer unknown) [5.34ms]
+(pass) plans return the complete EUR catalog publicly without requiring a session (Bearer orb_s_unknown) [6.27ms]
+(pass) plans return the complete EUR catalog publicly without requiring a session (Bearer legacy-farm-token) [6.76ms]
+(pass) a signed-in account receives the same EUR catalog without a farm header [6.13ms]
+
+test/voice-agent-errors.test.ts:
+(pass) agent refuses missing session before upgrading [7.84ms]
+(pass) agent refuses bad session before upgrading [6.99ms]
+(pass) agent refuses missing farm before upgrading [8.50ms]
+(pass) agent refuses nonmember farm before upgrading [8.88ms]
+(pass) agent refuses no allowance before upgrading [8.55ms]
+(pass) agent refuses spent allowance before upgrading [8.13ms]
+(pass) agent returns 503 for missing agent id without charging [9.29ms]
+(pass) agent returns 503 for missing API key without charging [7.83ms]
+(pass) agent returns 502 for provider rejection without charging [10.66ms]
+(pass) agent returns 502 for missing signed URL without charging [9.60ms]
+(pass) agent returns 502 for malformed provider JSON without charging [9.83ms]
+(pass) agent returns 502 for provider unreachable without charging [10.65ms]
+(pass) agent requires a WebSocket upgrade after entitlement checks [9.01ms]
+
+ 370 pass
+ 0 fail
+ 1195 expect() calls
+Ran 370 tests across 26 files. [18.16s]

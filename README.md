@@ -57,7 +57,7 @@ Other workspace software is shared as a self-contained `skills/<name>/` package 
 
 ## Plans and using your own AI key
 
-Orbit is free and open-source software. You can run it purely locally with your own API key or subscription from providers such as Anthropic, OpenAI, or Google. If you prefer not to manage API keys, creating a free Orbit account gives your farm a 30-day free trial of Orion in the cloud with no card required. After the trial, optional paid plans in EUR cover cloud AI usage, voice minutes, and multi-device sync: **Orion** (EUR 20/month or EUR 200/year), **2 cameras** (EUR 49/month or EUR 490/year), **4 cameras** (EUR 75/month or EUR 750/year), and **6 cameras** (EUR 95/month or EUR 950/year), alongside optional hardware (**Pecorva box** at EUR 920 and **Tested camera** at EUR 150).
+Orbit is free and open-source software. You can run it purely locally with your own API key or subscription from providers such as Anthropic, OpenAI, or Google. If you prefer not to manage API keys, creating a free Orbit account gives your farm a 30-day free trial of Orion in the cloud with no card required. After the trial, optional paid plans in EUR cover cloud AI usage, voice minutes, and multi-device sync: **Orion** (EUR 20/month or EUR 200/year), **2 cameras** (EUR 49/month or EUR 490/year), **4 cameras** (EUR 75/month or EUR 750/year), and **6 cameras** (EUR 95/month or EUR 950/year), alongside optional hardware (**Barnstar box** at EUR 920 and **Tested camera** at EUR 150).
 
 ---
 

@@ -26,7 +26,9 @@ export STRIPE_API_KEY
   echo "orbit-core-$ENV-STRIPE_SECRET_KEY is not a Stripe secret key" >&2
   exit 1
 }
-URL="$(g run services describe "$SERVICE" --region="$REGION" --format='value(status.url)')/v1/billing/webhook"
+# Staging is served at api.barnstar.dev (Cloud Run domain mapping); override with CORE_PUBLIC_URL.
+case "$ENV" in staging) CORE_PUBLIC_URL="${CORE_PUBLIC_URL:-https://api.barnstar.dev}" ;; esac
+URL="${CORE_PUBLIC_URL:-$(g run services describe "$SERVICE" --region="$REGION" --format='value(status.url)')}/v1/billing/webhook"
 
 endpoint_id="$(stripe webhook_endpoints list --limit 100 |
   bun -e 'const j=await Bun.stdin.json();console.log(j.data.find(e=>e.url===process.argv[1])?.id??"")' "$URL")"

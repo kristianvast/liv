@@ -12,11 +12,11 @@ export const account: Catalog<typeof en> = {
   "field.email": "E-post",
   "field.password": "Passord",
   "field.passwordHint": "Minst 10 tegn",
-  "field.terms": "Jeg godtar Pecorvas vilkår for bruk og personvernerklæring",
+  "field.terms": "Jeg godtar Barnstars vilkår for bruk og personvernerklæring",
   "forgot.link": "Glemt passordet?",
   "google.continue": "Fortsett med Google",
   "google.terms":
-    "Når du fortsetter med Google, godtar du Pecorvas vilkår for bruk og personvernerklæring.",
+    "Når du fortsetter med Google, godtar du Barnstars vilkår for bruk og personvernerklæring.",
   "google.waiting":
     "Fullfør innloggingen med Google i nettleseren. Orbit oppdaterer seg selv når du er ferdig.",
   "google.reopen": "Åpne siden igjen",
@@ -127,7 +127,7 @@ export const account: Catalog<typeof en> = {
   "billing.voiceMeter": "Taleminutter",
   "billing.voiceUsage": "{used} / {allowance} min",
   "billing.freeCopy":
-    "Orbit og Orion har åpen kildekode og er gratis; bruk ditt eget KI-abonnement eller egen nøkkel under Leverandører, eller velg en plan for å bruke Orion i Pecorvas sky.",
+    "Orbit og Orion har åpen kildekode og er gratis; bruk ditt eget KI-abonnement eller egen nøkkel under Leverandører, eller velg en plan for å bruke Orion i Barnstars sky.",
   "billing.signedOutPrompt": "Logg inn ovenfor for å velge en plan eller se gårdens skyforbruk.",
   "billing.choosePlan": "Velg en plan",
   "billing.manageBilling": "Administrer betaling",

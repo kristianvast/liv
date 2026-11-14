@@ -1,0 +1,15 @@
+2026-11-12T00:05:58.095Z
+
+===== assets =====
+page /:
+orion-voice.css?v=7
+orion-voice.js?v=15
+page /variants/A/:
+
+===== scriptCopy =====
+8
+orion-voice.js -> 200 86262 bytes
+orion-halo.js -> 200
+
+===== demoSession =====
+POST /v1/voice/demo/session -> 400 | fields: error

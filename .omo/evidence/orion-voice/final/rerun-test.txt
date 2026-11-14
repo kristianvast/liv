@@ -1,0 +1,1002 @@
+$ bun run --filter '*' test && bun test ./skills
+@orbit/e2e test: bun test v1.4.4 (38afee6c8)
+@orbit/schema test: bun test v1.4.4 (38afee6c8)
+@orbit/e2e test: 
+@orbit/e2e test: scripts/check-workflows.test.ts:
+@orbit/schema test: 
+@orbit/schema test: test/migrate.test.ts:
+@orbit/e2e test: (pass) accepts a minimal workflow [8.43ms]
+@orbit/e2e test: (pass) reports a job without runs-on and a duplicate key [1.46ms]
+@orbit/e2e test: 
+@orbit/e2e test:  2 pass
+@orbit/e2e test:  0 fail
+@orbit/e2e test:  3 expect() calls
+@orbit/e2e test: Ran 2 tests across 1 file. [61.00ms]
+@orbit/e2e test: Exited with code 0
+@orbit/schema test: (pass) migrations apply on an in-memory bun:sqlite db and are idempotent [7.81ms]
+@orbit/schema test: 
+@orbit/schema test: test/ade.test.ts:
+@orbit/schema test: (pass) animals > animalToAde output validates against icarAnimalCoreResource [10.68ms]
+@orbit/schema test: (pass) animals > the validator rejects a resource without an identifier [0.04ms]
+@orbit/schema test: (pass) animals > official id is primary; Orbit id rides along as an alternative identifier [0.01ms]
+@orbit/schema test: (pass) animals > round trip preserves mapped columns (0) [0.11ms]
+@orbit/schema test: (pass) animals > round trip preserves mapped columns (1) [0.01ms]
+@orbit/schema test: (pass) animals > adeToAnimal rejects missing identifier [0.07ms]
+@orbit/schema test: (pass) animals > adeToAnimal rejects unsupported specie [0.02ms]
+@orbit/schema test: (pass) animals > adeToAnimal rejects bad birthDate
+@orbit/schema test: (pass) animals > adeToAnimal rejects unknown gender [0.04ms]
+@orbit/schema test: (pass) animals > adeToAnimal rejects wrong resourceType
+@orbit/schema test: (pass) animals > adeToAnimal rejects not an object
+@orbit/schema test: (pass) events > milking exports a valid ADE event and round-trips [6.93ms]
+@orbit/schema test: (pass) events > weight exports a valid ADE event and round-trips [1.99ms]
+@orbit/schema test: (pass) events > heat_alert exports a valid ADE event and round-trips [2.97ms]
+@orbit/schema test: (pass) events > health_event exports a valid ADE event and round-trips [1.54ms]
+@orbit/schema test: (pass) events > insemination exports a valid ADE event and round-trips [4.53ms]
+@orbit/schema test: (pass) events > pregnancy_check exports a valid ADE event and round-trips [1.38ms]
+@orbit/schema test: (pass) events > calving exports a valid ADE event and round-trips [2.59ms]
+@orbit/schema test: (pass) events > abortion exports a valid ADE event and round-trips [0.34ms]
+@orbit/schema test: (pass) events > dry_off exports a valid ADE event and round-trips [0.17ms]
+@orbit/schema test: (pass) events > treatment exports a valid ADE event and round-trips [4.44ms]
+@orbit/schema test: (pass) events > arrival exports a valid ADE event and round-trips [6.17ms]
+@orbit/schema test: (pass) events > departure exports a valid ADE event and round-trips [1.54ms]
+@orbit/schema test: (pass) events > birth exports a valid ADE event and round-trips [0.48ms]
+@orbit/schema test: (pass) events > death exports a valid ADE event and round-trips [0.93ms]
+@orbit/schema test: (pass) events > activity has no ADE event [0.02ms]
+@orbit/schema test: (pass) events > rumination has no ADE event
+@orbit/schema test: (pass) events > temperature has no ADE event
+@orbit/schema test: (pass) events > calving_alert has no ADE event
+@orbit/schema test: (pass) events > insemination without inseminationType cannot be exported [0.03ms]
+@orbit/schema test: (pass) events > milk weight in pounds is converted to kilograms [0.02ms]
+@orbit/schema test: (pass) events > adeToObservation rejects unknown resourceType
+@orbit/schema test: (pass) events > adeToObservation rejects bad eventDateTime
+@orbit/schema test: (pass) events > adeToObservation rejects missing animal
+@orbit/schema test: (pass) events > adeToObservation rejects unsupported unit
+@orbit/schema test: 
+@orbit/schema test: test/wearable.test.ts:
+@orbit/schema test: (pass) single wearable per animal > partial unique index rejects a second active wearable [4.00ms]
+@orbit/schema test: (pass) single wearable per animal > non-wearable devices may be bound alongside a wearable [1.68ms]
+@orbit/schema test: (pass) single wearable per animal > after unbinding, a different wearable may be bound [2.46ms]
+@orbit/schema test: (pass) single wearable per animal > assertSingleWearable throws a readable error before the constraint [2.90ms]
+@orbit/schema test: (pass) single wearable per animal > findWearableConflict (pure) [0.03ms]
+@orbit/schema test: 
+@orbit/schema test: test/parity.test.ts:
+@orbit/schema test: (pass) farms has identical columns in sqlite and pg [0.07ms]
+@orbit/schema test: (pass) animals has identical columns in sqlite and pg [0.20ms]
+@orbit/schema test: (pass) devices has identical columns in sqlite and pg [0.04ms]
+@orbit/schema test: (pass) device_bindings has identical columns in sqlite and pg [0.08ms]
+@orbit/schema test: (pass) connectors has identical columns in sqlite and pg [0.03ms]
+@orbit/schema test: (pass) observations has identical columns in sqlite and pg [0.07ms]
+@orbit/schema test: (pass) cameras has identical columns in sqlite and pg [0.02ms]
+@orbit/schema test: (pass) camera_layouts has identical columns in sqlite and pg [0.05ms]
+@orbit/schema test: 
+@orbit/schema test: test/seed.test.ts:
+@orbit/schema test: (pass) seedDemoFarm creates the demo farm and respects the one-wearable rule [37.67ms]
+@orbit/schema test: (pass) seedDemoFarm backs each reproduction status with the recorded event [17.10ms]
+@orbit/schema test: 
+@orbit/schema test: test/camera-layouts.test.ts:
+@orbit/schema test: (pass) camera layouts allow only one live row per farm and retain soft-deleted rows [1.93ms]
+@orbit/schema test: 
+@orbit/schema test: test/hlc.test.ts:
+@orbit/schema test: (pass) hlc > ticks are strictly increasing even when the wall clock stalls or goes back [0.14ms]
+@orbit/schema test: (pass) hlc > receive moves past a remote timestamp from the future [0.04ms]
+@orbit/schema test: (pass) hlc > receive with equal wall time takes max counter + 1
+@orbit/schema test: (pass) hlc > concurrent writes from two nodes have a deterministic total order
+@orbit/schema test: (pass) hlc > rejects excessive drift and malformed input [0.04ms]
+@orbit/schema test: 
+@orbit/schema test:  57 pass
+@orbit/schema test:  0 fail
+@orbit/schema test:  236 expect() calls
+@orbit/schema test: Ran 57 tests across 7 files. [298.00ms]
+@orbit/schema test: Exited with code 0
+@orbit/sync test: bun test v1.4.4 (38afee6c8)
+@orbit/protocol test: bun test v1.4.4 (38afee6c8)
+@orbit/connectors test: bun test v1.4.4 (38afee6c8)
+@core/api test: bun test v1.4.4 (38afee6c8)
+@orbit/sync test: 
+@orbit/sync test: test/engine.test.ts:
+@orbit/connectors test: 
+@orbit/connectors test: template/index.test.ts:
+@orbit/protocol test: 
+@orbit/protocol test: test/codec.test.ts:
+@core/api test: 
+@core/api test: test/billing-trial.test.ts:
+@orbit/sync test: (pass) pull > applies shape rows, normalising Postgres values, and resumes from the stored offset [13.35ms]
+@orbit/sync test: (pass) pull > sends the configured farm header on pushes and shape reads [6.47ms]
+@orbit/sync test: (pass) pull > 409 must-refetch restarts the shape from offset -1 with the new handle [6.72ms]
+@orbit/sync test: (pass) last-writer-wins > a newer incoming row overwrites an older local row [5.36ms]
+@orbit/sync test: (pass) last-writer-wins > an older incoming row never overwrites a newer local row [5.00ms]
+@orbit/sync test: (pass) outbox push > pushes in seq-ordered batches and acknowledges every row [5.78ms]
+@orbit/sync test: (pass) outbox push > retries with backoff after a 500 and then marks rows acknowledged [7.89ms]
+@orbit/sync test: (pass) outbox push > keeps the outbox intact while Core is unreachable [8.14ms]
+@orbit/sync test: (pass) outbox push > conflict results stay pending; rejected results are settled with the error [5.58ms]
+@orbit/sync test: (pass) soft deletes > an incoming soft delete keeps the row and sets deleted_at [12.42ms]
+@orbit/sync test: (pass) soft deletes > a local soft delete is pushed as a delete op carrying deleted_at [4.59ms]
+@orbit/sync test: (pass) single active wearable > a newer incoming collar binding ends the older local bolus binding [4.96ms]
+@orbit/sync test: (pass) single active wearable > an older incoming binding is stored already ended when the local one is newer [6.40ms]
+@orbit/sync test: 
+@orbit/sync test: test/camera-layouts.test.ts:
+@orbit/sync test: (pass) camera layouts sync JSON from shapes and push the stored layout through the outbox [7.26ms]
+@orbit/sync test: 
+@orbit/sync test:  14 pass
+@orbit/sync test:  0 fail
+@orbit/sync test:  44 expect() calls
+@orbit/sync test: Ran 14 tests across 2 files. [138.00ms]
+@orbit/sync test: Exited with code 0
+@orbit/protocol test: (pass) decodeClientMessage > accepts valid requests and round-trips encodeRequest [0.51ms]
+@orbit/protocol test: (pass) decodeClientMessage > validates named db queries and mutations [1.69ms]
+@orbit/protocol test: (pass) decodeClientMessage > rejects malformed frames with readable errors [0.22ms]
+@orbit/protocol test: (pass) decodeServerMessage > responses and events [0.41ms]
+@orbit/protocol test: (pass) decodeServerMessage > validateResult checks per-request result shape [0.13ms]
+@orbit/protocol test: (pass) modules contract > requests accept only known module ids [0.11ms]
+@orbit/protocol test: (pass) modules contract > results and modules.updated validate the state shape [0.46ms]
+@orbit/protocol test: (pass) parseReadyLine [0.05ms]
+@orbit/protocol test: 
+@orbit/protocol test: test/billing-voice.test.ts:
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts billing.checkout requests [0.14ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts billing.checkout requests [0.20ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts billing.checkout requests [0.03ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts billing.checkout requests
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts billing.plans requests [0.01ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts billing.portal requests [0.01ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts billing.status requests
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts voice.start requests [0.01ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts voice.stop requests
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts voice.turn requests [0.06ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts voice.tool requests [0.02ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > rejects malformed billing.checkout [0.07ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > rejects malformed billing.checkout [0.03ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > rejects malformed billing.checkout [0.06ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > rejects malformed billing.checkout [0.02ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > rejects malformed voice.turn [0.02ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > rejects malformed voice.turn [0.05ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > rejects malformed voice.tool [0.02ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > rejects malformed voice.start [0.02ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > validates billing status usage and nullable subscription fields [0.53ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > validates the billing catalogue when locked=%s [0.13ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > validates the billing catalogue when locked=%s [0.10ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts voice.note events [0.02ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts browser.view events [0.04ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > accepts browser.view events [0.03ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > voice.start answers with the local socket path and the prompt values [0.38ms]
+@orbit/protocol test: (pass) billing and voice wire contracts > uses the named observation mutation codec [0.07ms]
+@orbit/protocol test: 
+@orbit/protocol test: test/client.test.ts:
+@orbit/connectors test: (pass) template connector > test() reads the fixture [1.24ms]
+@orbit/connectors test: (pass) template connector > test() reports a missing file instead of throwing [0.22ms]
+@orbit/connectors test: (pass) template connector > sync() writes animals and weight observations [0.33ms]
+@orbit/connectors test: 
+@orbit/connectors test: test/generic-csv.test.ts:
+@orbit/protocol test: (pass) createOrionClient > hello, typed requests, queries and events [5.32ms]
+@orbit/connectors test: (pass) generic_csv > maps columns to animals, a bound collar and observations [3.62ms]
+@orbit/protocol test: (pass) createOrionClient > error responses and invalid results reject with OrionRequestError [2.09ms]
+@orbit/connectors test: (pass) generic_csv > utcOffsetMinutes shifts local export times to UTC [0.97ms]
+@orbit/connectors test: (pass) generic_csv > a second sensor for the same animal is skipped with a warning [0.45ms]
+@orbit/connectors test: (pass) generic_csv > scale converts units [0.45ms]
+@orbit/connectors test: (pass) generic_csv > test() lists columns, and flags a wrong mapping [1.34ms]
+@orbit/connectors test: (pass) generic_csv > a missing animal id column makes sync fail, a missing mapping is a config error [0.73ms]
+@orbit/connectors test: (pass) value parsing > numbers accept decimal comma and thousands separators [0.02ms]
+@orbit/connectors test: (pass) value parsing > timestamps: ISO, offsets, dmy, mdy and invalid dates [0.04ms]
+@orbit/connectors test: 
+@orbit/connectors test: test/csv.test.ts:
+@orbit/connectors test: (pass) parseCsv > handles quotes, embedded delimiters and newlines, CRLF and BOM [0.10ms]
+@orbit/connectors test: (pass) parseCsv > auto-detects semicolon and tab delimiters [0.04ms]
+@orbit/connectors test: (pass) parseCsv > an explicit delimiter wins over detection [0.02ms]
+@orbit/connectors test: (pass) parseCsv > pads short rows and rejects empty or unterminated input [0.07ms]
+@orbit/connectors test: (pass) parseXmlRecords > merges attributes and child elements and decodes entities [0.19ms]
+@orbit/connectors test: (pass) parseXmlRecords > throws when no record element exists [0.02ms]
+@orbit/connectors test: 
+@orbit/connectors test: test/sdk.test.ts:
+@orbit/connectors test: (pass) defineConnector > validates config and reports every issue [0.29ms]
+@orbit/connectors test: (pass) defineConnector > runSync counts writes and runTest returns the result [0.13ms]
+@orbit/connectors test: (pass) memory writer > an animal never gets a second active wearable [0.07ms]
+@orbit/connectors test: (pass) memory writer > non-wearables are not limited and rebinding is idempotent [0.01ms]
+@orbit/connectors test: (pass) memory writer > moving a device ends its previous binding [0.02ms]
+@orbit/connectors test: (pass) memory writer > rejects references to unknown animals and devices [0.02ms]
+@orbit/connectors test: (pass) builtin connectors > registry exposes only the generic CSV importer [0.01ms]
+@orbit/connectors test: (pass) builtin connectors > every adapter's API path throws NotImplementedError [0.07ms]
+@orbit/connectors test: (pass) builtin connectors > sync stops when the signal is aborted [0.23ms]
+@orbit/connectors test: 
+@orbit/connectors test:  26 pass
+@orbit/connectors test:  0 fail
+@orbit/connectors test:  61 expect() calls
+@orbit/connectors test: Ran 26 tests across 4 files. [206.00ms]
+@orbit/connectors test: Exited with code 0
+@orbit/protocol test: (pass) createOrionClient > request timeout [51.50ms]
+@orbit/protocol test: (pass) createOrionClient > bad token ends in unauthorized without reconnecting [1.35ms]
+@orbit/protocol test: (pass) createOrionClient > reconnects after a dropped connection and fails in-flight requests [13.21ms]
+@orbit/protocol test: (pass) createOrionClient > close rejects pending work and stops [1.35ms]
+@orbit/protocol test: 
+@orbit/protocol test:  41 pass
+@orbit/protocol test:  0 fail
+@orbit/protocol test:  109 expect() calls
+@orbit/protocol test: Ran 41 tests across 3 files. [266.00ms]
+@orbit/protocol test: Exited with code 0
+@orbit/app test: 
+@orbit/app test: [1m[46m RUN [49m[22m [36mv3.2.7 [39m[90m/Users/kristianvastveit/projects/orbit/apps/orbit[39m
+@orbit/app test: 
+@core/api test: (pass) the free month grants Orion allowances and reports its end while plan stays free [50.08ms]
+@core/api test: (pass) an unconfirmed owner gets no free month until the address is confirmed [64.24ms]
+@core/api test: (pass) the free month permits the LLM gateway and records usage [38.11ms]
+@core/api test: (pass) the free month is over at 2026-11-19T12:00:00Z and blocks the model [32.70ms]
+@core/api test: (pass) the free month is over at 2026-11-20T12:00:00Z and blocks the model [20.86ms]
+@core/api test: (pass) status clears trialEndsAt after the free month [14.64ms]
+@core/api test: (pass) free month status counts the single token and voice pool from the owner's creation date [15.80ms]
+@core/api test: (pass) the gateway refuses an exhausted free pool from the previous calendar month [15.40ms]
+@core/api test: (pass) the earliest owner account starts the month even if another owner joined later [16.61ms]
+@core/api test: (pass) a farm without an owner has no free month [17.27ms]
+@core/api test: (pass) a paid active plan supersedes the free month [14.07ms]
+@core/api test: (pass) a paid trialing plan supersedes the free month [21.59ms]
+@core/api test: (pass) a farm budget override still grants model access after the free month [13.18ms]
+@core/api test: (pass) a zero budget override exhausts an available free allowance [18.40ms]
+@core/api test: (pass) a zero budget override exhausts an available cam2 allowance [13.91ms]
+@core/api test: 
+@core/api test: test/feedback.test.ts:
+@orbit/app test:  [32m✓[39m src/i18n/i18n.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 66[2mms[22m[39m
+@core/api test: (pass) feedback > stores feedback with optional session: %s [34.03ms]
+@core/api test: (pass) feedback > stores feedback with optional session: %s [36.02ms]
+@core/api test: (pass) feedback > ignores a farm the user cannot act on: 00000000-0000-4000-8000-0000000000b2 [74.35ms]
+@core/api test: (pass) feedback > ignores a farm the user cannot act on: not-a-uuid [13.77ms]
+@core/api test: (pass) feedback > rejects invalid feedback 0 [20.12ms]
+@core/api test: (pass) feedback > rejects invalid feedback %# [12.15ms]
+@core/api test: (pass) feedback > rejects invalid feedback 2 [32.50ms]
+@core/api test: (pass) feedback > rejects invalid feedback 3 [7.95ms]
+@core/api test: (pass) feedback > rejects invalid feedback 4 [6.96ms]
+@core/api test: (pass) feedback > rejects invalid feedback 5 [12.85ms]
+@core/api test: (pass) feedback > rejects invalid feedback 6 [20.83ms]
+@core/api test: (pass) feedback > rejects invalid feedback 7 [15.03ms]
+@core/api test: (pass) feedback > rejects invalid feedback 8 [13.37ms]
+@core/api test: (pass) feedback > rejects invalid feedback 9 [13.71ms]
+@core/api test: (pass) feedback > malformed JSON returns the error envelope [9.67ms]
+@core/api test: (pass) feedback > enforces rolling persistent limits, including parallel calls: %s [74.05ms]
+@orbit/app test:  [32m✓[39m src/features/guide/browser-view.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 59[2mms[22m[39m
+@orbit/app test:  [32m✓[39m src/features/guide/guide-look-parse.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+@orbit/app test:  [32m✓[39m src/app/theme.test.tsx [2m([22m[2m1 test[22m[2m)[22m[32m 22[2mms[22m[39m
+@core/api test: (pass) feedback > enforces rolling persistent limits, including parallel calls: %s [162.56ms]
+@orbit/app test: [90mstderr[2m | src/features/chat/chat.test.tsx[2m > [22m[2mturn grouping[2m > [22m[2mkeeps tool group collapsed when tools are running or failed and expands only on click
+@orbit/app test: [22m[39mAn update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: 
+@core/api test: (pass) feedback > changing a client supplied forwarded hop cannot bypass the IP limit [92.11ms]
+@core/api test: (pass) submissions > requires a valid session: %s [7.23ms]
+@core/api test: (pass) submissions > requires a valid session: legacy-farm-token [6.82ms]
+@orbit/app test: [90mstderr[2m | src/features/chat/billing-voice.test.tsx[2m > [22m[2mAccountCard billing plans and usage meters[2m > [22m[2mkeeps the sign-in prompt without loading billing when signed out
+@orbit/app test: [22m[39mAn update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: 
+@core/api test: (pass) submissions > requires a valid session: orb_s_invalid [11.82ms]
+@core/api test: (pass) submissions > stores UTF-8 bytes and the member farm [15.12ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: /absolute.ts [17.36ms]
+@orbit/app test:  [32m✓[39m src/features/guide/guide-interactions.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 251[2mms[22m[39m
+@core/api test: (pass) submissions > rejects unsafe file paths: ../secret [13.45ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: src/../secret [17.73ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: src//file [6.96ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: ./file [7.48ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: C:/file [45.85ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: src\file [32.05ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: -file [12.90ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: src/.hidden [9.31ms]
+@orbit/app test:  [32m✓[39m src/features/cameras/cameras.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 112[2mms[22m[39m
+@core/api test: (pass) submissions > rejects unsafe file paths: src/file..ts [9.02ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx [19.79ms]
+@orbit/app test: [90mstderr[2m | src/features/chat/chat.test.tsx[2m > [22m[2mChatPage and SettingsPage integration[2m > [22m[2madds an API key through the sign-in dialog without ever showing it, and undoes a snapshot
+@orbit/app test: [22m[39morbit: account status unavailable: Error: Unhandled request: account.status
+@orbit/app test:     at Object.<anonymous> [90m(/Users/kristianvastveit/projects/orbit/apps/orbit/[39msrc/features/chat/chat.test.tsx:270:17[90m)[39m
+@orbit/app test:     at Object.mockCall (file:///Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/@vitest+spy@3.2.7/node_modules/[4m@vitest/spy[24m/dist/index.js:96:15)
+@orbit/app test:     at Object.spy [as request] (file:///Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/tinyspy@4.0.6/node_modules/[4mtinyspy[24m/dist/index.js:47:80)
+@orbit/app test:     at [90m/Users/kristianvastveit/projects/orbit/apps/orbit/[39msrc/features/settings/AccountCard.tsx:64:12
+@orbit/app test:     at Object.react_stack_bottom_frame (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:28656:20)
+@orbit/app test:     at runWithFiberInDEV (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:1048:13)
+@orbit/app test:     at commitHookEffectListMount (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:13748:29)
+@orbit/app test:     at commitHookPassiveMountEffects (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:13835:11)
+@orbit/app test:     at commitPassiveMountOnFiber (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:16906:13)
+@orbit/app test:     at recursivelyTraversePassiveMountEffects (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:16851:13)
+@orbit/app test: orbit: local UI status unavailable: Error: Unhandled request: localUi.status
+@orbit/app test:     at Object.<anonymous> [90m(/Users/kristianvastveit/projects/orbit/apps/orbit/[39msrc/features/chat/chat.test.tsx:270:17[90m)[39m
+@orbit/app test:     at Object.mockCall (file:///Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/@vitest+spy@3.2.7/node_modules/[4m@vitest/spy[24m/dist/index.js:96:15)
+@orbit/app test:     at Object.spy [as request] (file:///Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/tinyspy@4.0.6/node_modules/[4mtinyspy[24m/dist/index.js:47:80)
+@orbit/app test:     at [90m/Users/kristianvastveit/projects/orbit/apps/orbit/[39msrc/features/settings/YourOrbitCard.tsx:22:30
+@orbit/app test:     at [90m/Users/kristianvastveit/projects/orbit/apps/orbit/[39msrc/features/settings/YourOrbitCard.tsx:31:32
+@orbit/app test:     at Object.react_stack_bottom_frame (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:28656:20)
+@orbit/app test:     at runWithFiberInDEV (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:1048:13)
+@orbit/app test:     at commitHookEffectListMount (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:13748:29)
+@orbit/app test:     at commitHookPassiveMountEffects (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:13835:11)
+@orbit/app test:     at commitPassiveMountOnFiber (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:16906:13)
+@orbit/app test: 
+@core/api test: (pass) submissions > rejects unsafe file paths: src/ [24.44ms]
+@core/api test: (pass) submissions > rejects invalid builds 0 [10.16ms]
+@core/api test: (pass) submissions > rejects invalid builds 1 [16.72ms]
+@orbit/app test: [90mstderr[2m | src/features/voice/voice.test.tsx[2m > [22m[2mSaved voice tool cards in Chat timeline[2m > [22m[2mrenders plain-language summaries for db_query and db_mutate in English and Norwegian while keeping technical inputs inside expanded details
+@orbit/app test: [22m[39mAn update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: 
+@orbit/app test:  [32m✓[39m src/features/voice/voice.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[33m 422[2mms[22m[39m
+@core/api test: (pass) submissions > rejects invalid builds 2 [22.22ms]
+@core/api test: (pass) submissions > rejects invalid builds 3 [12.48ms]
+@core/api test: (pass) submissions > rejects invalid builds 4 [6.62ms]
+@core/api test: (pass) submissions > rejects invalid builds 5 [10.58ms]
+@orbit/app test: [90mstderr[2m | src/features/chat/chat.test.tsx[2m > [22m[2mChatPage and SettingsPage integration[2m > [22m[2mshows a subscription's sign-in link and code field, and cancels the sign-in on close
+@orbit/app test: [22m[39morbit: account status unavailable: Error: Unhandled request: account.status
+@orbit/app test:     at Object.<anonymous> [90m(/Users/kristianvastveit/projects/orbit/apps/orbit/[39msrc/features/chat/chat.test.tsx:270:17[90m)[39m
+@orbit/app test:     at Object.mockCall (file:///Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/@vitest+spy@3.2.7/node_modules/[4m@vitest/spy[24m/dist/index.js:96:15)
+@orbit/app test:     at Object.spy [as request] (file:///Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/tinyspy@4.0.6/node_modules/[4mtinyspy[24m/dist/index.js:47:80)
+@orbit/app test:     at [90m/Users/kristianvastveit/projects/orbit/apps/orbit/[39msrc/features/settings/AccountCard.tsx:64:12
+@orbit/app test:     at Object.react_stack_bottom_frame (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:28656:20)
+@orbit/app test:     at runWithFiberInDEV (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:1048:13)
+@orbit/app test:     at commitHookEffectListMount (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:13748:29)
+@orbit/app test:     at commitHookPassiveMountEffects (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:13835:11)
+@orbit/app test:     at commitPassiveMountOnFiber (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:16906:13)
+@orbit/app test:     at recursivelyTraversePassiveMountEffects (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:16851:13)
+@orbit/app test: orbit: local UI status unavailable: Error: Unhandled request: localUi.status
+@orbit/app test:     at Object.<anonymous> [90m(/Users/kristianvastveit/projects/orbit/apps/orbit/[39msrc/features/chat/chat.test.tsx:270:17[90m)[39m
+@orbit/app test:     at Object.mockCall (file:///Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/@vitest+spy@3.2.7/node_modules/[4m@vitest/spy[24m/dist/index.js:96:15)
+@orbit/app test:     at Object.spy [as request] (file:///Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/tinyspy@4.0.6/node_modules/[4mtinyspy[24m/dist/index.js:47:80)
+@orbit/app test:     at [90m/Users/kristianvastveit/projects/orbit/apps/orbit/[39msrc/features/settings/YourOrbitCard.tsx:22:30
+@orbit/app test:     at [90m/Users/kristianvastveit/projects/orbit/apps/orbit/[39msrc/features/settings/YourOrbitCard.tsx:31:32
+@orbit/app test:     at Object.react_stack_bottom_frame (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:28656:20)
+@orbit/app test:     at runWithFiberInDEV (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:1048:13)
+@orbit/app test:     at commitHookEffectListMount (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:13748:29)
+@orbit/app test:     at commitHookPassiveMountEffects (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:13835:11)
+@orbit/app test:     at commitPassiveMountOnFiber (/Users/kristianvastveit/projects/orbit/node_modules/[4m.bun[24m/react-dom@19.3.1+0441d6f8f57aca1e/node_modules/[4mreact-dom[24m/cjs/react-dom-client.development.js:16906:13)
+@orbit/app test: 
+@core/api test: (pass) submissions > rejects invalid builds 6 [13.45ms]
+@core/api test: (pass) submissions > rejects invalid builds 7 [8.48ms]
+@orbit/app test:  [32m✓[39m src/features/herd/farm-screens.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 263[2mms[22m[39m
+@core/api test: (pass) submissions > rejects invalid builds 8 [35.66ms]
+@core/api test: (pass) submissions > rejects invalid builds 9 [8.86ms]
+@core/api test: (pass) submissions > rejects invalid builds 10 [12.60ms]
+@orbit/app test:  [32m✓[39m src/features/chat/billing-voice.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[33m 571[2mms[22m[39m
+@orbit/app test:  [32m✓[39m test/app.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[33m 326[2mms[22m[39m
+@core/api test: (pass) submissions > accepts exactly 512 KiB and rejects larger UTF-8 content across files [29.35ms]
+@core/api test: (pass) submissions > lists only the caller's own submissions newest first without bodies [21.28ms]
+@core/api test: (pass) owner review > disabled admin returns 404: GET /v1/admin/feedback [9.81ms]
+@core/api test: (pass) owner review > disabled admin returns 404: PATCH /v1/admin/feedback/00000000-0000-4000-8000-0000000000b1 [7.15ms]
+@core/api test: (pass) owner review > disabled admin returns 404: GET /v1/admin/submissions [7.30ms]
+@orbit/app test:  [32m✓[39m src/features/chat/chat.test.tsx [2m([22m[2m16 tests[22m[2m)[22m[33m 632[2mms[22m[39m
+@core/api test: (pass) owner review > disabled admin returns 404: GET /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [11.01ms]
+@core/api test: (pass) owner review > disabled admin returns 404: PATCH /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [6.58ms]
+@core/api test: (pass) owner review > wrong admin token returns 401: GET /v1/admin/feedback [9.32ms]
+@core/api test: (pass) owner review > wrong admin token returns 401: PATCH /v1/admin/feedback/00000000-0000-4000-8000-0000000000b1 [8.17ms]
+@core/api test: (pass) owner review > wrong admin token returns 401: GET /v1/admin/submissions [8.48ms]
+@core/api test: (pass) owner review > wrong admin token returns 401: GET /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [5.08ms]
+@core/api test: (pass) owner review > wrong admin token returns 401: PATCH /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [4.83ms]
+@core/api test: (pass) owner review > admin HTML is disabled without a token and served without assets when enabled [6.88ms]
+@core/api test: (pass) owner review > lists feedback, changes status and filters the result [11.41ms]
+@core/api test: (pass) owner review > reviews builds with metadata lists and file bodies only in detail [12.26ms]
+@orbit/app test:  [32m✓[39m src/app/modules.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[33m 489[2mms[22m[39m
+@core/api test: (pass) owner review > rejects invalid review input and missing resources [8.03ms]
+@core/api test: (pass) sends notifications through the log mailer without submission file bodies [11.81ms]
+@orbit/app test: 
+@core/api test: (pass) a failed notification still persists and accepts both requests [10.39ms]
+@orbit/app test: [2m Test Files [22m [1m[32m12 passed[39m[22m[90m (12)[39m
+@orbit/app test: [2m      Tests [22m [1m[32m78 passed[39m[22m[90m (78)[39m
+@orbit/app test: [2m   Start at [22m 22:35:46
+@orbit/app test: [2m   Duration [22m 3.87s[2m (transform 1.63s, setup 973ms, collect 23.31s, tests 3.29s, environment 7.50s, prepare 1.47s)[22m
+@orbit/app test: 
+@core/api test: (pass) allows website CORS on /v1/feedback [17.68ms]
+@core/api test: (pass) allows website CORS on /v1/submissions [6.74ms]
+@core/api test: 
+@core/api test: test/billing-webhook-contract.test.ts:
+@orbit/app test: Exited with code 0
+@core/api test: (pass) subscription webhook accepts orion from metadata [8.53ms]
+@core/api test: (pass) subscription webhook accepts orion from lookup-month [7.99ms]
+@core/api test: (pass) subscription webhook accepts orion from lookup-year [7.81ms]
+@core/api test: (pass) subscription webhook accepts cam2 from metadata [6.66ms]
+@core/api test: (pass) subscription webhook accepts cam2 from lookup-month [8.04ms]
+@core/api test: (pass) subscription webhook accepts cam2 from lookup-year [7.47ms]
+@core/api test: (pass) subscription webhook accepts cam4 from metadata [7.41ms]
+@core/api test: (pass) subscription webhook accepts cam4 from lookup-month [7.39ms]
+@core/api test: (pass) subscription webhook accepts cam4 from lookup-year [6.66ms]
+@core/api test: (pass) subscription webhook accepts cam6 from metadata [7.97ms]
+@core/api test: (pass) subscription webhook accepts cam6 from lookup-month [7.03ms]
+@core/api test: (pass) subscription webhook accepts cam6 from lookup-year [8.09ms]
+@core/api test: (pass) subscription webhook rejects invalid metadata plan pen [7.50ms]
+@core/api test: (pass) subscription webhook rejects invalid metadata plan barn [5.90ms]
+@core/api test: (pass) subscription webhook rejects invalid metadata plan free [8.33ms]
+@core/api test: (pass) subscription webhook rejects invalid metadata plan cam3 [13.62ms]
+@core/api test: (pass) subscription webhook rejects invalid metadata plan unknown [8.35ms]
+@core/api test: (pass) subscription webhook rejects invalid lookup key pecorva_pen_monthly [7.00ms]
+@core/api test: (pass) subscription webhook rejects invalid lookup key pecorva_barn_yearly [6.09ms]
+@core/api test: (pass) subscription webhook rejects invalid lookup key pecorva_cam3_monthly [5.87ms]
+@core/api test: (pass) subscription webhook rejects invalid lookup key other_cam2_monthly [7.78ms]
+@core/api test: (pass) a paid subscription checkout records hardware and mails once alongside the plan [10.48ms]
+@core/api test: (pass) delayed subscription hardware payment mails once even with distinct success events [10.55ms]
+@core/api test: 
+@core/api test: test/billing.test.ts:
+@core/api test: (pass) a signed subscription update changes billing status and allowances [9.64ms]
+@core/api test: (pass) invalid signature t=1,v1=bad does not apply an event [6.32ms]
+@core/api test: (pass) invalid signature t=1793966400,v1=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa does not apply an event [6.51ms]
+@core/api test: (pass) invalid signature  does not apply an event [7.53ms]
+@core/api test: (pass) a correctly signed event outside the five minute window is rejected [6.05ms]
+@core/api test: (pass) replaying a signed event cannot overwrite a newer subscription [7.92ms]
+@core/api test: (pass) an older subscription event delivered late never overwrites newer state [12.34ms]
+@core/api test: (pass) the Stripe customer link decides the farm even when metadata names an old farm id [6.71ms]
+@core/api test: (pass) hardware orders keep shipping, wait for delayed payments and email once when paid [9.12ms]
+@core/api test: (pass) a completed plan checkout emails the buyer how to sign in to Orbit [7.86ms]
+@core/api test: 
+@core/api test: test/voice-demo.test.ts:
+@core/api test: (pass) POST /v1/voice/demo/session > webrtc (default) returns a conversation token [4.84ms]
+@core/api test: (pass) POST /v1/voice/demo/session > websocket returns a signed url [3.32ms]
+@core/api test: (pass) POST /v1/voice/demo/session > bad body is 400 without an upstream call [1.28ms]
+@core/api test: (pass) POST /v1/voice/demo/session > missing key or agent is 503 not_configured [1.35ms]
+@core/api test: voice demo: ElevenLabs /v1/convai/conversation/token returned 401
+@core/api test: (pass) POST /v1/voice/demo/session > upstream failure is 502 and does not leak the upstream body [3.62ms]
+@core/api test: (pass) POST /v1/voice/demo/session > per-IP limit returns 429 with Retry-After, then recovers after the window [17.20ms]
+@core/api test: (pass) POST /v1/voice/demo/session > daily cap returns 429 until the next UTC day [6.68ms]
+@core/api test: (pass) POST /v1/voice/demo/session > CORS preflight from https://pecorva.com is allowed [1.98ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > hanging up keeps the remaining time: a verified 30 s call leaves 150 s for the next one [4.85ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > used up: 429 allowance_used until the first call leaves the 25 h window [4.61ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > a client that talks past max_seconds is charged the real length [5.31ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > spoofed leading X-Forwarded-For hops, the same IPv6 /64 and a new app instance do not reset it [9.51ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > parallel requests from one visitor never grant more than the allowance [5.65ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > an open call blocks the next one with call_active [4.46ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > a credential that never became a call is refunded after 15 min, not before [7.71ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > a failing conversation lookup fails closed and keeps the reservation [3.62ms]
+@core/api test: voice demo: ElevenLabs /v1/convai/conversation/token returned 500
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > an upstream mint failure does not consume the allowance [4.88ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > client address is the last X-Forwarded-For hop; IPv6 groups by /64 [0.83ms]
+@core/api test: 
+@core/api test: test/orion-voice-agent.test.ts:
+@core/api test: (pass) without an agent id it creates every tool and then the agent that uses them [0.32ms]
+@core/api test: (pass) with an agent id it updates that agent's own tools and creates only the missing ones [0.14ms]
+@core/api test: (pass) a refusal from ElevenLabs stops the sync and names the request [0.05ms]
+@core/api test: 
+@core/api test: test/accounts.test.ts:
+@core/api test: (pass) registration and sign-in > eight-character passwords register; seven characters fail weak_password [91.44ms]
+@core/api test: (pass) registration and sign-in > register signs in, stores only an argon2id hash and a hashed session token [84.34ms]
+@core/api test: (pass) registration and sign-in > duplicate emails, weak passwords and bad addresses are refused [159.44ms]
+@core/api test: (pass) registration and sign-in > wrong passwords and unknown emails get the same 401, then 429 after repeated failures [454.25ms]
+@core/api test: (pass) registration and sign-in > logout revokes the session and expired sessions stop working [155.03ms]
+@core/api test: (pass) Google sign-in > creates a verified passwordless user, consent and device session without email [11.43ms]
+@core/api test: (pass) Google sign-in > returning subjects sign in without terms even when their Google email changes [12.18ms]
+@core/api test: (pass) Google sign-in > links an existing password account by lowercase email and verifies it [232.93ms]
+@core/api test: (pass) Google sign-in > rejects wrong audience tokens [7.87ms]
+@core/api test: (pass) Google sign-in > rejects expired tokens [8.55ms]
+@core/api test: (pass) Google sign-in > rejects future issued tokens [7.94ms]
+@core/api test: (pass) Google sign-in > rejects wrong issuer tokens [7.33ms]
+@core/api test: (pass) Google sign-in > rejects missing subject tokens [8.95ms]
+@core/api test: (pass) Google sign-in > rejects a bad signature and malformed credentials [22.55ms]
+@core/api test: (pass) Google sign-in > requires a verified email: {"email_verified":false} [7.37ms]
+@core/api test: (pass) Google sign-in > requires a verified email: {"email_verified":"true"} [9.81ms]
+@core/api test: (pass) Google sign-in > requires a verified email: {"email":null} [6.88ms]
+@core/api test: (pass) Google sign-in > new users must accept terms and missing configuration disables sign-in [10.51ms]
+@core/api test: (pass) Google sign-in > passwordless login and change fail cleanly; reset can set an eight-character password [381.38ms]
+@core/api test: (pass) Google sign-in > permits the Pecorva website CORS preflight and response [11.98ms]
+@core/api test: (pass) farms and members > claiming a local farm id makes the caller owner; a second claim is refused [161.98ms]
+@core/api test: (pass) farms and members > creating a new farm writes the farm row and lists it in /v1/me [89.88ms]
+@core/api test: (pass) farms and members > owners and managers manage members within their rank; the last owner stays [251.69ms]
+@core/api test: (pass) invites > only the invited email can accept, once, before expiry; revoked codes stop working [445.68ms]
+@core/api test: (pass) invites > workers cannot invite and managers cannot invite owners [226.05ms]
+@core/api test: (pass) farm data with user sessions > roles decide which tables a member may change [225.02ms]
+@core/api test: (pass) farm data with user sessions > sessions need the farm header and a membership; legacy farm tokens still work [144.51ms]
+@core/api test: (pass) farm data with user sessions > the cloud model alias maps to Core's default upstream model and is metered per farm [152.01ms]
+@core/api test: (pass) account lifecycle > sign-up requires accepting the terms and records the data-sharing choice [77.40ms]
+@core/api test: (pass) account lifecycle > a verify link works once, only before it expires, and gates invite acceptance [147.35ms]
+@core/api test: (pass) account lifecycle > password reset never reveals accounts, signs out everywhere and works once [335.88ms]
+@core/api test: (pass) account lifecycle > sessions are listed per device and can be revoked one by one [138.18ms]
+@core/api test: (pass) account lifecycle > deleting an account needs the plan cancelled, wipes the sole-owned cloud farm and keeps exports [273.60ms]
+@core/api test: (pass) account lifecycle > an Orbit farm adopts the empty cloud farm bought on the website, plan included [148.16ms]
+@core/api test: (pass) account lifecycle > a cloud farm that already holds data is never adopted [74.31ms]
+@core/api test: 
+@core/api test: test/billing-gateway.test.ts:
+@core/api test: (pass) a free session farm gets plan_required before calling a model [6.20ms]
+@core/api test: (pass) a paid farm at its allowance gets budget_exceeded [6.31ms]
+@core/api test: (pass) a farm budget override wins over its paid plan allowance [5.90ms]
+@core/api test: (pass) Vertex thinking tokens count toward the farm allowance [6.18ms]
+@core/api test: (pass) billing status includes metered voice usage [6.08ms]
+@core/api test: 
+@core/api test: test/voice-agent.test.ts:
+@core/api test: (pass) agent relays opaque frames in order before upstream opens and meters on client close [10.65ms]
+@core/api test: (pass) agent persists periodic usage and closes both sockets at the shared allowance [1010.44ms]
+@core/api test: (pass) upstream closing ends the agent client connection [9.57ms]
+@core/api test: 
+@core/api test: test/billing-voice-trial.test.ts:
+@core/api test: (pass) the free month grants voice access [7.87ms]
+@core/api test: (pass) previous calendar month voice consumes the free pool [7.00ms]
+@core/api test: (pass) day 31 ends free voice access [7.15ms]
+@core/api test: 
+@core/api test: test/billing-checkout.test.ts:
+@core/api test: (pass) workers cannot start a checkout [6.26ms]
+@core/api test: (pass) checkout resolves a lookup price and attaches the farm to session and subscription [5.11ms]
+@core/api test: (pass) website preflight reaches account route /v1/me/sessions [3.84ms]
+@core/api test: (pass) website preflight reaches account route /v1/me/export [4.16ms]
+@core/api test: (pass) website preflight reaches account route /v1/me/password [4.24ms]
+@core/api test: (pass) website preflight and public plans use the allowed origin [4.01ms]
+@core/api test: (pass) unverified accounts cannot start a checkout [4.53ms]
+@core/api test: (pass) with automatic tax on, checkouts collect VAT ids and billing addresses [5.35ms]
+@core/api test: (pass) without automatic tax the checkout carries no tax fields [5.55ms]
+@core/api test: (pass) checkout without x-orbit-farm creates a default farm when the account has none [5.34ms]
+@core/api test: 
+@core/api test: test/billing-checkout-contract.test.ts:
+@core/api test: (pass) checkout uses the Stripe lookup for orion/month [5.53ms]
+@core/api test: (pass) checkout uses the Stripe lookup for orion/year [5.01ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam2/month [4.98ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam2/year [4.29ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam4/month [4.67ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam4/year [5.47ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam6/month [4.96ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam6/year [4.65ms]
+@core/api test: (pass) checkout rejects invalid plan pen [5.15ms]
+@core/api test: (pass) checkout rejects invalid plan barn [5.18ms]
+@core/api test: (pass) checkout rejects invalid plan free [4.83ms]
+@core/api test: (pass) checkout rejects invalid plan cam3 [5.49ms]
+@core/api test: (pass) checkout rejects invalid plan unknown [4.75ms]
+@core/api test: (pass) checkout rejects invalid plan %s [4.40ms]
+@core/api test: (pass) checkout rejects invalid plan %s [4.45ms]
+@core/api test: (pass) checkout rejects invalid interval monthly [4.86ms]
+@core/api test: (pass) checkout rejects invalid interval  [4.19ms]
+@core/api test: (pass) checkout rejects invalid interval %s [4.50ms]
+@core/api test: (pass) checkout rejects invalid interval %s [5.03ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"box":-1} [4.43ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"box":0.5} [4.69ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"box":21} [4.54ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"box":"1"} [4.65ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"box":null} [4.12ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":-1} [4.82ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":1.5} [4.73ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":65} [4.47ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":"2"} [4.74ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":null} [5.21ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":-1} [3.99ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":0.5} [3.99ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":21} [4.28ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":"1"} [4.35ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":null} [4.26ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":-1} [4.12ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":1.5} [4.18ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":65} [4.63ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":"2"} [4.09ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":null} [3.78ms]
+@core/api test: (pass) combined checkout adds hardware, shipping and buyer metadata to the subscription [5.26ms]
+@core/api test: (pass) hardware checkout requires a session (%s) [4.57ms]
+@core/api test: (pass) hardware checkout requires a session (Bearer invalid) [4.25ms]
+@core/api test: (pass) hardware checkout requires a session (Bearer orb_s_invalid) [4.43ms]
+@core/api test: (pass) hardware checkout uses the account email and supplied redirects without a farm header [5.11ms]
+@core/api test: (pass) /v1/billing/checkout rejects unsafe successUrl [5.07ms]
+@core/api test: (pass) /v1/billing/checkout rejects unsafe cancelUrl [10.29ms]
+@core/api test: (pass) /v1/billing/checkout refuses to send the buyer to a foreign https site via successUrl [5.23ms]
+@core/api test: (pass) /v1/billing/checkout refuses to send the buyer to a foreign https site via cancelUrl [5.24ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects unsafe successUrl [4.29ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects unsafe cancelUrl [5.10ms]
+@core/api test: (pass) /v1/billing/hardware-checkout refuses to send the buyer to a foreign https site via successUrl [5.48ms]
+@core/api test: (pass) /v1/billing/hardware-checkout refuses to send the buyer to a foreign https site via cancelUrl [4.94ms]
+@core/api test: (pass) checkout passes a website redirect with its own path and query through to Stripe [5.40ms]
+@core/api test: (pass) a configured website origin may receive the buyer even when the defaults point elsewhere [5.88ms]
+@core/api test: (pass) the billing portal returns to the website and refuses a foreign return address [7.12ms]
+@core/api test: 
+@core/api test: test/billing-migration.test.ts:
+@core/api test: (pass) 0007 maps legacy subscriptions and replaces the plan CHECK [340.40ms]
+@core/api test: 
+@core/api test: test/api.test.ts:
+@core/api test: (pass) basics > /healthz reports ok without a token [3.51ms]
+@core/api test: (pass) basics > /health reports ok without a token [3.17ms]
+@core/api test: (pass) basics > v1 routes require a valid bearer token [4.21ms]
+@core/api test: (pass) basics > issued tokens are stored hashed and resolve to their farm [3.41ms]
+@core/api test: (pass) basics > migrate is idempotent [3.63ms]
+@core/api test: (pass) POST /v1/changes > camera layouts migrate and accept farm-scoped JSON updates with row LWW [4.55ms]
+@core/api test: (pass) POST /v1/changes > applies a valid row, then LWW: equal/older is stale, newer wins [5.09ms]
+@core/api test: (pass) POST /v1/changes > rejects rows for another farm, bad enums and malformed values [3.42ms]
+@core/api test: (pass) POST /v1/changes > soft deletes keep the row; delete ops without deleted_at are rejected [4.83ms]
+@core/api test: (pass) POST /v1/changes > rejects oversized and malformed requests [3.23ms]
+@core/api test: (pass) single active wearable per animal > a newer wearable binding ends the older one with a cloud HLC [6.45ms]
+@core/api test: (pass) single active wearable per animal > an older conflicting binding is stored already ended [6.29ms]
+@core/api test: (pass) single active wearable per animal > the wearable flag must match the device kind [6.59ms]
+@core/api test: (pass) GET /v1/shape > animals forces the farm filter and forwards Electric headers [3.08ms]
+@core/api test: (pass) GET /v1/shape > camera_layouts forces the farm filter and forwards Electric headers [2.95ms]
+@core/api test: (pass) GET /v1/shape > refuses non-synced tables [3.15ms]
+@core/api test: (pass) POST /v1/llm/* > forwards with Core's key and records usage from a JSON response [4.79ms]
+@core/api test: (pass) POST /v1/llm/* > meters streamed (SSE) responses and asks OpenAI-style streams for usage [5.33ms]
+@core/api test: (pass) POST /v1/llm/* > refuses farms over their monthly budget without calling upstream [3.94ms]
+@core/api test: (pass) POST /v1/llm/* > returns 503 when no upstream is configured [2.94ms]
+@core/api test: 
+@core/api test: test/billing-plans.test.ts:
+@core/api test: (pass) plans return the complete EUR catalog publicly without requiring a session (%s) [4.88ms]
+@core/api test: (pass) plans return the complete EUR catalog publicly without requiring a session (Bearer unknown) [4.38ms]
+@core/api test: (pass) plans return the complete EUR catalog publicly without requiring a session (Bearer orb_s_unknown) [4.65ms]
+@core/api test: (pass) plans return the complete EUR catalog publicly without requiring a session (Bearer legacy-farm-token) [4.43ms]
+@core/api test: (pass) a signed-in account receives the same EUR catalog without a farm header [4.39ms]
+@core/api test: 
+@core/api test: test/voice-agent-errors.test.ts:
+@core/api test: (pass) agent refuses missing session before upgrading [6.51ms]
+@core/api test: (pass) agent refuses bad session before upgrading [5.74ms]
+@core/api test: (pass) agent refuses missing farm before upgrading [6.49ms]
+@core/api test: (pass) agent refuses nonmember farm before upgrading [6.04ms]
+@core/api test: (pass) agent refuses no allowance before upgrading [6.99ms]
+@core/api test: (pass) agent refuses spent allowance before upgrading [7.40ms]
+@core/api test: (pass) agent returns 503 for missing agent id without charging [6.89ms]
+@core/api test: (pass) agent returns 503 for missing API key without charging [7.24ms]
+@core/api test: (pass) agent returns 502 for provider rejection without charging [7.43ms]
+@core/api test: (pass) agent returns 502 for missing signed URL without charging [6.89ms]
+@core/api test: (pass) agent returns 502 for malformed provider JSON without charging [7.58ms]
+@core/api test: (pass) agent returns 502 for provider unreachable without charging [6.95ms]
+@core/api test: (pass) agent requires a WebSocket upgrade after entitlement checks [7.23ms]
+@core/api test: 
+@core/api test:  284 pass
+@core/api test:  0 fail
+@core/api test:  945 expect() calls
+@core/api test: Ran 284 tests across 16 files. [16.08s]
+@core/api test: Exited with code 0
+@orion/agent test: bun test v1.4.4 (38afee6c8)
+@orion/agent test: 
+@orion/agent test: test/shell.test.ts:
+@orion/agent test: (pass) bundledShell > finds the MinGit shell next to the sidecar on Windows and nowhere else [0.68ms]
+@orion/agent test: 
+@orion/agent test: test/voice-transport.test.ts:
+@orion/agent test: (pass) live transport authenticates Core and relays text bytes verbatim [3.80ms]
+@orion/agent test: (pass) local relay forwards opaque frames and budget close 4402 through a real WebSocket [46.54ms]
+@orion/agent test: (pass) voice socket paths enforce token call existence and one connection [36.49ms]
+@orion/agent test: 
+@orion/agent test: test/voice-browser.test.ts:
+@orion/agent test: (pass) voice browser open and highlight emit JPEG views and close clears the image [497.35ms]
+@orion/agent test: 
+@orion/agent test: test/feedback.test.ts:
+@orion/agent test: (pass) collectBuild > takes the text files of one page and leaves out generated, hidden and binary files [1.62ms]
+@orion/agent test: (pass) collectBuild > refuses a build that still holds a password and names the line [0.56ms]
+@orion/agent test: (pass) collectBuild > refuses a name that would leave the workspace folder [0.51ms]
+@orion/agent test: (pass) feedback over the protocol > a signed-out farm's feedback reaches the cloud without credentials, with version and system [26.30ms]
+@orion/agent test: 
+@orion/agent test: test/browser.test.ts:
+@orion/agent test: (pass) browser tool > opens a page, lists what can be used, and never reads a password back [56.85ms]
+@orion/agent test: (pass) browser tool > a click changes the page and the next reading shows it [1016.01ms]
+@orion/agent test: (pass) browser tool > typing replaces the field's text and submitting follows the form to the next page [1051.48ms]
+@orion/agent test: (pass) browser tool > back returns to the form and a screenshot is a real JPEG [1025.69ms]
+@orion/agent test: (pass) browser tool > refuses addresses that are not web pages [0.07ms]
+@orion/agent test: 
+@orion/agent test: test/auth.test.ts:
+@orion/agent test: (pass) provider sign-in (Pi /login over the protocol) > lists subscriptions and API-key providers without the internal mock provider [30.34ms]
+@orion/agent test: (pass) provider sign-in (Pi /login over the protocol) > relays links, device codes and prompts, stores the credential, and logs out [38.44ms]
+@orion/agent test: (pass) provider sign-in (Pi /login over the protocol) > cancelling a sign-in mid-prompt stores nothing and reports cancelled [24.20ms]
+@orion/agent test: (pass) provider sign-in (Pi /login over the protocol) > saves a built-in provider's API key through its own login prompt without echoing it [28.03ms]
+@orion/agent test: (pass) provider sign-in (Pi /login over the protocol) > rejects unknown providers and methods a provider does not offer [23.82ms]
+@orion/agent test: 
+@orion/agent test: test/skills.test.ts:
+@orion/agent test: (pass) skill catalog > search finds a skill by keyword and install returns its instructions [9.61ms]
+@orion/agent test: (pass) skill catalog > a file that does not match its checksum installs nothing [10.97ms]
+@orion/agent test: (pass) skill catalog > a path that leaves the skill folder is refused before any download [5.60ms]
+@orion/agent test: (pass) skill catalog > the repository catalog matches the skill files [20.23ms]
+@orion/agent test: (pass) page from a skill > scaffold copies the skill's page with its card and never replaces the farm's copy [12.87ms]
+@orion/agent test: (pass) page from a skill > scaffold names the pages a skill has when asked for one it lacks [12.30ms]
+@orion/agent test: (pass) page from a skill > a skill whose page folder points outside the skill is refused [15.55ms]
+@orion/agent test: (pass) connector from a skill > scaffold copies the skill's connector and runs import the herd once and milkings incrementally [17.89ms]
+@orion/agent test: (pass) connector from a skill > the DelPro skill's mapping imports through Orion with LIV-shaped rows [22.10ms]
+@orion/agent test: (pass) connector from a skill > scaffold refuses a skill that is not installed [10.72ms]
+@orion/agent test: 
+@orion/agent test: test/billing.test.ts:
+@orion/agent test: (pass) billing relay authenticates every request with the stored session and farm [0.27ms]
+@orion/agent test: (pass) billing plans rejects an invalid Core catalogue [0.03ms]
+@orion/agent test: (pass) billing translates Core HTTP 403 into forbidden [0.04ms]
+@orion/agent test: (pass) billing translates Core HTTP 402 into plan_required [0.01ms]
+@orion/agent test: (pass) billing translates Core HTTP 429 into budget_exceeded
+@orion/agent test: (pass) signed-out protocol billing request asks the farmer to sign in [34.33ms]
+@orion/agent test: 
+@orion/agent test: test/computer.test.ts:
+@orion/agent test: (pass) computer tool key mapping > parses modifiers, named keys, aliases and the plus key [0.19ms]
+@orion/agent test: (pass) computer tool key mapping > macOS passes characters as an argument, never inside the script [0.11ms]
+@orion/agent test: (pass) computer tool key mapping > Windows escapes SendKeys syntax and refuses the Windows key [0.05ms]
+@orion/agent test: (pass) computer tool key mapping > Linux maps to xdotool key names and arguments [0.04ms]
+@orion/agent test: (pass) computer tool key mapping > macOS pointer scripts post a press and release at the target
+@orion/agent test: (pass) computer tool refusals > missing coordinates come back as a refusal result, not a thrown error [0.04ms]
+@orion/agent test: 
+@orion/agent test: test/cameras.test.ts:
+@orion/agent test: (pass) camera layout writes keep one row with outbox, snapshot and change notifications [16.42ms]
+@orion/agent test: (pass) malformed camera layouts are rejected without queuing a write [16.11ms]
+@orion/agent test: (pass) camera layout save and get round trip over the protocol and emit camera_layouts [39.92ms]
+@orion/agent test: (pass) go2rtc binary resolution uses override, sibling, data directory, then PATH [0.92ms]
+@orion/agent test: (pass) an absent relay reports unavailable while authenticated camera routes return 503 [36.48ms]
+@orion/agent test: 
+@orion/agent test: test/local-orion.test.ts:
+@orion/agent test: (pass) orbit source > the first call downloads the installed version on a farm branch, the next finds it there [195.42ms]
+@orion/agent test: (pass) orbit source > a folder that holds something else is left alone [86.31ms]
+@orion/agent test: (pass) building Orion itself > an app-only change leaves the shipped Orion in use [292.71ms]
+@orion/agent test: (pass) building Orion itself > a changed Orion that starts is switched on, and one that cannot start is not [389.86ms]
+@orion/agent test: (pass) building Orion itself > going back to the original also stops using the farm's Orion [237.30ms]
+@orion/agent test: (pass) starting Orion > the shipped Orion hands over to the farm's build and ends when it ends [353.00ms]
+@orion/agent test: (pass) starting Orion > a farm build that does not start is switched off and the shipped Orion runs instead [384.69ms]
+@orion/agent test: (pass) restarting after a change to Orion > Orion restarts once the conversation that asked for it has finished [33.30ms]
+@orion/agent test: (pass) restarting after a change to Orion > without a parent to start it again, Orion says it will not restart [17.80ms]
+@orion/agent test: 
+@orion/agent test: test/orion.test.ts:
+@orion/agent test: (pass) protocol handshake > hello with the right token returns server info [27.16ms]
+@orion/agent test: (pass) protocol handshake > a wrong token gets unauthorized and close code 4401 [26.40ms]
+@orion/agent test: (pass) sessions > create, list and fork persist across a restart [45.36ms]
+@orion/agent test: (pass) no AI model set up > a prompt is refused with not_ready, nothing stays running, and abort reports nothing to stop [18.52ms]
+@orion/agent test: (pass) mock model > a prompt streams message.delta and ends with agent.settled [32.09ms]
+@orion/agent test: (pass) mock model > 'list cows' emits herd_query tool events and summarizes the result [37.73ms]
+@orion/agent test: (pass) mock model > the first finished run names the conversation, and a name the farmer chose is kept [37.94ms]
+@orion/agent test: (pass) tools run without approval prompts > camera_discover runs straight away [35.16ms]
+@orion/agent test: (pass) one-wearable rule > device_bind refuses a second wearable and explains why [15.77ms]
+@orion/agent test: (pass) one-wearable rule > db.mutate bindings.set returns rule_violation [34.19ms]
+@orion/agent test: (pass) animal events > herd_record_event stores what a calendar needs and refuses what it cannot place [15.91ms]
+@orion/agent test: (pass) memory > remember and forget edit the farm and user memory files [15.07ms]
+@orion/agent test: (pass) memory > a new session's system prompt contains both memories [39.81ms]
+@orion/agent test: (pass) snapshots > a file write is snapshotted and undo reverts it [45.68ms]
+@orion/agent test: (pass) snapshots > undo of a database write restores the previous row [33.33ms]
+@orion/agent test: (pass) custom pages > a page Orion writes is listed and served only with the session token [41.74ms]
+@orion/agent test: (pass) custom pages > a page lists its card only when the card file is inside its own folder [30.80ms]
+@orion/agent test: (pass) custom pages > sandboxed pages can load their own files, the Orbit stylesheet and its fonts [30.95ms]
+@orion/agent test: (pass) app source editing > --app-source adds the checkout and its AGENTS.md to the system prompt [79.85ms]
+@orion/agent test: (pass) local UI build > a checked build is served under the token and a launch that never boots reads as broken [123.19ms]
+@orion/agent test: (pass) local UI build > a failing typecheck reports the step and leaves the original app in use [52.12ms]
+@orion/agent test: 
+@orion/agent test: test/workspace.test.ts:
+@orion/agent test: (pass) workspace snapshots > initializes and snapshots with no git on PATH [15.06ms]
+@orion/agent test: (pass) workspace snapshots > reopening preserves starter files and history [10.57ms]
+@orion/agent test: (pass) workspace snapshots > snapshots and reverts added files [21.81ms]
+@orion/agent test: (pass) workspace snapshots > snapshots and reverts modified files [23.32ms]
+@orion/agent test: (pass) workspace snapshots > snapshots and reverts deleted files [20.92ms]
+@orion/agent test: (pass) workspace snapshots > conflicting added files leave the entire undo untouched [16.41ms]
+@orion/agent test: (pass) workspace snapshots > conflicting modified files leave the entire undo untouched [18.95ms]
+@orion/agent test: (pass) workspace snapshots > conflicting deleted files leave the entire undo untouched [21.07ms]
+@orion/agent test: (pass) workspace snapshots > uncommitted overlapping changes also prevent undo [8.48ms]
+@orion/agent test: workspace snapshot with 10,000 ignored files: 427.9 ms
+@orion/agent test: (pass) workspace snapshots > ignores large connector dependencies and nested ignore rules [3058.41ms]
+@orion/agent test: (pass) workspace snapshots > reopens a real git repository with deleted and ignored tracked files [141.40ms]
+@orion/agent test: 
+@orion/agent test: test/billing-gateway.test.ts:
+@orion/agent test: orion: naming the conversation failed: orbit-gateway/orbit-default: Error: 402: {"code":"plan_required","message":"plan_required"}
+@orion/agent test: (pass) Core gateway HTTP 402 emits a typed plan_required chat error [148.43ms]
+@orion/agent test: orion: naming the conversation failed: orbit-gateway/orbit-default: Error: 429: {"code":"budget_exceeded","message":"budget_exceeded"}
+@orion/agent test: (pass) Core gateway HTTP 429 emits a typed budget_exceeded chat error [40.84ms]
+@orion/agent test: 
+@orion/agent test: test/voice-history.test.ts:
+@orion/agent test: (pass) spoken turns and finished voice tools survive reopening with voice markers [38.32ms]
+@orion/agent test: (pass) voice start returns earlier chat and spoken turns in conversation_recap [28.34ms]
+@orion/agent test: (pass) a chat continuation sees spoken turns in the real mock model context and excludes tool history [35.66ms]
+@orion/agent test: (pass) a turn recorded during streaming emits immediately and is persisted before agent.settled [43.71ms]
+@orion/agent test: (pass) whitespace-only turns leave history and title unchanged and first speech titles a conversation [26.03ms]
+@orion/agent test: (pass) recap drops the oldest complete turns to stay under four thousand characters [24.56ms]
+@orion/agent test: (pass) recap retains the end of an oversized latest turn with its speaker label [25.80ms]
+@orion/agent test: 
+@orion/agent test: test/web.test.ts:
+@orion/agent test: (pass) htmlToText > keeps what a person reads, marks headings, and writes links out in full [2.31ms]
+@orion/agent test: (pass) parseSearchResults > unwraps the redirect address, decodes text and drops advertising [0.08ms]
+@orion/agent test: (pass) web tools > web_search lists results and tells Orion when the service turns it away [0.58ms]
+@orion/agent test: (pass) web tools > web_fetch returns a long page in parts and never the page's scripts [0.38ms]
+@orion/agent test: (pass) web tools > web_fetch refuses files that are not text, missing pages and non-web addresses [0.27ms]
+@orion/agent test: 
+@orion/agent test: test/resources.test.ts:
+@orion/agent test: (pass) embedded resources > materializeResources writes every embedded file and drops stale ones [2.91ms]
+@orion/agent test: (pass) embedded resources > a session's system prompt contains the materialised AGENTS.md [33.56ms]
+@orion/agent test: 
+@orion/agent test: test/billing-error.test.ts:
+@orion/agent test: (pass) classifies gateway failures without hiding other model errors [0.01ms]
+@orion/agent test: (pass) classifies gateway failures without hiding other model errors
+@orion/agent test: (pass) classifies gateway failures without hiding other model errors
+@orion/agent test: 
+@orion/agent test: test/camera-proxy.test.ts:
+@orion/agent test: (pass) camera proxy preserves upstream HTTP responses and MSE text and binary frames [4.12ms]
+@orion/agent test: 
+@orion/agent test: test/modules.test.ts:
+@orion/agent test: (pass) modules > a fresh data dir starts with every module off and writes modules.json [19.03ms]
+@orion/agent test: (pass) modules > a data dir that already has data enables those modules automatically [28.11ms]
+@orion/agent test: (pass) modules > enable and disable requests persist and emit modules.updated [27.83ms]
+@orion/agent test: (pass) modules > the first animal added through db.mutate enables the herd module [19.97ms]
+@orion/agent test: (pass) modules > orbit_modules enables herd from chat (mock trigger) with enabledBy orion [27.18ms]
+@orion/agent test: orion: /var/folders/x8/7wh9r8wx4_q47yf73zz25ht00000gn/T/ulw-orbit-voice.Eae95TrLry/orion-test-2wTrjF/modules.json is not valid JSON (JSON Parse error: Expected '}'); rebuilding it
+@orion/agent test: (pass) ModulesStore > list, idempotent enable, never auto-disables, rebuilds a broken file [0.93ms]
+@orion/agent test: 
+@orion/agent test: test/voice.test.ts:
+@orion/agent test: (pass) a real mock voice socket greets and answers a herd question using the actual animal count [26.21ms]
+@orion/agent test: (pass) database tool parses params "{\"species\":\"cattle\"}" and reports invalid input in plain words [22.78ms]
+@orion/agent test: (pass) database tool parses params "{invalid" and reports invalid input in plain words [22.40ms]
+@orion/agent test: (pass) database tool parses params "[]" and reports invalid input in plain words [25.03ms]
+@orion/agent test: (pass) database tool parses params "" and reports invalid input in plain words [23.32ms]
+@orion/agent test: (pass) database tool parses params undefined and reports invalid input in plain words [23.68ms]
+@orion/agent test: (pass) another protocol socket cannot report turns or tools for a call [22.94ms]
+@orion/agent test: (pass) closing the SDK socket still accepts final reports until stop [25.42ms]
+@orion/agent test: (pass) orion_task answers Started while streaming and later ends its tool and sends a voice note [28.37ms]
+@orion/agent test: (pass) a stopped orion_task is saved as stopped and the voice agent is told [29.93ms]
+@orion/agent test: 
+@orion/agent test: test/account.test.ts:
+@orion/agent test: (pass) Orion account > signed out, Orbit stays local: writes work and sync is disabled [40.65ms]
+@orion/agent test: (pass) Orion account > register claims the local farm, syncs writes to Core and a paid plan runs on the cloud model [156.12ms]
+@orion/agent test: (pass) Orion account > an invited viewer is refused local writes and stays signed in across restarts [215.42ms]
+@orion/agent test: (pass) Orion account > a plan bought on the website before Orbit was installed follows the account into Orbit [192.10ms]
+@orion/agent test: orion: naming the conversation failed: orbit-gateway/orbit-default: Error: the model gave no title (toolUse)
+@orion/agent test: (pass) Orion account > Gemini thought signatures on tool calls go back to the model on the next turn [140.15ms]
+@orion/agent test: orion: naming the conversation failed: orbit-gateway/orbit-default: Error: the model gave no title (toolUse)
+@orion/agent test: (pass) Orion account > a farm on the free month shares a page through Orion, and Core holds it for review [154.17ms]
+@orion/agent test: 
+@orion/agent test: test/title.test.ts:
+@orion/agent test: (pass) a title is asked of the provider's cheapest paid text model, never a dearer one [0.05ms]
+@orion/agent test: (pass) the subscription's small model exists for titles but is not offered as a model to chat with [22.43ms]
+@orion/agent test: 
+@orion/agent test: test/voice-farm.test.ts:
+@orion/agent test: (pass) worker voice writes cannot change cameras [25.65ms]
+@orion/agent test: (pass) client frames received before the upstream opens are flushed in their original order [26.10ms]
+@orion/agent test: (pass) voice observation writes keep the shared mutation undo snapshot [27.30ms]
+@orion/agent test: (pass) voice binding tools refuse a second wearable on the same animal [27.25ms]
+@orion/agent test: (pass) a slow tool answers within its budget and later emits its real result and a voice note [26.37ms]
+@orion/agent test: 
+@orion/agent test:  136 pass
+@orion/agent test:  0 fail
+@orion/agent test:  552 expect() calls
+@orion/agent test: Ran 136 tests across 24 files. [13.46s]
+@orion/agent test: Exited with code 0
+bun test v1.4.4 (38afee6c8)
+
+skills/farm-views/views.test.ts:
+(pass) the herd and calendar views carry the same reproduction rules [0.10ms]
+(pass) every page the skill lists has its panel, its card and settings Orion can parse [0.31ms]
+
+skills/delaval-delpro/connector/mapping.test.ts:
+(pass) maps animal identity, herd number, and exited status [0.02ms]
+(pass) maps DelPro sex %s to female
+(pass) maps DelPro sex %s to male
+(pass) maps DelPro sex %s to unknown
+(pass) maps DelPro sex %s to unknown
+(pass) keeps present animals active
+(pass) maps milking kg, scaled conductivity, preferred SCC, seconds, and normal flags [3.74ms]
+(pass) uses Occ fallback, preserves real conductivity, and flags abnormal milk [0.50ms]
+(pass) omits null milking metadata while retaining a null yield [0.39ms]
+(pass) treats zero daily weight and rectal temperature as absent [0.48ms]
+(pass) emits daily sensor values at local midnight with both animal identifiers [0.33ms]
+(pass) converts 2026-03-29 01:30:00 in Europe/Oslo across DST [0.25ms]
+(pass) converts 2026-03-29 03:30:00 in Europe/Oslo across DST [0.23ms]
+(pass) converts 2026-03-08 01:30:00 in America/Chicago across DST [0.24ms]
+(pass) converts 2026-03-08 03:30:00 in America/Chicago across DST [0.22ms]
+(pass) converts 2026-11-01 01:30:00 in America/Chicago across DST [0.28ms]
+(pass) converts 2026-10-25 02:30:00 in Europe/Oslo across DST [0.25ms]
+(pass) rejects nonexistent DST wall-clock times [0.29ms]
+
+skills/delaval-delpro/connector/connector.test.ts:
+(pass) first run imports animals, paginated milkings, daily sensors, and cursors [0.96ms]
+(pass) second run with returned state emits no repeated milkings or daily observations [0.81ms]
+(pass) imports only completed local days strictly after the previous cursor [0.50ms]
+(pass) stops at the configured batch cap and preserves the daily cursor without values [0.31ms]
+(pass) null secret fails before loading the SQL driver or opening a connection [0.04ms]
+
+skills/farm-views/pages/calendar/calendar.test.ts:
+(pass) resolveConfig > fills defaults when keys are missing [0.05ms]
+(pass) resolveConfig > drops unknown event type ids and preserves config order without duplicates [0.01ms]
+(pass) planned event derivations > derives expected-calving for cattle ('Calving due') and horses ('Foaling due') [0.29ms]
+(pass) planned event derivations > derives dry-off-due for pregnant lactating cattle and pregnancy-check-due for unconfirmed inseminations [0.04ms]
+(pass) planned event derivations > marks overdue planned events with danger tone and Overdue detail [0.02ms]
+(pass) recorded event derivations > calving produces 'Calved' for cattle and 'Foaled' for horses [0.04ms]
+(pass) recorded event derivations > insemination sets 'Natural service' detail for NaturalService and RunWithBull [0.02ms]
+(pass) recorded event derivations > pregnancy-check formats In calf / In foal / Not in calf / Not in foal [0.02ms]
+(pass) recorded event derivations > dry-off and treatment and alert derive titles, details, and tones accurately [0.03ms]
+(pass) priority ordering, filtering, and grid/week/upcoming builders > orders events within a day by EVENT_PRIORITY [0.04ms]
+(pass) priority ordering, filtering, and grid/week/upcoming builders > month grid and week strip honour weekStart (1 = Monday vs 0 = Sunday) [0.30ms]
+(pass) priority ordering, filtering, and grid/week/upcoming builders > chip filtering via config.show and activeTypes excludes unselected types [0.06ms]
+(pass) priority ordering, filtering, and grid/week/upcoming builders > buildUpcomingList puts overdue first and getNextEventSummary picks next future planned event [0.08ms]
+
+skills/farm-views/pages/herd/repro.test.ts:
+(pass) reproFacts > a confirmed cow in milk is due 280 days after insemination and dries off 60 days before [0.05ms]
+(pass) reproFacts > an insemination before the last calving belongs to the previous cycle
+(pass) reproFacts > an inseminated cow without a check gets a pregnancy check date and no calving date
+(pass) reproFacts > an empty check or an abortion after insemination clears the calving date [0.01ms]
+(pass) reproFacts > dry cows, heifers and mares get a due date but no dry-off date [0.02ms]
+(pass) reproFacts > recorded events are enough when the animal carries no status [0.01ms]
+(pass) reproFacts > the farm's own gestation and dry-off days replace the defaults
+
+skills/farm-views/pages/herd/herd.test.ts:
+(pass) resolveConfig > fills defaults when keys are missing and preserves valid config order [0.03ms]
+(pass) resolveConfig > drops unknown option ids, deduplicates, and restricts card-only vs panel-only facts [0.03ms]
+(pass) resolveConfig > detects when herd-wide repro events or per-animal milk queries are needed [0.06ms]
+(pass) species and card.breakdown rules > species filter limits the view for all, cattle, and horse [0.03ms]
+(pass) species and card.breakdown rules > card.breakdown splits by group, species, or lactation and sums past top 3 as other [0.57ms]
+(pass) filter registry rules > attention matches health_event, calving_alert, or heat_alert in last 7 days [0.02ms]
+(pass) filter registry rules > group expands sorted by group size descending, then group name [0.10ms]
+(pass) filter registry rules > species filter expands only when farm has more than one species [0.03ms]
+(pass) filter registry rules > fresh, dry, in-calf, inseminated, open [0.04ms]
+(pass) filter registry rules > due-soon, dry-off-due, check-due, heat, no-sensor, low-battery [0.03ms]
+(pass) sort registry rules > sorts by attention, name, tag, age, group, due, and milk [0.31ms]
+(pass) age, milk, facts, badges, and panel sections > age formatting follows <60d -> days, <24m -> months, else years, unknown -> null [0.07ms]
+(pass) age, milk, facts, badges, and panel sections > milk 7-day average divides total kg by number of days with milkings [0.06ms]
+(pass) age, milk, facts, badges, and panel sections > every fact in FACT_OPTIONS formats properly and card renders at most 3 [0.67ms]
+(pass) age, milk, facts, badges, and panel sections > every badge in BADGE_OPTIONS matches its rule and card renders at most 2 in config order [0.09ms]
+(pass) age, milk, facts, badges, and panel sections > panel details use foaling terminology for horses and calving for cattle [0.44ms]
+(pass) age, milk, facts, badges, and panel sections > search and slug helpers [0.03ms]
+
+skills/farm-views/pages/cameras/cameras.test.ts:
+(pass) resolveConfig > returns shipped defaults when input is missing or invalid [0.02ms]
+(pass) resolveConfig > clamps refreshSeconds values to 1..120 [0.01ms]
+(pass) resolveConfig > ignores unknown keys and falls back on unknown order option [0.02ms]
+(pass) visibleCameras and ordering > hides cameras matched by name or id [0.02ms]
+(pass) visibleCameras and ordering > orders by location name then camera name ('location') [0.04ms]
+(pass) visibleCameras and ordering > orders alphabetically by camera name ('name') [0.07ms]
+(pass) visibleCameras and ordering > orders online cameras first ('online-first') [0.02ms]
+(pass) location chips and filtering > builds All chip first followed by all farm locations with counts and slugs [0.03ms]
+(pass) location chips and filtering > groups cameras without a location under 'No location' [0.02ms]
+(pass) location chips and filtering > honours configured locations order and skips unknown locations
+(pass) location chips and filtering > filters cameras by selected location or returns all for 'all' [0.03ms]
+(pass) pickCardCamera > picks configured camera by name or id when visible [0.04ms]
+(pass) pickCardCamera > falls back to first online camera in panel order when card.camera is null or unknown [0.04ms]
+(pass) pickCardCamera > falls back to first camera when no camera is online, and null when empty [0.02ms]
+(pass) status wording, summary, and formatting helpers > maps each status to exact wording, tone, and frame-request policy [0.01ms]
+(pass) status wording, summary, and formatting helpers > formats the online summary and card fallback list [0.02ms]
+(pass) status wording, summary, and formatting helpers > formats picture time as 'Picture from HH:MM:SS' [0.25ms]
+(pass) frame-state reducer > transitions loading -> unavailable on first failure if nothing was ever shown [0.01ms]
+(pass) frame-state reducer > keeps showing last good picture until 3 failures in a row, then becomes unavailable
+(pass) frame-state reducer > resets failure count on a subsequent success
+(pass) frame-state reducer > offline camera starts as unavailable
+
+ 83 pass
+ 0 fail
+ 332 expect() calls
+Ran 83 tests across 7 files. [33.00ms]
+EXIT=0

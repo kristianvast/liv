@@ -11,11 +11,11 @@ export const account = {
   "field.email": "Email",
   "field.password": "Password",
   "field.passwordHint": "At least 10 characters",
-  "field.terms": "I accept the Pecorva terms of service and privacy policy",
+  "field.terms": "I accept the Barnstar terms of service and privacy policy",
   "forgot.link": "Forgot password?",
   "google.continue": "Continue with Google",
   "google.terms":
-    "By continuing with Google you accept the Pecorva terms of service and privacy policy.",
+    "By continuing with Google you accept the Barnstar terms of service and privacy policy.",
   "google.waiting":
     "Finish signing in with Google in your browser. Orbit updates by itself when you are done.",
   "google.reopen": "Open the page again",
@@ -126,7 +126,7 @@ export const account = {
   "billing.voiceMeter": "Voice minutes",
   "billing.voiceUsage": "{used} / {allowance} min",
   "billing.freeCopy":
-    "Orbit and Orion are open source and free; bring your own AI subscription or key in Providers, or choose a plan to use Orion on Pecorva's cloud.",
+    "Orbit and Orion are open source and free; bring your own AI subscription or key in Providers, or choose a plan to use Orion on Barnstar's cloud.",
   "billing.signedOutPrompt": "Sign in above to choose a plan or check your farm's cloud usage.",
   "billing.choosePlan": "Choose a plan",
   "billing.manageBilling": "Manage billing",

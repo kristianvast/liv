@@ -6,7 +6,7 @@ import { billingFixture, FARM, SECRET } from "./billing-fixture";
 
 const { app, db, session } = billingFixture();
 
-for (const plan of ["orion", "cam2", "cam4", "cam6"] as const) {
+for (const plan of ["orion", "cam2", "cam4", "cam6", "cam8", "cam12", "cam16"] as const) {
   test.each(["metadata", "lookup-month", "lookup-year"])(
     `subscription webhook accepts ${plan} from %s`,
     async (source) => {
@@ -78,7 +78,7 @@ test("a paid subscription checkout records hardware and mails once alongside the
   const a = app({
     mailer,
     fetch: async () => Response.json(subscription),
-    billing: { secretKey: "sk_test", webhookSecret: SECRET, ordersEmail: "orders@pecorva.test" },
+    billing: { secretKey: "sk_test", webhookSecret: SECRET, ordersEmail: "orders@barnstar.test" },
   });
   const value = {
     id: "cs_combined",
@@ -128,7 +128,7 @@ test("delayed subscription hardware payment mails once even with distinct succes
   const a = app({
     mailer,
     fetch: async () => Response.json(subscription),
-    billing: { secretKey: "sk_test", webhookSecret: SECRET, ordersEmail: "orders@pecorva.test" },
+    billing: { secretKey: "sk_test", webhookSecret: SECRET, ordersEmail: "orders@barnstar.test" },
   });
   const value = {
     id: "cs_delayed",

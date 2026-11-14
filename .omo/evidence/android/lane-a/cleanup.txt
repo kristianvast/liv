@@ -1,0 +1,3 @@
+Temporary Core stopped.
+Removed temporary data: /var/folders/x8/7wh9r8wx4_q47yf73zz25ht00000gn/T/orbit-lane-a-n9wEjm
+Successfully rebound 127.0.0.1:63976; probe stopped; port is free.

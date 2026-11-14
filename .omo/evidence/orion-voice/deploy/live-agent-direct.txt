@@ -1,0 +1,10 @@
+signed url obtained (host api.elevenlabs.io)
+metadata: {"conversation_id":"conv_7701m76gp5maecq8z13p04rgt47k","agent_output_audio_format":"pcm_16000","user_input_audio_format":"pcm_16000","persistent_session_token":null}
+agent: Hello, Orion here. How can I help?
+user: How many animals are in my herd?
+tool call: db_query {"query":"farm.summary","params":"{}"} expects_response=true
+agent: You have 28 animals in your herd.
+RESULT: answer uses the tool result (28)
+closed 1006 
+event counts: {"conversation_initiation_metadata":1,"agent_chat_response_part":8,"agent_response":2,"ping":2,"client_tool_call":1,"agent_tool_response":1} | tool calls: 1
+EXIT=0

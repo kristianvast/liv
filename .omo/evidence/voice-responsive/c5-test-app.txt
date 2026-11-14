@@ -1,0 +1,257 @@
+@orbit/app test: 
+@orbit/app test:  RUN  v3.2.7 /Users/kristianvastveit/projects/orbit/apps/orbit
+@orbit/app test: 
+@orbit/app test:  ✓ src/features/voice/captions.test.ts (2 tests) 2ms
+@orbit/app test:  ✓ src/lib/updater.test.ts (2 tests) 1ms
+@orbit/app test:  ✓ src/i18n/i18n.test.tsx (4 tests) 90ms
+@orbit/app test:  ✓ src/features/guide/guide-look-parse.test.tsx (4 tests) 94ms
+@orbit/app test:  ✓ src/features/guide/browser-view.test.tsx (1 test) 52ms
+@orbit/app test:  ✓ src/app/theme.test.tsx (2 tests) 23ms
+@orbit/app test: stderr | src/features/chat/chat.test.tsx > turn grouping > keeps tool group collapsed when tools are running or failed and expands only on click
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: 
+@orbit/app test: stderr | src/features/chat/chat.test.tsx > turn grouping > folds every command of a turn, and the narration between them, into one group above the reply
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: 
+@orbit/app test: stderr | src/features/chat/billing-voice.test.tsx > AccountCard billing plans and usage meters > keeps the sign-in prompt without loading billing when signed out
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: 
+@orbit/app test:  ✓ src/features/guide/guide-interactions.test.tsx (3 tests) 298ms
+@orbit/app test: stderr | src/features/chat/chat.test.tsx > ChatPage and SettingsPage integration > New chat never persists an empty session and hides never-started ones from history
+@orbit/app test: An update to ChatPage inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to ChatPage inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to MemoryRouter inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to ChatPage inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to ChatPage inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: 
+@orbit/app test:  ✓ src/features/cameras/cameras.test.tsx (5 tests) 121ms
+@orbit/app test: stderr | src/features/settings/multi-user-farms.test.tsx > AccountCard cloud farm creation and farm-less signed-in state > renders a calm signed-in card with no link error when the account has no farm at all
+@orbit/app test: An update to BillingSection inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to BillingSection inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: 
+@orbit/app test: stderr | src/features/voice/voice.test.tsx > Saved voice tool cards in Chat timeline > renders plain-language summaries for db_query and db_mutate in English and Norwegian while keeping technical inputs inside expanded details
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: An update to FarmSpeciesProvider inside a test was not wrapped in act(...).
+@orbit/app test: 
+@orbit/app test: When testing, code that causes React state updates should be wrapped into act(...):
+@orbit/app test: 
+@orbit/app test: act(() => {
+@orbit/app test:   /* fire events that update state */
+@orbit/app test: });
+@orbit/app test: /* assert on the output */
+@orbit/app test: 
+@orbit/app test: This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+@orbit/app test: 
+@orbit/app test:  ✓ src/features/voice/voice.test.tsx (10 tests) 449ms
+@orbit/app test:  ✓ src/features/herd/farm-screens.test.tsx (2 tests) 303ms
+@orbit/app test:  ✓ test/app.test.tsx (6 tests) 343ms
+@orbit/app test:  ✓ src/features/settings/multi-user-farms.test.tsx (7 tests) 346ms
+@orbit/app test:  ✓ src/features/chat/billing-voice.test.tsx (15 tests) 561ms
+@orbit/app test:  ✓ src/features/chat/chat.test.tsx (18 tests) 675ms
+@orbit/app test:  ✓ src/app/modules.test.tsx (13 tests) 577ms
+@orbit/app test: 
+@orbit/app test:  Test Files  15 passed (15)
+@orbit/app test:       Tests  94 passed (94)
+@orbit/app test:    Start at  12:45:51
+@orbit/app test:    Duration  4.20s (transform 2.82s, setup 1.45s, collect 30.36s, tests 3.93s, environment 9.06s, prepare 1.76s)
+@orbit/app test: 
+@orbit/app test: Exited with code 0

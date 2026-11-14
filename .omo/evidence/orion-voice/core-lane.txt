@@ -1,0 +1,13 @@
+Core lane evidence 2026-11-11T21:27:38.469Z (working tree, uncommitted, base a6f2626)
+
+$ bun run --filter '@core/api' typecheck -> exit 0
+$ bun test ./test/orion-voice-agent.test.ts ./test/voice-agent.test.ts ./test/voice-agent-errors.test.ts -> 19 pass 0 fail
+$ bunx biome check core/api core/README.md ->
+Checked 55 files in 18ms. No fixes applied.
+$ voice:setup --print (head) ->
+@core/api voice:setup: {
+@core/api voice:setup:   "tools": [
+@core/api voice:setup:     {
+@core/api voice:setup:       "type": "client",
+@core/api voice:setup:       "name": "db_query",
+Child st_01a1cc79 report: 281 pass full @core/api suite; curl -i /v1/voice/agent without session -> HTTP/1.1 401 {"error":{"code":"unauthorized","message":"Sign in first"}}; port freed.

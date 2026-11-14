@@ -2,13 +2,13 @@
 
 ## 0. Research Log & Design Read
 
-- **Design Read:** Operational desktop farm command shell for non-technical cattle or horse farmers, with a warm, high-contrast "Observatory Ledger" (`U1`) palette (limestone paper, iron ink, terracotta accent; charcoal and lantern amber at night), the **Kepler Monogram (`L2`)** brand mark, and the **Pecorva brand type system**: Tanker all-caps poster display over Switzer UI text. Layout stays quiet: flat panels, hairline rules instead of boxes, one prominent action per screen, and a silent sync indicator that appears only when offline or out of sync for >= 3 minutes. Big 44px hit targets, either-or species language ("Cattle" or "Horses" — never combined "Cows & Horses"), and two themes (`light` for bright barn offices, `dark` for night checks).
-- **Redesign log (2026-11-05):** removed every region boxed as a bordered + shadowed card, stat tiles and bordered rows nested inside cards, a subtitle under every heading, pill badges on static labels, sparkle icons on suggestion chips, three equal stat cards, an explanatory "Data Safety" filler card, an icon-in-orange-tile logo, and a broken 390px shell. The owner kept the original warm palette and asked for the Pecorva website fonts (`pecorva-website/shared/tokens.css`).
+- **Design Read:** Operational desktop farm command shell for non-technical cattle or horse farmers, with a warm, high-contrast "Observatory Ledger" (`U1`) palette (limestone paper, iron ink, terracotta accent; charcoal and lantern amber at night), the **Kepler Monogram (`L2`)** brand mark, and the **Barnstar brand type system**: Tanker all-caps poster display over Switzer UI text. Layout stays quiet: flat panels, hairline rules instead of boxes, one prominent action per screen, and a silent sync indicator that appears only when offline or out of sync for >= 3 minutes. Big 44px hit targets, either-or species language ("Cattle" or "Horses" — never combined "Cows & Horses"), and two themes (`light` for bright barn offices, `dark` for night checks).
+- **Redesign log (2026-11-05):** removed every region boxed as a bordered + shadowed card, stat tiles and bordered rows nested inside cards, a subtitle under every heading, pill badges on static labels, sparkle icons on suggestion chips, three equal stat cards, an explanatory "Data Safety" filler card, an icon-in-orange-tile logo, and a broken 390px shell. The owner kept the original warm palette and asked for the Barnstar website fonts (`pecorva-website/shared/tokens.css`).
 - **Domain Invariant:** A cow or horse wears **at most ONE active wearable sensor** at a time (a collar **OR** a bolus **OR** an ear tag sensor, never stacked or combined). UI copy and components always present wearables as mutually exclusive choices.
 - **Languages:** All UI copy goes through `t()` from `src/i18n` (English source catalogs in `src/i18n/locales/en/<namespace>.ts`, Norwegian Bokmål in `locales/nb/`; a missing translation is a type error). Never hard-code user-visible strings in components; data from Orion or the database (animal names, notes) is shown as-is. Users pick the language in Settings; the default follows the OS language.
 - **Anti-Slop Guard:** No purple gradients, no glassmorphism (`backdrop-filter`), no emoji icons, no coloured edge stripes on cards, no 2px accent outlines on rounded cards, no cards inside cards, no marketing fluff ("seamlessly", "effortlessly", "smart").
 
-## 1. Typography (Pecorva type system, self-hosted)
+## 1. Typography (Barnstar type system, self-hosted)
 
 All fonts are self-hosted WOFF2 files in `apps/orbit/public/fonts/`; licences are listed in its `README.md`. `font-synthesis: none` is set globally so the single-weight display face is never faux-bolded.
 
@@ -121,14 +121,14 @@ Layout: Ask Orion Screen (Chat & Voice) - two-column bounded shell (`.orbit-thre
 
 ### Settings Screen (Account & Billing) & Ask Orion (Chat & Voice)
 
-- **Primary Action:** **"Choose a plan"** (`billing-choose-plan-button`, opens pecorva.com/pricing in the browser) inside `BillingSection` on the Account card; **"Send"** (`chat-send-button`) in the Ask Orion composer.
+- **Primary Action:** **"Choose a plan"** (`billing-choose-plan-button`, opens barnstar.dev/pricing in the browser) inside `BillingSection` on the Account card; **"Send"** (`chat-send-button`) in the Ask Orion composer.
 - **Information Priorities (1-3):**
   1. **Current plan, status, renewal date, and usage meters** (`billing-plan-name`, `billing-status-badge`, `billing-period-end`, `billing-meter-tokens`, `billing-meter-voice`), plus open-source BYO key explanation on free plan (`billing-free-copy`).
   2. **Plan actions:** `billing-choose-plan-button` opens the website's plans page in the browser (plans and prices are never listed in the app); `billing-portal-button` (`billing.portal`) for paid farms.
   3. **Chat plan-limit card & Talk to Orion voice panel** (`chat-plan-error-card` with `chat-plan-error-use-key` and `chat-plan-error-see-plans`; `voice-panel` with `voice-state-badge`, `voice-transcript`, `voice-tools` reusing `ToolCard`, `voice-stop-button`, and `voice-mic-error` fallback).
 - **Left Out on Purpose:** multi-tier comparison tables with checkmarks, decorative discount badges, animated waveform gimmicks, 2px coloured selection borders on plan cards.
 - **Required Content:**
-  - `AccountCard`: plan name (`free`/`pen`/`barn`), status badge, renewal/period end, token and voice minute usage meters, Free BYO explanation, signed-out sign-in prompt, `Choose a plan` (opens https://pecorva.com/pricing/ in the browser), `Manage billing` (`billing.portal`).
+  - `AccountCard`: plan name (`free`/`pen`/`barn`), status badge, renewal/period end, token and voice minute usage meters, Free BYO explanation, signed-out sign-in prompt, `Choose a plan` (opens https://barnstar.dev/pricing/ in the browser), `Manage billing` (`billing.portal`).
   - `ChatPage`: `PlanErrorCard` for `plan_required` and `budget_exceeded` with `"Use your own key"` (navigates to Providers) and `"See plans"` (navigates to Account card); `Composer` `"Talk to Orion"` button (`chat-voice-button`) opening `VoicePanel` with AudioWorklet 16 kHz PCM16 capture, 24 kHz AudioContext playback queue, live transcript, `ToolCard` tool executions, state badge, stop button, and mic-denied notice.
 
 ## 6. Components (source)

@@ -34,8 +34,8 @@ const baseSession: SessionSummary = {
 
 const signedInAccount: AccountStatus = {
   state: "signed_in",
-  coreUrl: "https://api.pecorva.com",
-  user: { id: "u-1", email: "astrid@pecorva.com", name: "Astrid" },
+  coreUrl: "https://api.barnstar.dev",
+  user: { id: "u-1", email: "astrid@barnstar.dev", name: "Astrid" },
   farm: { id: "f-1", name: "North Meadow Farm", role: "owner" },
 };
 
@@ -279,7 +279,7 @@ describe("AccountCard billing plans and usage meters", () => {
     fireEvent.click(screen.getByTestId("billing-choose-plan-button"));
     await waitFor(() =>
       expect(openSpy).toHaveBeenCalledWith(
-        "https://pecorva.com/pricing/",
+        "https://barnstar.dev/pricing/",
         "_blank",
         "noopener,noreferrer",
       ),

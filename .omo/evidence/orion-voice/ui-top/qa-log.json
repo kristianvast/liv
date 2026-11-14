@@ -1,0 +1,182 @@
+[
+ {
+  "n": "full idle",
+  "d": {
+   "single": {
+    "textFieldsOnPage": 1,
+    "fieldsInPanel": 1,
+    "talkButtons": 1,
+    "oldVoiceBtn": 0,
+    "mute": 0,
+    "end": 0,
+    "send": 1,
+    "startersInPanel": 1
+   },
+   "widgetTop": 204,
+   "askTop": 551,
+   "setupTop": null,
+   "widgetAboveAsk": true,
+   "overflow": false
+  }
+ },
+ {
+  "n": "full in call",
+  "d": {
+   "single": {
+    "textFieldsOnPage": 1,
+    "fieldsInPanel": 1,
+    "talkButtons": 0,
+    "oldVoiceBtn": 0,
+    "mute": 1,
+    "end": 1,
+    "send": 1,
+    "startersInPanel": 0
+   },
+   "widgetTop": 204,
+   "askTop": null,
+   "setupTop": null,
+   "widgetAboveAsk": null,
+   "overflow": false
+  }
+ },
+ {
+  "n": "full after end",
+  "d": {
+   "single": {
+    "textFieldsOnPage": 1,
+    "fieldsInPanel": 1,
+    "talkButtons": 1,
+    "oldVoiceBtn": 0,
+    "mute": 0,
+    "end": 0,
+    "send": 1,
+    "startersInPanel": 1
+   },
+   "widgetTop": 204,
+   "askTop": 562,
+   "setupTop": null,
+   "widgetAboveAsk": true,
+   "overflow": false
+  }
+ },
+ {
+  "n": "min idle",
+  "d": {
+   "single": {
+    "textFieldsOnPage": 1,
+    "fieldsInPanel": 1,
+    "talkButtons": 1,
+    "oldVoiceBtn": 0,
+    "mute": 0,
+    "end": 0,
+    "send": 1,
+    "startersInPanel": 1
+   },
+   "widgetTop": 263,
+   "askTop": 609,
+   "setupTop": null,
+   "widgetAboveAsk": true,
+   "overflow": false
+  }
+ },
+ {
+  "n": "min in call",
+  "d": {
+   "single": {
+    "textFieldsOnPage": 1,
+    "fieldsInPanel": 1,
+    "talkButtons": 0,
+    "oldVoiceBtn": 0,
+    "mute": 1,
+    "end": 1,
+    "send": 1,
+    "startersInPanel": 0
+   },
+   "widgetTop": 263,
+   "askTop": null,
+   "setupTop": null,
+   "widgetAboveAsk": null,
+   "overflow": false
+  }
+ },
+ {
+  "n": "min after end",
+  "d": {
+   "single": {
+    "textFieldsOnPage": 1,
+    "fieldsInPanel": 1,
+    "talkButtons": 1,
+    "oldVoiceBtn": 0,
+    "mute": 0,
+    "end": 0,
+    "send": 1,
+    "startersInPanel": 1
+   },
+   "widgetTop": 263,
+   "askTop": 621,
+   "setupTop": null,
+   "widgetAboveAsk": true,
+   "overflow": false
+  }
+ },
+ {
+  "n": "min-phone idle",
+  "d": {
+   "single": {
+    "textFieldsOnPage": 1,
+    "fieldsInPanel": 1,
+    "talkButtons": 1,
+    "oldVoiceBtn": 0,
+    "mute": 0,
+    "end": 0,
+    "send": 1,
+    "startersInPanel": 1
+   },
+   "widgetTop": 340,
+   "askTop": 638,
+   "setupTop": null,
+   "widgetAboveAsk": true,
+   "overflow": false
+  }
+ },
+ {
+  "n": "min-phone in call",
+  "d": {
+   "single": {
+    "textFieldsOnPage": 1,
+    "fieldsInPanel": 1,
+    "talkButtons": 0,
+    "oldVoiceBtn": 0,
+    "mute": 1,
+    "end": 1,
+    "send": 1,
+    "startersInPanel": 0
+   },
+   "widgetTop": 340,
+   "askTop": null,
+   "setupTop": null,
+   "widgetAboveAsk": null,
+   "overflow": false
+  }
+ },
+ {
+  "n": "min-phone after end",
+  "d": {
+   "single": {
+    "textFieldsOnPage": 1,
+    "fieldsInPanel": 1,
+    "talkButtons": 1,
+    "oldVoiceBtn": 0,
+    "mute": 0,
+    "end": 0,
+    "send": 1,
+    "startersInPanel": 1
+   },
+   "widgetTop": 38,
+   "askTop": 356,
+   "setupTop": null,
+   "widgetAboveAsk": true,
+   "overflow": false
+  }
+ }
+]

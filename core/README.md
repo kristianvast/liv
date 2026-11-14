@@ -145,15 +145,18 @@ the provisioning placeholder never enables the admin routes.
 
 `GET /v1/billing/plans` returns `{currency:"eur",locked:false,trialDays:30,plans,hardware}` publicly:
 
-| Plan               | Cameras | EUR/month | EUR/year | Orion tokens/month | Voice minutes/month |
-| ------------------ | ------- | --------- | -------- | ------------------ | ------------------- |
-| Free (`free`)      | 0       | 0         | 0        | 0                  | 0                   |
-| Orion (`orion`)    | 0       | 20        | 200      | 2,000,000          | 30                  |
-| 2 cameras (`cam2`) | 2       | 49        | 490      | 3,000,000          | 60                  |
-| 4 cameras (`cam4`) | 4       | 75        | 750      | 5,000,000          | 100                 |
-| 6 cameras (`cam6`) | 6       | 95        | 950      | 8,000,000          | 150                 |
+| Plan                 | Cameras | EUR/month | EUR/year | Orion tokens/month | Voice minutes/month |
+| -------------------- | ------- | --------- | -------- | ------------------ | ------------------- |
+| Free (`free`)        | 0       | 0         | 0        | 0                  | 0                   |
+| Orion (`orion`)      | 0       | 20        | 200      | 2,000,000          | 30                  |
+| 2 cameras (`cam2`)   | 2       | 47        | 470      | 3,000,000          | 60                  |
+| 4 cameras (`cam4`)   | 4       | 75        | 750      | 5,000,000          | 100                 |
+| 6 cameras (`cam6`)   | 6       | 95        | 950      | 8,000,000          | 150                 |
+| 8 cameras (`cam8`)   | 8       | 111       | 1110     | 10,000,000         | 200                 |
+| 12 cameras (`cam12`) | 12      | 137       | 1370     | 14,000,000         | 280                 |
+| 16 cameras (`cam16`) | 16      | 155       | 1550     | 18,000,000         | 350                 |
 
-The Pecorva box is EUR 920 and a Tested camera is EUR 150 once. API prices are euros;
+The Barnstar box is EUR 920 and a Tested camera is EUR 150 once. API prices are euros;
 Stripe amounts are cents. Paid allowances reset at the UTC calendar month start.
 Each farm gets one free Orion pool (2 million tokens and 30 voice minutes) for 30 days from
 the earliest account creation date among its owners. During this month its plan remains `free`
@@ -171,8 +174,8 @@ Signatures expire after five minutes; event claims and subscription effects comm
 
 Session routes take `Authorization: Bearer <session>` and `x-orbit-farm`:
 
-- `POST /v1/billing/checkout`: `{plan:"orion"|"cam2"|"cam4"|"cam6",interval:"month"|"year",box?,cameras?,successUrl?,cancelUrl?}`.
-  Hardware quantities are whole numbers (`box` 0–20, `cameras` 0–64). Nonzero quantities add
+- `POST /v1/billing/checkout`: `{plan:"orion"|"cam2"|"cam4"|"cam6"|"cam8"|"cam12"|"cam16",interval:"month"|"year",box?,cameras?,successUrl?,cancelUrl?}`.
+  Hardware quantities are whole numbers (`box` 0–2, `cameras` 0–16). Nonzero quantities add
   one-time hardware to the same subscription Checkout Session and collect shipping.
 - `POST /v1/billing/portal`: `{returnUrl?}`. Checkout and portal require owner or manager.
 - `GET /v1/billing/status`: subscription state plus token and voice usage for any member.

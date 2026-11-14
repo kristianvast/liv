@@ -247,8 +247,8 @@ describe("Farm picker in Settings > Farm and AppShell", () => {
   it("lists cloud farms and this PC's own farm, marks the open farm, and shows Opening state on switch", async () => {
     const account: AccountStatus = {
       state: "signed_in",
-      coreUrl: "https://api.pecorva.com",
-      user: { id: "u-1", email: "astrid@pecorva.com", name: "Astrid" },
+      coreUrl: "https://api.barnstar.dev",
+      user: { id: "u-1", email: "astrid@barnstar.dev", name: "Astrid" },
       farm: { id: "f-1", name: "North Meadow", role: "owner" },
       farms: [
         {
@@ -328,8 +328,8 @@ describe("AccountCard cloud farm creation and farm-less signed-in state", () => 
     const onStatus = vi.fn();
     const account: AccountStatus = {
       state: "signed_in",
-      coreUrl: "https://api.pecorva.com",
-      user: { id: "u-1", email: "astrid@pecorva.com", name: "Astrid" },
+      coreUrl: "https://api.barnstar.dev",
+      user: { id: "u-1", email: "astrid@barnstar.dev", name: "Astrid" },
       farm: null,
       farms: [],
       localFarm: { id: "loc-1", name: "Hilltop Dairy" },
@@ -365,8 +365,8 @@ describe("AccountCard cloud farm creation and farm-less signed-in state", () => 
   it("renders a calm signed-in card with no link error when the account has no farm at all", () => {
     const account: AccountStatus = {
       state: "signed_in",
-      coreUrl: "https://api.pecorva.com",
-      user: { id: "u-solo", email: "solo@pecorva.com", name: "Solo" },
+      coreUrl: "https://api.barnstar.dev",
+      user: { id: "u-solo", email: "solo@barnstar.dev", name: "Solo" },
       farm: null,
       farms: [],
       localFarm: null,
@@ -395,7 +395,7 @@ describe("MembersCard permissions, limits, compact usage, invites, and leaving",
     const members: FarmMember[] = [
       {
         userId: "u-owner",
-        email: "astrid@pecorva.com",
+        email: "astrid@barnstar.dev",
         name: "Astrid",
         role: "owner",
         createdAt: "2026-11-01T00:00:00Z",
@@ -405,7 +405,7 @@ describe("MembersCard permissions, limits, compact usage, invites, and leaving",
       },
       {
         userId: "u-worker",
-        email: "lars@pecorva.com",
+        email: "lars@barnstar.dev",
         name: "Lars",
         role: "worker",
         createdAt: "2026-11-02T00:00:00Z",
@@ -417,8 +417,8 @@ describe("MembersCard permissions, limits, compact usage, invites, and leaving",
     const { client, requestMock } = createMultiUserClient({
       account: {
         state: "signed_in",
-        coreUrl: "https://api.pecorva.com",
-        user: { id: "u-owner", email: "astrid@pecorva.com", name: "Astrid" },
+        coreUrl: "https://api.barnstar.dev",
+        user: { id: "u-owner", email: "astrid@barnstar.dev", name: "Astrid" },
         farm: { id: "f-1", name: "North Meadow", role: "owner" },
       },
       members,
@@ -487,14 +487,14 @@ describe("MembersCard permissions, limits, compact usage, invites, and leaving",
     expect(inviteSwitch.checked).toBe(false);
     fireEvent.click(inviteSwitch);
     fireEvent.change(screen.getByTestId("invite-email"), {
-      target: { value: "maja@pecorva.com" },
+      target: { value: "maja@barnstar.dev" },
     });
     fireEvent.change(screen.getByTestId("invite-token-limit"), { target: { value: "25000" } });
     fireEvent.submit(screen.getByTestId("invite-form"));
 
     await waitFor(() =>
       expect(requestMock).toHaveBeenCalledWith("invites.create", {
-        email: "maja@pecorva.com",
+        email: "maja@barnstar.dev",
         role: "worker",
         useFarmPlan: true,
         monthlyTokenLimit: 25_000,
@@ -521,21 +521,21 @@ describe("MembersCard permissions, limits, compact usage, invites, and leaving",
     const { client, requestMock } = createMultiUserClient({
       account: {
         state: "signed_in",
-        coreUrl: "https://api.pecorva.com",
-        user: { id: "u-worker", email: "lars@pecorva.com", name: "Lars" },
+        coreUrl: "https://api.barnstar.dev",
+        user: { id: "u-worker", email: "lars@barnstar.dev", name: "Lars" },
         farm: { id: "f-1", name: "North Meadow", role: "worker" },
       },
       members: [
         {
           userId: "u-owner",
-          email: "astrid@pecorva.com",
+          email: "astrid@barnstar.dev",
           name: "Astrid",
           role: "owner",
           createdAt: "2026-11-01T00:00:00Z",
         },
         {
           userId: "u-worker",
-          email: "lars@pecorva.com",
+          email: "lars@barnstar.dev",
           name: "Lars",
           role: "worker",
           createdAt: "2026-11-02T00:00:00Z",
@@ -565,8 +565,8 @@ describe("BillingSection usage source switch, dual allowances, and account routi
     vi.spyOn(window, "open").mockImplementation(() => null);
     const ownerAccount: AccountStatus = {
       state: "signed_in",
-      coreUrl: "https://api.pecorva.com",
-      user: { id: "u-1", email: "astrid@pecorva.com", name: "Astrid" },
+      coreUrl: "https://api.barnstar.dev",
+      user: { id: "u-1", email: "astrid@barnstar.dev", name: "Astrid" },
       farm: { id: "f-1", name: "North Meadow", role: "owner" },
     };
     const billing: BillingStatus = {
@@ -641,8 +641,8 @@ describe("BillingSection usage source switch, dual allowances, and account routi
     vi.spyOn(window, "open").mockImplementation(() => null);
     const workerAccount: AccountStatus = {
       state: "signed_in",
-      coreUrl: "https://api.pecorva.com",
-      user: { id: "u-worker", email: "lars@pecorva.com", name: "Lars" },
+      coreUrl: "https://api.barnstar.dev",
+      user: { id: "u-worker", email: "lars@barnstar.dev", name: "Lars" },
       farm: { id: "f-1", name: "North Meadow", role: "worker" },
     };
     const disallowedBilling: BillingStatus = {

@@ -1,0 +1,60 @@
+{
+  "tools": [
+    [
+      "db_query",
+      "force",
+      20
+    ],
+    [
+      "db_mutate",
+      "force",
+      20
+    ],
+    [
+      "app",
+      "auto",
+      20
+    ],
+    [
+      "browser",
+      "force",
+      60
+    ],
+    [
+      "orion_task",
+      "force",
+      20
+    ]
+  ],
+  "turn": {
+    "turn_model": "turn_v3",
+    "speculative_turn": true,
+    "soft_timeout_config": {
+      "timeout_seconds": 2,
+      "message": "One moment.",
+      "use_llm_generated_message": true
+    }
+  },
+  "client_events": [
+    "audio",
+    "interruption",
+    "agent_response",
+    "user_transcript",
+    "tentative_user_transcript",
+    "agent_chat_response_part",
+    "agent_response_correction",
+    "agent_tool_response"
+  ],
+  "thinking_budget": 0,
+  "tts": {
+    "model_id": "eleven_v4_turbo",
+    "voice_id": "iP95p4xoKVk53GoZ742B",
+    "agent_output_audio_format": "pcm_44100",
+    "expressive_mode": true,
+    "enable_phoneme_tags": true,
+    "stability": 0.5,
+    "similarity_boost": 0.75,
+    "speed": 1
+  },
+  "promptHasRule": true
+}

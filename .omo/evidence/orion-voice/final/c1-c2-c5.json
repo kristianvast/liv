@@ -1,0 +1,118 @@
+{
+ "commit": "c54c837 + working tree",
+ "c1": {
+  "pathname": "/",
+  "state": "listening",
+  "orbCanvas": {
+   "w": 182,
+   "h": 134
+  },
+  "pass": true
+ },
+ "c5": {
+  "rows": [
+   "done: Found 28 animals"
+  ],
+  "forbidden": {
+   "db_query": false,
+   "db_mutate": false,
+   "{": false,
+   "animals.list": false
+  },
+  "widgetText": "Talk to OrionListeningMuteOpen in chatEnd callFound 28 animalsOrionHello, Orion here. How can I help?YouWho is in my herd?OrionThere are 28 animals in your herd. I checked the records on this computer.Send",
+  "pass": true
+ },
+ "afterEnd": "ended",
+ "sidebar": [
+  {
+   "id": "session-item-01a1ccbd-01b9-77fd-a381-66f1295fdd33",
+   "active": "true",
+   "text": "Who is in my herd?now"
+  },
+  {
+   "id": "session-item-01a1ccb5-3785-77fd-a381-66ef5ffe7b27",
+   "active": "false",
+   "text": "Who is in my herd?8m"
+  },
+  {
+   "id": "session-item-01a1cca8-92b4-7070-9303-18818d264a45",
+   "active": "false",
+   "text": "About: build me a calving22m"
+  },
+  {
+   "id": "session-item-01a1cca3-43b0-77f7-ba00-e74cffbda42c",
+   "active": "false",
+   "text": "open settings28m"
+  }
+ ],
+ "opened": {
+  "text": "Hello, Orion here. How can I help?Who is in my herd?Read farm recordsthe herd list2 msDoneThere are 28 animals in your herd. I checked the records on this computer.",
+  "toolRows": [
+   "db_query/done: Read farm recordsthe herd list2 msDone"
+  ],
+  "voiceMarks": 6,
+  "url": "?s=01a1ccbd-01b9-77fd-a381-66f1295fdd33"
+ },
+ "chatContinued": true,
+ "voiceAgain": {
+  "url": "?s=01a1ccbd-01b9-77fd-a381-66f1295fdd33",
+  "sessions": 7,
+  "activeItem": "session-item-01a1ccbd-01b9-77fd-a381-66f1295fdd33",
+  "sameConversation": true
+ },
+ "c2": {
+  "pass": true
+ },
+ "log": [
+  {
+   "at": "2026-11-11T22:31:41.122Z",
+   "name": "goto",
+   "detail": "http://127.0.0.1:5231/ (locale en, theme light)"
+  },
+  {
+   "at": "2026-11-11T22:31:41.164Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/final/c1-home-idle.png"
+  },
+  {
+   "at": "2026-11-11T22:31:41.508Z",
+   "name": "click",
+   "detail": "[data-testid=home-orion-widget] [data-testid=home-voice-start]"
+  },
+  {
+   "at": "2026-11-11T22:31:41.578Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/final/c1-home-listening.png"
+  },
+  {
+   "at": "2026-11-11T22:31:41.588Z",
+   "name": "type",
+   "detail": "voice-text-input: Who is in my herd? + Enter"
+  },
+  {
+   "at": "2026-11-11T22:31:41.764Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/final/c2-home-answer.png"
+  },
+  {
+   "at": "2026-11-11T22:31:43.058Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/final/c2-chat-history.png"
+  },
+  {
+   "at": "2026-11-11T22:31:43.069Z",
+   "name": "type",
+   "detail": "chat-composer-input: hello after the call + Enter (no call live -> chat.prompt)"
+  },
+  {
+   "at": "2026-11-11T22:31:43.640Z",
+   "name": "click",
+   "detail": "chat-voice-button in the same conversation"
+  },
+  {
+   "at": "2026-11-11T22:31:43.833Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/final/c2-voice-again-same-conversation.png"
+  }
+ ]
+}

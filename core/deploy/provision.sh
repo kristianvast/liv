@@ -51,7 +51,7 @@ production)
 esac
 
 # Non-secret API configuration (override any of these from the environment).
-CORE_CORS_ORIGINS="${CORE_CORS_ORIGINS:-http://localhost:3000,https://pecorva.com,https://www.pecorva.com,http://127.0.0.1:3000,http://localhost:4317}"
+CORE_CORS_ORIGINS="${CORE_CORS_ORIGINS:-http://localhost:3000,https://barnstar.dev,https://www.barnstar.dev,https://pecorva.com,https://www.pecorva.com,http://127.0.0.1:3000,http://localhost:4317}"
 # Public website voice demo (src/voice-demo.ts). The API key is the project-level secret
 # ELEVENLABS_API_KEY, mounted only when it exists; without it the endpoint answers 503.
 ELEVENLABS_AGENT_ID="${ELEVENLABS_AGENT_ID:-agent_4301m706m15yez7vmk8k0vc8ebea}"
@@ -63,10 +63,11 @@ ELEVENLABS_VOICE_MALE="${ELEVENLABS_VOICE_MALE:-iP95p4xoKVk53GoZ742B}"
 # The website (pecorva-website/shared/pecorva-config.js) and the Orbit app, which signs in through
 # the website's /account/app/ page, both use this web client.
 GOOGLE_CLIENT_IDS="${GOOGLE_CLIENT_IDS:-1058349393837-7091dcna47e9d70lcv8rt73ivl0ccmiv.apps.googleusercontent.com}"
-BILLING_SUCCESS_URL="${BILLING_SUCCESS_URL:-http://localhost:3000/account/?checkout=success}"
-BILLING_CANCEL_URL="${BILLING_CANCEL_URL:-http://localhost:3000/account/?checkout=cancel}"
-PUBLIC_SITE_URL="${PUBLIC_SITE_URL:-http://localhost:3000}"
-MAIL_FROM="${MAIL_FROM:-Pecorva <no-reply@agrointel.no>}"
+BILLING_SUCCESS_URL="${BILLING_SUCCESS_URL:-https://barnstar.dev/account/?checkout=success}"
+BILLING_CANCEL_URL="${BILLING_CANCEL_URL:-https://barnstar.dev/account/?checkout=cancel}"
+PUBLIC_SITE_URL="${PUBLIC_SITE_URL:-https://barnstar.dev}"
+MAIL_FROM="${MAIL_FROM:-Barnstar <no-reply@barnstar.dev>}"
+MAIL_REPLY_TO="${MAIL_REPLY_TO:-hello@barnstar.dev}"
 ORBIT_DOWNLOAD_URL="${ORBIT_DOWNLOAD_URL:-https://github.com/kristianvast/orbit/releases/latest}"
 ORDERS_EMAIL="${ORDERS_EMAIL:-kristian@agrointel.no}"
 CORE_FEEDBACK_EMAIL="${CORE_FEEDBACK_EMAIL:-}"
@@ -331,6 +332,7 @@ ENV_VARS+="|LLM_SMALL_MODEL=google/gemini-3.5-flash-lite"
 ENV_VARS+="|VOICE_MODEL=gemini-3.8-live|VOICE_LOCATION=us-central1"
 ENV_VARS+="|CORE_CORS_ORIGINS=$CORE_CORS_ORIGINS|BILLING_SUCCESS_URL=$BILLING_SUCCESS_URL"
 ENV_VARS+="|BILLING_CANCEL_URL=$BILLING_CANCEL_URL|MAIL_PROVIDER=resend|MAIL_FROM=$MAIL_FROM"
+ENV_VARS+="|MAIL_REPLY_TO=$MAIL_REPLY_TO"
 ENV_VARS+="|PUBLIC_SITE_URL=$PUBLIC_SITE_URL|ORBIT_DOWNLOAD_URL=$ORBIT_DOWNLOAD_URL"
 ENV_VARS+="|ORDERS_EMAIL=$ORDERS_EMAIL|STRIPE_AUTOMATIC_TAX=$STRIPE_AUTOMATIC_TAX"
 ENV_VARS+="|CORE_FEEDBACK_EMAIL=$CORE_FEEDBACK_EMAIL"

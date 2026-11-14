@@ -65,7 +65,7 @@ fn parse_ready_port(line: &str) -> Option<u16> {
 /// ORBIT_DEFAULT_CORE_URL, and ORBIT_CORE_URL in the environment overrides both at run time.
 const DEFAULT_CORE_URL: &str = match option_env!("ORBIT_DEFAULT_CORE_URL") {
   Some(url) => url,
-  None => "https://orbit-core-staging-prakpg2ywa-lz.a.run.app",
+  None => "https://api.barnstar.dev",
 };
 
 fn spawn_orion_sidecar(app: &AppHandle) -> Result<(), String> {

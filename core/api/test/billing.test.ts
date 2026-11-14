@@ -87,7 +87,7 @@ test("hardware orders keep shipping, wait for delayed payments and email once wh
     billing: {
       secretKey: "sk_test",
       webhookSecret: SECRET,
-      ordersEmail: "orders@pecorva.test",
+      ordersEmail: "orders@barnstar.test",
     },
   });
   const order = {
@@ -123,14 +123,14 @@ test("hardware orders keep shipping, wait for delayed payments and email once wh
   expect((await db.select().from(hardwareOrders))[0]?.status).toBe("paid");
   expect(mail.sent.map((m) => [m.template, m.to])).toEqual([
     ["hardware_order", "buyer@farm.test"],
-    ["order_notice", "orders@pecorva.test"],
+    ["order_notice", "orders@barnstar.test"],
   ]);
 });
 test("a completed plan checkout emails the buyer how to sign in to Orbit", async () => {
   const mail = createLogMailer(() => {});
   const a = app({
     mailer: mail,
-    links: { siteUrl: "https://pecorva.test", downloadUrl: "https://get.orbit.test" },
+    links: { siteUrl: "https://barnstar.test", downloadUrl: "https://get.orbit.test" },
     fetch: async () => Response.json(subscription),
   });
   await webhook(a, {

@@ -4,6 +4,7 @@ import type { Principal } from "./auth";
 import {
   addHardware,
   addTaxFields,
+  addYearlyNote,
   hardwareCheckout,
   hardwareSelection,
   redirectUrl,
@@ -104,6 +105,7 @@ export function registerBillingRoutes(app: Hono<FarmEnv>, db: CoreDb, options: S
     });
     addTaxFields(form, options);
     await addHardware(form, selection, stripe);
+    if (interval === "year") addYearlyNote(form, plan, selection, options);
     if (options.automaticTax) {
       form.set("customer_update[address]", "auto");
       form.set("customer_update[name]", "auto");

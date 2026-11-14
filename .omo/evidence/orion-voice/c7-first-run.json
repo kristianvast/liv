@@ -1,0 +1,62 @@
+{
+ "highlight": {
+  "x": 12,
+  "y": 485,
+  "width": 223,
+  "height": 52
+ },
+ "navSettings": {
+  "x": 12,
+  "y": 488.59375,
+  "width": 215,
+  "height": 44
+ },
+ "intersects": true,
+ "note": "Orion: Settings are here.",
+ "pointer": {
+  "x": 173,
+  "y": 520,
+  "width": 32,
+  "height": 32
+ },
+ "rowsAfterHighlight": [
+  "done: Checked this screen",
+  "done: Marked it on your screen"
+ ],
+ "pathAfterOpen": "/settings",
+ "dock": {
+  "state": "listening",
+  "w": 488.578125,
+  "h": 62,
+  "text": "Talk to OrionListeningMuteOpen in chatEnd call"
+ },
+ "dockHasEnd": true,
+ "dockAfterEnd": "gone",
+ "log": [
+  {
+   "at": "2026-11-11T22:02:04.739Z",
+   "name": "goto",
+   "detail": "http://127.0.0.1:5231/ (locale en, theme light)"
+  },
+  {
+   "at": "2026-11-11T22:02:05.014Z",
+   "name": "type",
+   "detail": "where are the settings?"
+  },
+  {
+   "at": "2026-11-11T22:02:05.177Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c7-highlight-settings.png"
+  },
+  {
+   "at": "2026-11-11T22:02:05.185Z",
+   "name": "type",
+   "detail": "open settings"
+  },
+  {
+   "at": "2026-11-11T22:02:05.655Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c7-settings-opened-dock.png"
+  }
+ ]
+}

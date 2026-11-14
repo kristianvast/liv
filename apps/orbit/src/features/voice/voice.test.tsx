@@ -93,7 +93,7 @@ function createFakeVoiceClient(
         case "account.status":
           return {
             state: "signed_in",
-            coreUrl: "https://api.pecorva.com",
+            coreUrl: "https://api.barnstar.dev",
             user: { id: "u-1", email: "farmer@example.com", name: "Astrid" },
             farm: { id: "f-1", name: "North Meadow", role: "owner" },
           } as RequestResult<T>;

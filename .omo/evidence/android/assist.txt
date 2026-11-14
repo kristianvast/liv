@@ -1,0 +1,27 @@
+Assistant gesture, 2026-11-13T10:46:17.723Z
+$ adb shell cmd role add-role-holder android.app.role.ASSISTANT no.agrointel.orbit
+(no output)
+
+$ adb shell cmd role get-role-holders android.app.role.ASSISTANT
+no.agrointel.orbit
+
+$ adb shell dumpsys activity activities | grep -E "topResumedActivity|ResumedActivity" | head -3
+topResumedActivity=ActivityRecord{29594416 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t3}
+  ResumedActivity: ActivityRecord{29594416 u0 com.google.android.apps.nexuslauncher/.NexusLauncherActivity t3}
+
+$ adb shell input keyevent 219
+(no output)
+
+$ adb shell dumpsys activity activities | grep -E "topResumedActivity|ResumedActivity" | head -3
+topResumedActivity=ActivityRecord{216749219 u0 no.agrointel.orbit/.MainActivity t11}
+  ResumedActivity: ActivityRecord{216749219 u0 no.agrointel.orbit/.MainActivity t11}
+
+$ adb shell dumpsys activity services no.agrointel.orbit | grep -E "OrbitCallService|isForeground" | head -3
+* ServiceRecord{5c0d2ba u0 no.agrointel.orbit/.OrbitCallService c:no.agrointel.orbit}
+    intent={cmp=no.agrointel.orbit/.OrbitCallService}
+    infoAllowStartForeground=[callingPackage: no.agrointel.orbit; callingUid: 10231; uidState: TOP ; uidBFSL: [BFSL]; BFGS denied: false; intent: Intent { xflg=0x4 cmp=no.agrointel.orbit/.OrbitCallService (has extras) }; code:PROC_STATE_TOP; tempAllowListReason:<null>; allowWiu:12; targetSdkVersion:36; callerTargetSdkVersion:36; startForegroundCount:0; bindFromPackage:null; isBindService:false]
+
+call-state on screen: Listening
+visible: Orion | Listening | Here is what I found:&#10;Installed farm-views 1.0.0 into skills/farm-views/ (19 files). Its instructions:&#10;&#10;---&#10;&#10;name: farm-views&#10;description: Ready-made, tested screens to start from when the farmer wants to see their animals, a calendar or their cameras - a herd view (Home card, herd list with the farmer's own filters, a card and a detail panel per animal), a calendar (calvings and foalings due, dry-offs, pregnancy checks, recorded events) and a camera wall. Copy one in and tune it instead of building a page from scratch.&#10;Ask me if you want more detail. | add the herd view | Here is what I found:&#10;Added pages/herd/ from the farm-views skill (card.html, config.json, herd.js, index.html, page.json, repro.js). The farmer finds it under "Your pages" and as a card on Home. Now set pages/herd/config.json to what this farmer uses.&#10;Ask me if you want more detail. | Hello, Orion here. How can I help? | Ask Orion | End call | Send
+
+=> PASS: role holder is the app, the app was not on top before the key, MainActivity is resumed after it and a call is live

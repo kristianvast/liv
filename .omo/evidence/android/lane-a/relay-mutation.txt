@@ -1,0 +1,52 @@
+bun test v1.4.4 (38afee6c8)
+
+test/relay.test.ts:
+62 |       ch: frame.ch,
+63 |       d: ' {"hello": "phone"} ',
+64 |     });
+65 |     const received = message(client);
+66 |     host.send(JSON.stringify({ t: "data", ch: frame.ch, d: ' {"hello": "farm"} ' }));
+67 |     expect(await received).toBe(' {"hello": "farm"} ');
+                                ^
+error: expect(received).toBe(expected)
+
+Expected: " {"hello": "farm"} "
+Received: "mutation"
+
+      at <anonymous> (/Users/kristianvastveit/projects/orbit/core/api/test/relay.test.ts:67:28)
+(fail) client pipes verbatim frames both ways and propagates client close [19.68ms]
+62 |       ch: frame.ch,
+63 |       d: ' {"hello": "phone"} ',
+64 |     });
+65 |     const received = message(client);
+66 |     host.send(JSON.stringify({ t: "data", ch: frame.ch, d: ' {"hello": "farm"} ' }));
+67 |     expect(await received).toBe(' {"hello": "farm"} ');
+                                ^
+error: expect(received).toBe(expected)
+
+Expected: " {"hello": "farm"} "
+Received: "mutation"
+
+      at <anonymous> (/Users/kristianvastveit/projects/orbit/core/api/test/relay.test.ts:67:28)
+(fail) client?channel=voice&voiceId=voice-1 pipes verbatim frames both ways and propagates client close [11.69ms]
+(pass) host channel close 4003 preserves application codes or maps to offline [9.86ms]
+(pass) host channel close 1000 preserves application codes or maps to offline [10.47ms]
+(pass) replacing a host closes the old host with 4409 and its clients with 4410 [12.54ms]
+(pass) host disconnect closes clients and status becomes offline [9.63ms]
+(pass) another member of the same farm cannot reach this account's host [10.97ms]
+(pass) refuses missing session before upgrade [7.07ms]
+(pass) refuses nonmember before upgrade [8.99ms]
+(pass) refuses bad farm before upgrade [6.91ms]
+(pass) refuses offline before upgrade [7.46ms]
+(pass) refuses invalid channel before upgrade [8.26ms]
+(pass) refuses missing voice id before upgrade [7.88ms]
+(pass) requires upgrade and farm header while status remains ordinary HTTP [8.38ms]
+(pass) ninth client is refused with 429 too_many [12.84ms]
+(pass) binary closes only its channel with the required code [8.83ms]
+(pass) oversize closes only its channel with the required code [9.58ms]
+(pass) host-oversize closes only its channel with the required code [9.32ms]
+
+ 16 pass
+ 2 fail
+ 39 expect() calls
+Ran 18 tests across 1 file. [995.00ms]

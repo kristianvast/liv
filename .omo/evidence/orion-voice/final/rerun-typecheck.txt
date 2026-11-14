@@ -1,0 +1,10 @@
+$ bun run --filter '*' typecheck
+@orbit/e2e typecheck: Exited with code 0
+@orbit/schema typecheck: Exited with code 0
+@orbit/sync typecheck: Exited with code 0
+@core/api typecheck: Exited with code 0
+@orbit/connectors typecheck: Exited with code 0
+@orbit/protocol typecheck: Exited with code 0
+@orbit/app typecheck: Exited with code 0
+@orion/agent typecheck: Exited with code 0
+EXIT=0

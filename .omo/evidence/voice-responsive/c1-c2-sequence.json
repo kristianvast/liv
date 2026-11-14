@@ -1,0 +1,156 @@
+{
+  "c1": {
+    "text": "Who is in my herd?",
+    "turn": [
+      {
+        "ms": 346,
+        "kind": "voice-caption-user",
+        "value": "YouWho is in my herd?"
+      },
+      {
+        "ms": 355,
+        "kind": "voice-caption-assistant",
+        "value": "OrionI'll check."
+      },
+      {
+        "ms": 358,
+        "kind": "state",
+        "value": "working"
+      },
+      {
+        "ms": 358,
+        "kind": "row",
+        "value": "running | Looking through your herd"
+      },
+      {
+        "ms": 359,
+        "kind": "state",
+        "value": "listening"
+      },
+      {
+        "ms": 359,
+        "kind": "row",
+        "value": "done | Found 28 animals"
+      },
+      {
+        "ms": 360,
+        "kind": "voice-caption-assistant",
+        "value": "OrionThere are 28 animals in your herd. I checked the records on this computer."
+      }
+    ],
+    "before": [
+      {
+        "ms": 0,
+        "kind": "state",
+        "value": "idle"
+      },
+      {
+        "ms": 0,
+        "kind": "access-dialog",
+        "value": "closed"
+      },
+      {
+        "ms": 75,
+        "kind": "state",
+        "value": "connecting"
+      },
+      {
+        "ms": 241,
+        "kind": "state",
+        "value": "listening"
+      },
+      {
+        "ms": 241,
+        "kind": "voice-caption-assistant",
+        "value": "OrionHello, Orion here. How can I help?"
+      }
+    ]
+  },
+  "c2": {
+    "text": "open http://127.0.0.1:7841/pages/qa/herd/index.html",
+    "turn": [
+      {
+        "ms": 263,
+        "kind": "voice-caption-user",
+        "value": "Youopen http://127.0.0.1:7841/pages/qa/herd/index.html"
+      },
+      {
+        "ms": 270,
+        "kind": "voice-caption-assistant",
+        "value": "OrionI'll open it."
+      },
+      {
+        "ms": 272,
+        "kind": "state",
+        "value": "working"
+      },
+      {
+        "ms": 272,
+        "kind": "row",
+        "value": "running | Opening 127.0.0.1"
+      },
+      {
+        "ms": 299,
+        "kind": "state",
+        "value": "listening"
+      },
+      {
+        "ms": 299,
+        "kind": "row",
+        "value": "done | Opened 127.0.0.1"
+      },
+      {
+        "ms": 304,
+        "kind": "state",
+        "value": "working"
+      },
+      {
+        "ms": 304,
+        "kind": "row",
+        "value": "running | Pointing out where to look on the page"
+      },
+      {
+        "ms": 322,
+        "kind": "state",
+        "value": "listening"
+      },
+      {
+        "ms": 322,
+        "kind": "row",
+        "value": "done | Marked the spot on the page"
+      },
+      {
+        "ms": 323,
+        "kind": "voice-caption-assistant",
+        "value": "OrionI opened the page and marked where to start."
+      }
+    ],
+    "before": [
+      {
+        "ms": 0,
+        "kind": "state",
+        "value": "idle"
+      },
+      {
+        "ms": 0,
+        "kind": "access-dialog",
+        "value": "closed"
+      },
+      {
+        "ms": 51,
+        "kind": "state",
+        "value": "connecting"
+      },
+      {
+        "ms": 180,
+        "kind": "state",
+        "value": "listening"
+      },
+      {
+        "ms": 180,
+        "kind": "voice-caption-assistant",
+        "value": "OrionHello, Orion here. How can I help?"
+      }
+    ]
+  }
+}

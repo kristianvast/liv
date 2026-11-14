@@ -1,0 +1,46 @@
+{
+ "before": {
+  "pages": []
+ },
+ "transcript": [
+  {
+   "prompt": "find a skill for my herd",
+   "isError": false,
+   "text": "{\"sessionId\":\"01a1c53d-2307-7409-a651-6acb37c2b975\",\"toolCallId\":\"mock_call_0_skill_search\",\"result\":\"2 skills found:\\n- delaval-delpro 1.0.0: Import animals, milkings and daily weights from a DeLaval DelPro herd management server (SQL Server on the farm network). Use when the farmer has DeLaval milking equipment or DelPro and wants its data in Orbit.\\n- farm-views 1.0.0: Ready-made, tested screens to start from when"
+  },
+  {
+   "prompt": "install the farm views skill",
+   "isError": false,
+   "text": "{\"sessionId\":\"01a1c53d-2307-7409-a651-6acb37c2b975\",\"toolCallId\":\"mock_call_2_skill_install\",\"result\":\"Installed farm-views 1.0.0 into skills/farm-views/ (19 files). Its instructions:\\n\\n---\\n\\nname: farm-views\\ndescription: Ready-made, tested screens to start from when the farmer wants to see their animals, a calendar or their cameras - a herd view (Home card, herd list with the farmer's own filters, a card and a de"
+  },
+  {
+   "prompt": "add the herd view",
+   "isError": false,
+   "text": "{\"sessionId\":\"01a1c53d-2307-7409-a651-6acb37c2b975\",\"toolCallId\":\"mock_call_4_page_scaffold\",\"result\":\"Added pages/herd/ from the farm-views skill (card.html, config.json, herd.js, index.html, page.json, repro.js). The farmer finds it under \\\"Your pages\\\" and as a card on Home. Now set pages/herd/config.json to what this farmer uses.\",\"details\":{\"id\":\"herd\",\"path\":\"pages/herd\",\"files\":[\"card.html\",\"config.json\",\"herd"
+  },
+  {
+   "prompt": "add the herd view",
+   "isError": true,
+   "text": "{\"sessionId\":\"01a1c53d-2307-7409-a651-6acb37c2b975\",\"toolCallId\":\"mock_call_6_page_scaffold\",\"result\":\"Not done: a page pages/herd already exists; change that one or pick another id\",\"details\":{\"code\":\"conflict\"},\"isError\":true,\"durationMs\":0,\"type\":\"tool.end\"}"
+  }
+ ],
+ "after": {
+  "pages": [
+   {
+    "id": "herd",
+    "title": "Herd",
+    "description": "Your animals, the lists you use, and each animal's details",
+    "path": "/pages/qa/herd/index.html",
+    "card": {
+     "path": "/pages/qa/herd/card.html"
+    }
+   }
+  ]
+ },
+ "secondScaffold": {
+  "isError": true,
+  "text": "{\"sessionId\":\"01a1c53d-2307-7409-a651-6acb37c2b975\",\"toolCallId\":\"mock_call_6_page_scaffold\",\"result\":\"Not done: a page pages/herd already exists; change that one or pick another id\",\"details\":{\"code\":\"conflict\"},\"isError\":true,\"durationMs\":0,\"type\":\"tool.end\"}",
+  "configUnchanged": true
+ },
+ "curl": "pages/qa/herd/card.html -> HTTP/1.1 200 OK Access-Control-Allow-Origin: * Content-Type: text/html;charset=utf-8 \npages/wrong/herd/card.html -> HTTP/1.1 401 Unauthorized content-type: text/plain;charset=utf-8 \npages/qa/herd/..%2F..%2FAGENTS.md -> HTTP/1.1 404 Not Found content-type: text/plain;charset=utf-8 \npages/qa/herd/config.json -> HTTP/1.1 200 OK Access-Control-Allow-Origin: * Content-Type: application/json;charset=utf-8 \npages/qa/_orbit.css -> HTTP/1.1 200 OK Access-Control-Allow-Origin: * Content-Type: text/css; charset=utf-8 \nfonts/tanker-400-normal.woff2 -> sed: RE error: illegal byte sequence\nHTTP/1.1 200 OK Access-Control-Allow-Origin: * Content-Type: font/woff2"
+}

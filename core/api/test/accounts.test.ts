@@ -310,7 +310,7 @@ describe("Google sign-in", () => {
     fetches = 0;
     return app({
       googleClientIds: [clientId, "desktop.apps.googleusercontent.com"],
-      corsOrigins: ["https://pecorva.com"],
+      corsOrigins: ["https://barnstar.dev"],
       fetch: async (input) => {
         expect(String(input)).toBe("https://www.googleapis.com/oauth2/v3/certs");
         fetches++;
@@ -509,21 +509,21 @@ describe("Google sign-in", () => {
     ).toBe(200);
   });
 
-  test("permits the Pecorva website CORS preflight and response", async () => {
+  test("permits the Barnstar website CORS preflight and response", async () => {
     const a = googleApp();
     const preflight = await a.request("/v1/auth/google", {
       method: "OPTIONS",
       headers: {
-        origin: "https://pecorva.com",
+        origin: "https://barnstar.dev",
         "access-control-request-method": "POST",
         "access-control-request-headers": "content-type",
       },
     });
     expect(preflight.status).toBe(204);
-    expect(preflight.headers.get("access-control-allow-origin")).toBe("https://pecorva.com");
+    expect(preflight.headers.get("access-control-allow-origin")).toBe("https://barnstar.dev");
     const response = await a.request("/v1/auth/google", {
       method: "POST",
-      headers: { origin: "https://pecorva.com", "content-type": "application/json" },
+      headers: { origin: "https://barnstar.dev", "content-type": "application/json" },
       body: JSON.stringify({
         credential: await credential({
           iss: "accounts.google.com",
@@ -533,7 +533,7 @@ describe("Google sign-in", () => {
       }),
     });
     expect(response.status).toBe(201);
-    expect(response.headers.get("access-control-allow-origin")).toBe("https://pecorva.com");
+    expect(response.headers.get("access-control-allow-origin")).toBe("https://barnstar.dev");
   });
 });
 

@@ -1,0 +1,72 @@
+[orion] ORION_READY {"port":7718}
+[vite] 
+[vite]   VITE v6.4.5  ready in 110 ms
+[vite] 
+[vite]   ➜  Local:   http://127.0.0.1:5183/
+[orion-fresh] ORION_READY {"port":7719}
+[vite-fresh] 
+[vite-fresh]   VITE v6.4.5  ready in 75 ms
+[vite-fresh] 
+[vite-fresh]   ➜  Local:   http://127.0.0.1:5184/
+Cannot use({ launchOptions }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at voice.spec.ts:43
+
+  41 |
+  42 | test.describe("Orion voice with a microphone", () => {
+> 43 |   test.use(FAKE_MICROPHONE);
+     |        ^
+  44 |
+  45 |   test("a call starts from the Home widget and answers in plain words", async ({ page }) => {
+  46 |     const widget = await startCallOnHome(page);
+Cannot use({ launchOptions }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at voice.spec.ts:43
+
+  41 |
+  42 | test.describe("Orion voice with a microphone", () => {
+> 43 |   test.use(FAKE_MICROPHONE);
+     |        ^
+  44 |
+  45 |   test("a call starts from the Home widget and answers in plain words", async ({ page }) => {
+  46 |     const widget = await startCallOnHome(page);
+Cannot use({ launchOptions }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at voice.spec.ts:43
+
+  41 |
+  42 | test.describe("Orion voice with a microphone", () => {
+> 43 |   test.use(FAKE_MICROPHONE);
+     |        ^
+  44 |
+  45 |   test("a call starts from the Home widget and answers in plain words", async ({ page }) => {
+  46 |     const widget = await startCallOnHome(page);
+Cannot use({ launchOptions }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at voice.spec.ts:43
+
+  41 |
+  42 | test.describe("Orion voice with a microphone", () => {
+> 43 |   test.use(FAKE_MICROPHONE);
+     |        ^
+  44 |
+  45 |   test("a call starts from the Home widget and answers in plain words", async ({ page }) => {
+  46 |     const widget = await startCallOnHome(page);
+Cannot use({ launchOptions }) in a describe group, because it forces a new worker.
+Make it top-level in the test file or put in the configuration file.
+
+   at voice.spec.ts:43
+
+  41 |
+  42 | test.describe("Orion voice with a microphone", () => {
+> 43 |   test.use(FAKE_MICROPHONE);
+     |        ^
+  44 |
+  45 |   test("a call starts from the Home widget and answers in plain words", async ({ page }) => {
+  46 |     const widget = await startCallOnHome(page);
+
+EXIT=1

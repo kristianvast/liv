@@ -1,0 +1,62 @@
+$ biome check .
+apps/orbit/src/features/settings/index.tsx:173:11 lint/complexity/noUselessFragments  FIXABLE  ━━━━━━━━━━
+
+  i This fragment is unnecessary.
+  
+    172 │         {page === "account" && (
+  > 173 │           <>
+        │           ^^
+  > 174 │             <div className="settings-columns">
+         ...
+  > 183 │             </div>
+  > 184 │           </>
+        │           ^^^
+    185 │         )}
+    186 │ 
+  
+  i A fragment is redundant if it contains only one child, or if it is the child of a html element, and is not a keyed fragment.
+  
+  i Unsafe fix: Remove the Fragment
+  
+    171 171 │   
+    172 172 │           {page === "account" && (
+    173     │ - ··········<>
+    174     │ - ············<div·className="settings-columns">
+        173 │ + ··········<div·className="settings-columns">
+    175 174 │                 <div className="settings-stack">
+    176 175 │                   <AccountSection />
+    ······· │ 
+    181 180 │                   <PrivacyCard settings={settings} onSettings={setSettings} />
+    182 181 │                 </div>
+    183     │ - ············</div>
+    184     │ - ··········</>
+        182 │ + ············</div>
+    185 183 │           )}
+    186 184 │   
+  
+
+packages/orion/src/agent/hub.ts:248:27 lint/style/useTemplate  FIXABLE  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  i Template literals are preferred over string concatenation.
+  
+    246 │       if (local) this.dropAgent(local);
+    247 │       const header = { ...history.header, cwd: this.opts.workspace.dir };
+  > 248 │       writeFileSync(file, [header, ...merged].map((e) => JSON.stringify(e)).join("\n") + "\n");
+        │                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    249 │       this.live.delete(remote.id);
+    250 │     }
+  
+  i Template literals are easier to read than a chain of + operators and quotes, and they avoid mistakes with spaces and escaped quotes.
+  
+  i Unsafe fix: Use a template literal.
+  
+     246  246 │         if (local) this.dropAgent(local);
+     247  247 │         const header = { ...history.header, cwd: this.opts.workspace.dir };
+     248      │ - ······writeFileSync(file,·[header,·...merged].map((e)·=>·JSON.stringify(e)).join("\n")·+·"\n");
+          248 │ + ······writeFileSync(file,·`${[header,·...merged].map((e)·=>·JSON.stringify(e)).join("\n")}\n`);
+     249  249 │         this.live.delete(remote.id);
+     250  250 │       }
+  
+
+Checked 526 files in 76ms. No fixes applied.
+Found 2 infos.

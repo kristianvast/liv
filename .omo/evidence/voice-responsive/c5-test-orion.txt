@@ -1,0 +1,280 @@
+@orion/agent test: bun test v1.4.4 (38afee6c8)
+@orion/agent test: 
+@orion/agent test: test/shell.test.ts:
+@orion/agent test: (pass) bundledShell > finds the MinGit shell next to the sidecar on Windows and nowhere else [2.40ms]
+@orion/agent test: (pass) shellTools > the shell tools ask for a plain-words description beside the command and still run it [5.92ms]
+@orion/agent test: (pass) RepeatGuard > a command that keeps giving the same result is refused, one whose result changes always runs [113.18ms]
+@orion/agent test: 
+@orion/agent test: test/voice-transport.test.ts:
+@orion/agent test: (pass) a farm in its free month may start a call although its plan is still free [0.03ms]
+@orion/agent test: (pass) no voice allowance refuses the call [0.02ms]
+@orion/agent test: (pass) a used-up voice allowance refuses the call
+@orion/agent test: (pass) live transport authenticates Core and relays text bytes verbatim [5.99ms]
+@orion/agent test: (pass) local relay forwards opaque frames and budget close 4402 through a real WebSocket [116.20ms]
+@orion/agent test: (pass) voice socket paths enforce token call existence and one connection [142.10ms]
+@orion/agent test: 
+@orion/agent test: test/voice-browser.test.ts:
+@orion/agent test: (pass) voice browser open and highlight emit JPEG views and close clears the image [456.76ms]
+@orion/agent test: 
+@orion/agent test: test/farm-code.test.ts:
+@orion/agent test: (pass) an agent workspace commit pushes immediately and another Orion can pull it [598.70ms]
+@orion/agent test: (pass) a fresh signed-in Orion adopts farm code and both PCs merge independent edits with undo [469.53ms]
+@orion/agent test: (pass) same-file concurrent edits retain the local version and save the other version for recovery [377.68ms]
+@orion/agent test: 
+@orion/agent test: test/feedback.test.ts:
+@orion/agent test: (pass) collectBuild > takes the text files of one page and leaves out generated, hidden and binary files [1.78ms]
+@orion/agent test: (pass) collectBuild > refuses a build that still holds a password and names the line [0.55ms]
+@orion/agent test: (pass) collectBuild > refuses a name that would leave the workspace folder [0.63ms]
+@orion/agent test: (pass) feedback over the protocol > a signed-out farm's feedback reaches the cloud without credentials, with version and system [24.34ms]
+@orion/agent test: 
+@orion/agent test: test/access.test.ts:
+@orion/agent test: (pass) the shell waits for one yes, a no refuses it, and a yes is remembered [70.95ms]
+@orion/agent test: (pass) an open question reaches a client that connects later and is dropped when the run stops [31.16ms]
+@orion/agent test: (pass) each tool gets its own question, and a yes or a no for one leaves the others asking [0.74ms]
+@orion/agent test: (pass) an allowed question is remembered as accepted, and turning a switch off keeps it accepted [46.05ms]
+@orion/agent test: (pass) tools that run code Orion wrote wait for the yes to running commands, and a no runs nothing [0.53ms]
+@orion/agent test: (pass) Orion's write and edit refuse Orbit's settings file by any spelling of its path [1.20ms]
+@orion/agent test: (pass) a live session has one bash, write and edit, and its write refuses the settings file [29.04ms]
+@orion/agent test: 
+@orion/agent test: test/browser.test.ts:
+@orion/agent test: (pass) browser tool > opens a page, lists what can be used, and never reads a password back [266.40ms]
+@orion/agent test: (pass) browser tool > a click changes the page and the next reading shows it [1024.12ms]
+@orion/agent test: (pass) browser tool > typing replaces the field's text and submitting follows the form to the next page [1068.10ms]
+@orion/agent test: (pass) browser tool > back returns to the form and a screenshot is a real JPEG [1024.23ms]
+@orion/agent test: (pass) browser tool > refuses addresses that are not web pages [0.13ms]
+@orion/agent test: 
+@orion/agent test: test/auth.test.ts:
+@orion/agent test: (pass) provider sign-in (Pi /login over the protocol) > lists subscriptions and API-key providers without the internal mock provider [32.68ms]
+@orion/agent test: (pass) provider sign-in (Pi /login over the protocol) > relays links, device codes and prompts, stores the credential, and logs out [34.50ms]
+@orion/agent test: (pass) provider sign-in (Pi /login over the protocol) > cancelling a sign-in mid-prompt stores nothing and reports cancelled [27.06ms]
+@orion/agent test: (pass) provider sign-in (Pi /login over the protocol) > saves a built-in provider's API key through its own login prompt without echoing it [30.86ms]
+@orion/agent test: (pass) provider sign-in (Pi /login over the protocol) > rejects unknown providers and methods a provider does not offer [22.75ms]
+@orion/agent test: 
+@orion/agent test: test/skills.test.ts:
+@orion/agent test: (pass) skill catalog > search finds a skill by keyword and install returns its instructions [8.54ms]
+@orion/agent test: (pass) skill catalog > a file that does not match its checksum installs nothing [6.02ms]
+@orion/agent test: (pass) skill catalog > a path that leaves the skill folder is refused before any download [6.57ms]
+@orion/agent test: (pass) skill catalog > the repository catalog matches the skill files [20.46ms]
+@orion/agent test: (pass) page from a skill > scaffold copies the skill's page with its card and never replaces the farm's copy [12.51ms]
+@orion/agent test: (pass) page from a skill > scaffold names the pages a skill has when asked for one it lacks [9.02ms]
+@orion/agent test: (pass) page from a skill > a skill whose page folder points outside the skill is refused [9.19ms]
+@orion/agent test: (pass) connector from a skill > scaffold copies the skill's connector and runs import the herd once and milkings incrementally [19.13ms]
+@orion/agent test: (pass) connector from a skill > the DelPro skill's mapping imports through Orion with LIV-shaped rows [21.08ms]
+@orion/agent test: (pass) connector from a skill > remove takes the connector, its password and its folder away, and the name can be used again [9.23ms]
+@orion/agent test: (pass) connector from a skill > remove leaves a folder outside connectors/ and a folder another connector uses [9.30ms]
+@orion/agent test: (pass) connector from a skill > scaffold refuses a skill that is not installed [5.05ms]
+@orion/agent test: 
+@orion/agent test: test/billing.test.ts:
+@orion/agent test: (pass) billing relay authenticates every request with the stored session and farm [0.33ms]
+@orion/agent test: (pass) billing plans rejects an invalid Core catalogue [0.06ms]
+@orion/agent test: (pass) billing translates Core HTTP 403 into forbidden [0.07ms]
+@orion/agent test: (pass) billing translates Core HTTP 402 into plan_required [0.01ms]
+@orion/agent test: (pass) billing translates Core HTTP 429 into budget_exceeded
+@orion/agent test: (pass) signed-out protocol billing request asks the farmer to sign in [35.27ms]
+@orion/agent test: 
+@orion/agent test: test/phone-notify-rate.test.ts:
+@orion/agent test: (pass) access notifications share a 30 second conversation limit with settlement notifications [3.44ms]
+@orion/agent test: 
+@orion/agent test: test/computer.test.ts:
+@orion/agent test: (pass) computer tool key mapping > parses modifiers, named keys, aliases and the plus key [0.15ms]
+@orion/agent test: (pass) computer tool key mapping > macOS passes characters as an argument, never inside the script [0.04ms]
+@orion/agent test: (pass) computer tool key mapping > Windows escapes SendKeys syntax and refuses the Windows key [0.06ms]
+@orion/agent test: (pass) computer tool key mapping > Linux maps to xdotool key names and arguments [0.03ms]
+@orion/agent test: (pass) computer tool key mapping > macOS pointer scripts post a press and release at the target [0.01ms]
+@orion/agent test: (pass) computer tool refusals > missing coordinates come back as a refusal result, not a thrown error [0.08ms]
+@orion/agent test: 
+@orion/agent test: test/cameras.test.ts:
+@orion/agent test: (pass) camera layout writes keep one row with outbox, snapshot and change notifications [17.33ms]
+@orion/agent test: (pass) malformed camera layouts are rejected without queuing a write [14.74ms]
+@orion/agent test: (pass) camera layout save and get round trip over the protocol and emit camera_layouts [36.98ms]
+@orion/agent test: (pass) go2rtc binary resolution uses override, sibling, data directory, then PATH [1.15ms]
+@orion/agent test: (pass) an absent relay reports unavailable while authenticated camera routes return 503 [37.16ms]
+@orion/agent test: 
+@orion/agent test: test/local-orion.test.ts:
+@orion/agent test: (pass) orbit source > the first call downloads the installed version on a farm branch, the next finds it there [209.50ms]
+@orion/agent test: (pass) orbit source > a folder that holds something else is left alone [93.26ms]
+@orion/agent test: (pass) building Orion itself > an app-only change leaves the shipped Orion in use [395.89ms]
+@orion/agent test: (pass) building Orion itself > a changed Orion that starts is switched on, and one that cannot start is not [569.49ms]
+@orion/agent test: (pass) building Orion itself > going back to the original also stops using the farm's Orion [295.07ms]
+@orion/agent test: (pass) starting Orion > the shipped Orion hands over to the farm's build and ends when it ends [693.24ms]
+@orion/agent test: (pass) starting Orion > a farm build that does not start is switched off and the shipped Orion runs instead [454.30ms]
+@orion/agent test: (pass) restarting after a change to Orion > Orion restarts once the conversation that asked for it has finished [28.52ms]
+@orion/agent test: (pass) restarting after a change to Orion > without a parent to start it again, Orion says it will not restart [23.33ms]
+@orion/agent test: (pass) updating the farm's own Orbit > the newest release is pulled and the farm's change is put back on top, checked and built [711.35ms]
+@orion/agent test: (pass) updating the farm's own Orbit > a change that clashes stops it with nothing changed, and leaving it out lets it through [814.34ms]
+@orion/agent test: (pass) updating the farm's own Orbit > a new release that fails its checks is undone and the previous build stays [621.98ms]
+@orion/agent test: (pass) starting after an update without the farm's changes > a farm build on an older release, or one that does not say, is switched off with the reason [1.25ms]
+@orion/agent test: (pass) starting after an update without the farm's changes > a farm build on the installed release or a newer one keeps running [0.69ms]
+@orion/agent test: 
+@orion/agent test: test/farm-code-app.test.ts:
+@orion/agent test: (pass) ports a farm delta onto the receiver's different installed release and checks the build [482.16ms]
+@orion/agent test: (pass) retains recovery bytes and shipped UI on app port conflict failure [442.69ms]
+@orion/agent test: (pass) retains recovery bytes and shipped UI on app port build failure [461.41ms]
+@orion/agent test: 
+@orion/agent test: test/orion.test.ts:
+@orion/agent test: (pass) protocol handshake > hello with the right token returns server info [38.11ms]
+@orion/agent test: (pass) protocol handshake > a wrong token gets unauthorized and close code 4401 [29.75ms]
+@orion/agent test: (pass) sessions > create and list persist across a restart [48.73ms]
+@orion/agent test: (pass) no AI model set up > a prompt is refused with not_ready, nothing stays running, and abort reports nothing to stop [19.52ms]
+@orion/agent test: (pass) mock model > a prompt streams message.delta and ends with agent.settled [32.80ms]
+@orion/agent test: (pass) mock model > 'list cows' emits herd_query tool events and summarizes the result [36.55ms]
+@orion/agent test: (pass) mock model > the first finished run names the conversation, and a name the farmer chose is kept [36.84ms]
+@orion/agent test: (pass) tools run without approval prompts > camera_discover runs straight away [33.62ms]
+@orion/agent test: (pass) one-wearable rule > device_bind refuses a second wearable and explains why [14.55ms]
+@orion/agent test: (pass) one-wearable rule > db.mutate bindings.set returns rule_violation [31.52ms]
+@orion/agent test: (pass) animal events > herd_record_event stores what a calendar needs and refuses what it cannot place [14.64ms]
+@orion/agent test: (pass) memory > remember and forget edit the farm and user memory files [14.00ms]
+@orion/agent test: (pass) memory > a new session's system prompt contains both memories [38.04ms]
+@orion/agent test: (pass) snapshots > a file write is snapshotted and undo reverts it [39.93ms]
+@orion/agent test: (pass) snapshots > undo of a database write restores the previous row [27.46ms]
+@orion/agent test: (pass) custom pages > a page Orion writes is listed and served only with the session token [36.98ms]
+@orion/agent test: (pass) custom pages > a page lists its card only when the card file is inside its own folder [29.23ms]
+@orion/agent test: (pass) custom pages > sandboxed pages can load their own files, the Orbit stylesheet and its fonts [28.73ms]
+@orion/agent test: (pass) app source editing > --app-source adds the checkout and its AGENTS.md to the system prompt [64.56ms]
+@orion/agent test: (pass) local UI build > a checked build is served under the token and a launch that never boots reads as broken [128.74ms]
+@orion/agent test: (pass) local UI build > with Run commands off, a build waits for the yes and Not now builds nothing [34.65ms]
+@orion/agent test: (pass) local UI build > a failing typecheck reports the step and leaves the original app in use [40.50ms]
+@orion/agent test: 
+@orion/agent test: test/workspace.test.ts:
+@orion/agent test: (pass) workspace snapshots > initializes and snapshots with no git on PATH [9.46ms]
+@orion/agent test: (pass) workspace snapshots > reopening preserves starter files and history [6.91ms]
+@orion/agent test: (pass) workspace snapshots > snapshots and reverts added files [12.25ms]
+@orion/agent test: (pass) workspace snapshots > snapshots and reverts modified files [14.68ms]
+@orion/agent test: (pass) workspace snapshots > snapshots and reverts deleted files [14.02ms]
+@orion/agent test: (pass) workspace snapshots > conflicting added files leave the entire undo untouched [9.93ms]
+@orion/agent test: (pass) workspace snapshots > conflicting modified files leave the entire undo untouched [11.93ms]
+@orion/agent test: (pass) workspace snapshots > conflicting deleted files leave the entire undo untouched [11.25ms]
+@orion/agent test: (pass) workspace snapshots > uncommitted overlapping changes also prevent undo [6.69ms]
+@orion/agent test: workspace snapshot with 10,000 ignored files: 368.6 ms
+@orion/agent test: (pass) workspace snapshots > ignores large connector dependencies and nested ignore rules [3020.93ms]
+@orion/agent test: (pass) workspace snapshots > reopens a real git repository with deleted and ignored tracked files [162.68ms]
+@orion/agent test: 
+@orion/agent test: test/billing-gateway.test.ts:
+@orion/agent test: orion: naming the conversation failed: orbit-gateway/orbit-default: Error: 402: {"code":"plan_required","message":"plan_required"}
+@orion/agent test: (pass) Core gateway HTTP 402 emits a typed plan_required chat error [116.59ms]
+@orion/agent test: orion: naming the conversation failed: orbit-gateway/orbit-default: Error: 429: {"code":"budget_exceeded","message":"budget_exceeded"}
+@orion/agent test: (pass) Core gateway HTTP 429 emits a typed budget_exceeded chat error [38.78ms]
+@orion/agent test: 
+@orion/agent test: test/voice-history.test.ts:
+@orion/agent test: (pass) spoken turns and finished voice tools survive reopening with voice markers [38.39ms]
+@orion/agent test: (pass) voice start returns earlier chat and spoken turns in conversation_recap [27.16ms]
+@orion/agent test: (pass) a chat continuation sees spoken turns in the real mock model context and excludes tool history [34.13ms]
+@orion/agent test: (pass) a turn recorded during streaming emits immediately and is persisted before agent.settled [41.41ms]
+@orion/agent test: (pass) whitespace-only turns leave history and title unchanged and first speech titles a conversation [27.13ms]
+@orion/agent test: (pass) recap drops the oldest complete turns to stay under four thousand characters [24.32ms]
+@orion/agent test: (pass) recap retains the end of an oversized latest turn with its speaker label [23.76ms]
+@orion/agent test: 
+@orion/agent test: test/web.test.ts:
+@orion/agent test: (pass) htmlToText > keeps what a person reads, marks headings, and writes links out in full [5.40ms]
+@orion/agent test: (pass) parseSearchResults > unwraps the redirect address, decodes text and drops advertising [0.14ms]
+@orion/agent test: (pass) web tools > web_search lists results and tells Orion when the service turns it away [0.70ms]
+@orion/agent test: (pass) web tools > web_fetch returns a long page in parts and never the page's scripts [0.46ms]
+@orion/agent test: (pass) web tools > web_fetch refuses files that are not text, missing pages and non-web addresses [0.28ms]
+@orion/agent test: 
+@orion/agent test: test/chat-history.test.ts:
+@orion/agent test: (pass) cloud history omits credential reads and known secrets without altering local history [0.22ms]
+@orion/agent test: (pass) history merge retains concurrent branches exactly once with parents before children [0.05ms]
+@orion/agent test: 
+@orion/agent test: test/resources.test.ts:
+@orion/agent test: (pass) embedded resources > materializeResources writes every embedded file and drops stale ones [3.16ms]
+@orion/agent test: (pass) embedded resources > a session's system prompt contains the materialised AGENTS.md [34.49ms]
+@orion/agent test: 
+@orion/agent test: test/settings.test.ts:
+@orion/agent test: (pass) thinking level > a new install and an older file that stored the old off default think at medium [0.95ms]
+@orion/agent test: (pass) thinking level > off chosen after the change is kept [0.26ms]
+@orion/agent test: 
+@orion/agent test: test/billing-error.test.ts:
+@orion/agent test: (pass) classifies gateway failures without hiding other model errors [0.01ms]
+@orion/agent test: (pass) classifies gateway failures without hiding other model errors
+@orion/agent test: (pass) classifies gateway failures without hiding other model errors
+@orion/agent test: 
+@orion/agent test: test/camera-proxy.test.ts:
+@orion/agent test: (pass) camera proxy preserves upstream HTTP responses and MSE text and binary frames [5.20ms]
+@orion/agent test: 
+@orion/agent test: test/modules.test.ts:
+@orion/agent test: (pass) modules > a fresh data dir starts with every module off and writes modules.json [18.51ms]
+@orion/agent test: (pass) modules > a data dir that already has data enables those modules automatically [27.15ms]
+@orion/agent test: (pass) modules > enable and disable requests persist and emit modules.updated [28.30ms]
+@orion/agent test: (pass) modules > the first animal added through db.mutate enables the herd module [18.96ms]
+@orion/agent test: (pass) modules > orbit_modules enables herd from chat (mock trigger) with enabledBy orion [23.66ms]
+@orion/agent test: orion: /var/folders/x8/7wh9r8wx4_q47yf73zz25ht00000gn/T/tmp.HZZiViFSsH/orion-test-LQlMBx/modules.json is not valid JSON (JSON Parse error: Expected '}'); rebuilding it
+@orion/agent test: (pass) ModulesStore > list, idempotent enable, never auto-disables, rebuilds a broken file [1.11ms]
+@orion/agent test: 
+@orion/agent test: test/phone.test.ts:
+@orion/agent test: (pass) dials only while signed in with phone access, and chat round-trips remotely [43.90ms]
+@orion/agent test: (pass) remote writes to desktop controls are forbidden while local controls still work [36.85ms]
+@orion/agent test: (pass) remote hello still checks the version and propagates the loopback close [36.53ms]
+@orion/agent test: (pass) reconnects after Core closes the host and stops when signed out [1041.08ms]
+@orion/agent test: (pass) a voice channel pipes its frames and closes when the remote protocol owner disconnects [36.42ms]
+@orion/agent test: (pass) a signed-in account without a linked farm never dials the relay [31.89ms]
+@orion/agent test: (pass) an inner frame over 8 MiB closes only its channel with 4413 [49.82ms]
+@orion/agent test: (pass) chat.prompt keeps not_found for an unknown session [36.71ms]
+@orion/agent test: (pass) chat.steer keeps not_found for an unknown session [31.46ms]
+@orion/agent test: (pass) chat.followUp keeps not_found for an unknown session [30.60ms]
+@orion/agent test: (pass) binary host frames are refused with 4415 [37.73ms]
+@orion/agent test: 
+@orion/agent test: test/voice.test.ts:
+@orion/agent test: (pass) a real mock voice socket greets, says it will check before the lookup, and answers with the actual animal count [25.58ms]
+@orion/agent test: (pass) database tool parses params "{\"species\":\"cattle\"}" and reports invalid input in plain words [23.69ms]
+@orion/agent test: (pass) database tool parses params "{invalid" and reports invalid input in plain words [21.03ms]
+@orion/agent test: (pass) database tool parses params "[]" and reports invalid input in plain words [22.64ms]
+@orion/agent test: (pass) database tool parses params "" and reports invalid input in plain words [21.88ms]
+@orion/agent test: (pass) database tool parses params undefined and reports invalid input in plain words [24.42ms]
+@orion/agent test: (pass) another protocol socket cannot report turns or tools for a call [24.42ms]
+@orion/agent test: (pass) closing the SDK socket still accepts final reports until stop [25.39ms]
+@orion/agent test: (pass) orion_task answers Started while streaming and later ends its tool and sends a voice note [27.31ms]
+@orion/agent test: (pass) a stopped orion_task is saved as stopped and the voice agent is told [30.18ms]
+@orion/agent test: 
+@orion/agent test: test/account.test.ts:
+@orion/agent test: orion: chat sync failed: chat cloud answered 503
+@orion/agent test: (pass) two Orions recover private chats and catch up offline turns across a restart [20277.65ms]
+@orion/agent test: (pass) Orion account > signed out, Orbit stays local: writes work and sync is disabled [32.76ms]
+@orion/agent test: (pass) Orion account > register leaves the farm on this PC; farms.create puts it in the cloud, syncs writes and a paid plan runs on the cloud model [135.16ms]
+@orion/agent test: (pass) Orion account > an invited viewer is refused local writes and stays signed in across restarts [189.04ms]
+@orion/agent test: (pass) Orion account > the sign-in lives in the data folder, survives losing the keychain, and moves an old keychain one there [129.24ms]
+@orion/agent test: (pass) Orion account > Google sign-in runs on the website and comes back through Orion's own page, once [44.09ms]
+@orion/agent test: (pass) Orion account > a plan bought on the website before Orbit was installed follows the account into Orbit [184.82ms]
+@orion/agent test: orion: naming the conversation failed: orbit-gateway/orbit-default: Error: the model gave no title (toolUse)
+@orion/agent test: (pass) Orion account > Gemini thought signatures on tool calls go back to the model on the next turn [128.04ms]
+@orion/agent test: orion: naming the conversation failed: orbit-gateway/orbit-default: Error: the model gave no title (toolUse)
+@orion/agent test: (pass) Orion account > a farm on the free month shares a page through Orion, and Core holds it for review [123.76ms]
+@orion/agent test: (pass) Orion account > a member runs on their own plan until the owner allows the farm plan, then switches [241.43ms]
+@orion/agent test: (pass) Orion account > each person on this PC sees only their own chats [251.87ms]
+@orion/agent test: (pass) Orion account > a member opens another farm in its own folder and goes back to this PC's farm [212.91ms]
+@orion/agent test: 
+@orion/agent test: test/phone-notifications.test.ts:
+@orion/agent test: (pass) notifies once when a remotely started chat settles after the phone disconnects [41.44ms]
+@orion/agent test: (pass) notifies for access while the remotely started model is running without a connected phone [45.60ms]
+@orion/agent test: orion: phone notify failed: HTTP 503
+@orion/agent test: (pass) a failed notify cannot fail chat settlement [42.41ms]
+@orion/agent test: 
+@orion/agent test: test/title.test.ts:
+@orion/agent test: (pass) a title is asked of the provider's cheapest paid text model, never a dearer one [0.10ms]
+@orion/agent test: (pass) the subscription's small model exists for titles but is not offered as a model to chat with [19.68ms]
+@orion/agent test: 
+@orion/agent test: test/page-read.test.ts:
+@orion/agent test: (pass) pages.read returns file bytes, MIME and byte length for the entry and page kit assets [27.52ms]
+@orion/agent test: (pass) pages.read refuses missing or escaping file board/../../AGENTS.md [25.94ms]
+@orion/agent test: (pass) pages.read refuses missing or escaping file ../board/index.html [26.20ms]
+@orion/agent test: (pass) pages.read refuses missing or escaping file board/missing.html [27.76ms]
+@orion/agent test: (pass) pages.read refuses missing or escaping file board/escape.html [25.47ms]
+@orion/agent test: (pass) pages.read refuses missing or escaping file _fonts/../settings.json [27.46ms]
+@orion/agent test: (pass) pages.read refuses missing or escaping file _fonts/absent.woff2 [27.31ms]
+@orion/agent test: (pass) pages.read refuses missing or escaping file _orbit.css/extra [27.67ms]
+@orion/agent test: (pass) pages.read refuses missing or escaping file _orbit.js/ [27.11ms]
+@orion/agent test: (pass) pages.read accepts exactly 4 MiB and refuses a file one byte larger [34.62ms]
+@orion/agent test: (pass) pages.read transports a 2 MiB page asset intact through the relay [43.25ms]
+@orion/agent test: (pass) pages.read returns not_found when a resolved file disappears before it is read [28.20ms]
+@orion/agent test: 
+@orion/agent test: test/voice-farm.test.ts:
+@orion/agent test: (pass) worker voice writes cannot change cameras [22.08ms]
+@orion/agent test: (pass) client frames received before the upstream opens are flushed in their original order [21.80ms]
+@orion/agent test: (pass) voice observation writes keep the shared mutation undo snapshot [24.56ms]
+@orion/agent test: (pass) voice binding tools refuse a second wearable on the same animal [24.34ms]
+@orion/agent test: (pass) a slow tool answers within its budget and later emits its real result and a voice note [25.99ms]
+@orion/agent test: 
+@orion/agent test:  199 pass
+@orion/agent test:  0 fail
+@orion/agent test:  890 expect() calls
+@orion/agent test: Ran 199 tests across 33 files. [45.25s]
+@orion/agent test: Exited with code 0

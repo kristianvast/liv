@@ -1,0 +1,60 @@
+{
+  "criterion": 1,
+  "at": "2026-11-13T10:38:08.997Z",
+  "core": "http://127.0.0.1:8797",
+  "relay": "ws://127.0.0.1:8797/v1/relay/client",
+  "orion": "ws://127.0.0.1:7797/ws",
+  "farmId": "00000000-0000-4000-8000-00000000f001",
+  "hello": {
+    "protocolVersion": 1,
+    "serverVersion": "0.1.8",
+    "farmId": "00000000-0000-4000-8000-00000000f001"
+  },
+  "sessionId": "01a1d47c-7341-7422-8bfd-7df60c814168",
+  "prompt": "Who is in my herd?",
+  "eventTypes": [
+    "sync.status",
+    "session.updated",
+    "message.start",
+    "message.start",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.delta",
+    "message.end",
+    "message.end",
+    "session.updated",
+    "agent.settled"
+  ],
+  "assistantMessageEnd": [
+    {
+      "kind": "assistant",
+      "id": "ebc2439e",
+      "ts": "2026-11-13T10:38:08.209Z",
+      "text": "This is the Orion mock model. You said: \"Who is in my herd?\". I can help with your herd.",
+      "model": "orion-mock/mock-1",
+      "stopReason": "stop"
+    }
+  ],
+  "settled": true,
+  "localOrionTranscriptHoldsPrompt": true,
+  "modelErrors": [],
+  "reply": "This is the Orion mock model. You said: \"Who is in my herd?\". I can help with your herd.",
+  "localOrionTranscriptHoldsReply": true,
+  "pass": true
+}

@@ -1,0 +1,10 @@
+orbit-winqa, user farmer, orion.exe built from HEAD (bun-windows-x64 1.4.4), fake Core
+PASS login -> signed_in
+PASS token in data folder, not in Windows keychain
+PASS hard-killed and restarted (like an update) -> signed_in
+PASS legacy token placed in Windows keychain
+PASS first start after update -> signed_in
+PASS token moved to data folder, keychain entry removed
+PASS second restart -> still signed_in
+PASS sign out sticks across restart
+PASS Core never refused a request (401s=0)

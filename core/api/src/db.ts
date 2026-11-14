@@ -181,7 +181,9 @@ export const billingCustomers = pgTable("billing_customers", {
 /** `farm_id` also stores the user UUID for a personal subscription, matching Stripe metadata. */
 export const farmSubscriptions = pgTable("farm_subscriptions", {
   farmId: uuid("farm_id").primaryKey(),
-  plan: text("plan", { enum: ["free", "orion", "cam2", "cam4", "cam6"] }).notNull(),
+  plan: text("plan", {
+    enum: ["free", "orion", "cam2", "cam4", "cam6", "cam8", "cam12", "cam16"],
+  }).notNull(),
   interval: text("interval", { enum: ["month", "year"] }),
   status: text("status").notNull(),
   stripeSubscriptionId: text("stripe_subscription_id").unique(),

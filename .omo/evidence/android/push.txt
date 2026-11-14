@@ -1,0 +1,45 @@
+Push, 2026-11-13T10:50:06.392Z
+$ adb shell am kill no.agrointel.orbit
+(no output)
+
+$ adb shell "pidof no.agrointel.orbit || echo NO_PROCESS"
+NO_PROCESS
+
+$ adb shell "dumpsys notification --noredact | grep -c 'pkg=no.agrointel.orbit'"
+0
+
+Command exited with code 1
+
+$ bun .omo/evidence/android/qa/push-alert.ts calving_alert
+{"kind":"calving_alert","animal":{"id":"f9d5a0bc-63c8-41c6-9c7f-228a3c32a983","name":"Ruby"},"mutationResult":{"ids":["2378ae7b-ac90-433f-bea2-eb272daf0843"],"snapshotId":"d899fd10-6074-4e99-b90b-ff4052b7a683"},"alertsBefore":3,"alertsAfter":4,"at":"2026-11-13T10:50:09.243Z"}
+
+PC outbox (newest first): ╭─────┬─────────┬────────┬──────────┬───────┬──────────────────────╮
+│ seq │ "table" │   op   │ attempts │ acked │ substr(coalesce(l... │
+╞═════╪═════════╪════════╪══════════╪═══════╪══════════════════════╡
+│   1 │ table   │ insert │        0 │     1 │                      │
+╰─────┴─────────┴────────┴──────────┴───────┴──────────────────────╯
+
+app process before the alert: NO_PROCESS
+
+$ adb shell dumpsys notification --noredact | grep -A40 pkg=no.agrointel.orbit (title, text, channel)
+NotificationRecord(0x0db12f19: pkg=no.agrointel.orbit user=UserHandle{0} id=0 tag=FCM-Notification:2806446 importance=4 key=0|no.agrointel.orbit|0|FCM-Notification:2806446|10231: Notification(channel=alerts shortcut=null contentView=null vibrate=null sound=null defaults=0 flags=AUTO_CANCEL color=0x00000000 vis=PRIVATE))
+      opPkg=no.agrointel.orbit
+      icon=Icon(typ=RESOURCE pkg=no.agrointel.orbit id=0x7f040028)
+                android.title=String (Calving alert)
+                android.text=String (A herd alert needs your attention.)
+
+shade texts: Calving alert | A herd alert needs your attention.
+
+=> push PASS: app process gone, FCM notification "Calving alert" on channel alerts
+
+Push edge: signed-out phone (rerun with the Electric stand-in so the PC's push to Core is prompt), 2026-11-13T10:54:59.128Z
+phone: sign-in screen showing (signed out in the app at 10:51, which deletes its device token at Core)
+heat_alert recorded on the PC at 10:51:45 (observation d86b17c7-f12f-44ae-9c29-6a3217cdee29)
+PC outbox: 1 acked 2026-11-13T10:50:45.464Z; 2 acked 2026-11-13T10:54:12.721Z
+25 s after Core acknowledged it: FCM notifications for the app = 0; notifications titled "Heat alert" = 0
+=> edge PASS: Core took the alert and the signed-out phone received nothing
+(The first attempt at this edge was inconclusive: without Electric the PC's sync cycle failed and backed off, so the alert had not reached Core within 45 s.)
+
+After signing in again: app process NO_PROCESS; health_event recorded on the PC ({"kind":"health_event","animal":{"id":"f9d5a0bc-63c8-41c6-9c7f-228a3c32a983","name":"Ruby"},"mutationResult":{...)
+notification after 2 s: android.title=String (Health alert) android.text=String (A herd alert needs your attention.)
+=> push after a fresh sign-in PASS

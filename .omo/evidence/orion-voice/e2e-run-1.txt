@@ -1,0 +1,27 @@
+[orion] ORION_READY {"port":7718}
+[vite] 
+[vite]   VITE v6.4.5  ready in 80 ms
+[vite] 
+[vite]   ➜  Local:   http://127.0.0.1:5183/
+[orion-fresh] ORION_READY {"port":7719}
+[vite-fresh] 
+[vite-fresh]   VITE v6.4.5  ready in 74 ms
+[vite-fresh] 
+[vite-fresh]   ➜  Local:   http://127.0.0.1:5184/
+
+Running 11 tests using 1 worker
+
+  ✓   1 [chromium] › web/chat.spec.ts:4:1 › list cows streams an answer with a completed herd_query tool card (1.5s)
+  ✓   2 [chromium] › web/chat.spec.ts:12:1 › find cameras runs camera_discover without an approval prompt (771ms)
+  ✓   3 [chromium] › web/chat.spec.ts:18:1 › a new session appears in the sidebar and survives a reload (854ms)
+  ✓   4 [chromium] › web/home.spec.ts:4:1 › home loads with the seeded herd counts (473ms)
+  ✓   5 [chromium] › web/voice-no-microphone.spec.ts:4:1 › without a microphone, typed questions still get an answer (832ms)
+  ✓   6 [chromium] › web/voice.spec.ts:44:1 › a call starts from the Home widget and answers in plain words (826ms)
+  ✓   7 [chromium] › web/voice.spec.ts:61:1 › a spoken conversation is kept in chat and continues there (974ms)
+  ✓   8 [chromium] › web/voice.spec.ts:83:1 › Orion points at Settings, opens it, and the call follows to that page (1.5s)
+  ✓   9 [chromium] › web/voice.spec.ts:98:1 › Orion shows the page it opened in its browser and marks where to start (1.5s)
+  ✓  10 [chromium] › web/voice.spec.ts:111:1 › a bigger job is handed over and Orion reports back when it is ready (802ms)
+  ✓  11 [fresh] › web/minimal-first.spec.ts:20:1 › Orbit starts minimal and Orion adds the herd module (1.7s)
+
+  11 passed (15.3s)
+EXIT=0

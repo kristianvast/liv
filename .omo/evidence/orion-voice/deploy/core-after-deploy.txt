@@ -1,0 +1,39 @@
+2026-11-12T00:05:33.588Z
+
+===== service =====
+revision: orbit-core-staging-00012-dxl | image: core-api:153b4495e5c3 | CORE_VERSION: 153b4495e5c3 | VOICE_AGENT_ID: agent_9801m76gmvhke6pbeqm50xq0xp74 | ELEVENLABS_API_KEY mounted: true | traffic: [["orbit-core-staging-00012-dxl",100]]
+
+===== health =====
+{"ok":true,"version":"153b4495e5c3"}
+
+===== agentNoAuth =====
+HTTP/2 401 
+{"error":{"code":"unauthorized","message":"Sign in first"}}
+
+===== agentUpgradeNoAuth =====
+HTTP/2 401
+
+===== agentBadSession =====
+401
+
+===== liveNoAuth =====
+401
+
+===== demoRoute =====
+core/api/src/voice-demo.ts:241:  app.post("/v1/voice/demo/session", async (c) => {
+core/api/src/app.ts:88:    "/v1/voice/demo/*",
+GET /v1/voice/demo/session -> 404
+
+===== plans =====
+/v1/billing/plans -> 200
+
+===== runs =====
+Working...
+CI | in_progress  | 153b449 | 43124354966
+Core deploy | completed success | 153b449 | 43124354878
+CI | completed success | a6f2626 | 43090935267
+
+===== webBuild =====
+ID                                    STATUS   SHORT_SHA  CREATE_TIME                FINISH_TIME
+b7ce1246-c51e-4a3e-8072-0956321436b0  SUCCESS  78d4126    2026-11-12T00:03:23+00:00  2026-11-12T00:05:20.524070Z
+92b96825-d2da-402f-8926-38ce4793ea61  SUCCESS  a13c38e    2026-11-11T11:02:29+00:00  2026-11-11T11:04:26.796566Z

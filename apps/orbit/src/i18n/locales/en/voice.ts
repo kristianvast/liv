@@ -44,7 +44,7 @@ export const voice = {
     "Orbit could not open your microphone. Allow microphone access in your browser or system settings, or keep talking to Orion by typing below.",
   "plan.requiredTitle": "Voice calls with Orion need an Orbit plan",
   "plan.requiredBody":
-    "Live voice runs on Pecorva's cloud. Start your free 30-day trial or choose a plan in Settings to talk to Orion.",
+    "Live voice runs on Barnstar's cloud. Start your free 30-day trial or choose a plan in Settings to talk to Orion.",
   "plan.budgetTitle": "Voice minutes used up for this period",
   "plan.budgetBody":
     "Your farm has used its included voice minutes for this billing period. Manage your plan in Settings, or continue in text chat.",

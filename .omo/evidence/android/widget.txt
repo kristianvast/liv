@@ -1,0 +1,119 @@
+Widget and lock, 2026-11-13T10:46:41.390Z
+$ adb shell dumpsys appwidget | grep -B2 -A14 "no.agrointel.orbit/.OrbitWidget" | head -60
+(no output)
+
+$ adb shell dumpsys activity services no.agrointel.orbit | grep -c "OrbitCallService"
+0
+
+Command exited with code 1
+
+$ adb shell locksettings set-pin 1234
+Pin set to '1234'
+
+$ adb shell input keyevent 26
+(no output)
+
+$ adb shell input keyevent 224
+(no output)
+
+$ adb shell dumpsys window | grep -E "isKeyguardShowing|mDreamingLockscreen" | head -2
+mShowingDream=false mDreamingLockscreen=true
+    isKeyguardShowing=true
+
+$ adb shell am start -a no.agrointel.orbit.action.TALK -p no.agrointel.orbit
+Starting: Intent { act=no.agrointel.orbit.action.TALK pkg=no.agrointel.orbit }
+Warning: Activity not started, its current task has been brought to the front
+
+$ adb shell dumpsys activity services no.agrointel.orbit | grep -c "OrbitCallService"
+0
+
+Command exited with code 1
+
+$ adb shell dumpsys window | grep -E "isKeyguardShowing" | head -1
+isKeyguardShowing=true
+
+while locked: PIN prompt node = com.android.systemui:id/keyguard_bouncer_container; app controls visible = false; call service records = 0
+
+Command exited with code 1
+systemui ids on screen: legacy_window_root, scrim_behind, scrim_notifications, light_reveal_scrim, scrim_in_front, low_light_animation_container, shared_notification_container, notification_panel, keyguard_long_press, notification_container_parent, qs_frame, quick_settings_container, keyguard_bouncer_container, keyguard_security_container, view_flipper, keyguard_pin_view, bouncer_message_view, bouncer_primary_message_area, pin_container, flow1, row0, pinEntry, key1, digit_text
+
+$ adb shell input text 1234
+(no output)
+
+$ adb shell input keyevent 66
+(no output)
+
+CALL AFTER UNLOCK WAIT FAILED: Error: timed out waiting for live call after unlock; visible: com.android.systemui:id/legacy_window_root | com.android.systemui:id/scrim_behind | com.android.systemui:id/scrim_notifications | com.android.systemui:id/light_reveal_scrim | com.android.systemui:id/scrim_in_front | com.android.systemui:id/low_light_animation_container | com.android.systemui:id/shared_notification_container | com.android.systemui:id/notification_panel | com.android.systemui:id/keyguard_long_press | com.android.systemu
+$ adb shell dumpsys window | grep -E "isKeyguardShowing" | head -1
+isKeyguardShowing=true
+
+after the PIN: keyguard isKeyguardShowing=true; call service records = 0; call-state = (none)
+
+$ adb shell "dumpsys appwidget | grep -i -A12 'OrbitWidget' | head -40"
+[36] provider ProviderId{uid:10231, app:10231, cmp:ComponentInfo{no.agrointel.orbit/no.agrointel.orbit.OrbitWidget}, profile:UserHandle{0}}
+    min=(16385x16385)   minResize=(16385x16385) updatePeriodMillis=0 resizeMode=3 widgetCategory=3 autoAdvanceViewId=-1 initialLayout=#7f080009 initialKeyguardLayout=#0   zombie=false
+ 
+Widgets:
+  [0] id=2
+    host=HostId{user:0, app:10198, hostId:1025, pkg:com.google.android.apps.nexuslauncher}
+    provider=ProviderId{uid:10156, app:10156, cmp:ComponentInfo{com.google.android.googlequicksearchbox/com.google.android.apps.gsa.staticplugins.searchwidget.GoogleSearchWidgetProvider}, profile:UserHandle{0}}
+    host.callbacks=com.android.internal.appwidget.IAppWidgetHost$Stub$Proxy@2ef3e6f
+    views=android.widget.RemoteViews@dbd977c
+    views_bitmap_memory=0
+ 
+Hosts:
+  [0] hostId=HostId{user:0, app:10198, hostId:1025, pkg:com.google.android.apps.nexuslauncher}
+
+app/src/main/res/xml/orbit_widget.xml:
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="64dp" android:minHeight="64dp" android:updatePeriodMillis="0"
+    android:initialLayout="@layout/orbit_widget" android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen|keyguard" android:description="@string/talk" />
+
+$ adb shell locksettings clear --old 1234
+Lock credential cleared
+
+$ adb shell locksettings verify
+Lock credential verified successfully
+
+=> widget PASS (provider registered with the system and declared home_screen|keyguard)
+PIN removed again: Lock credential verified successfully
+
+
+Lock test (single continuous run), 2026-11-13T10:48:21.699Z
+$ adb shell locksettings set-pin 1234
+Pin set to '1234'
+
+$ adb shell input keyevent 26
+(no output)
+
+$ adb shell input keyevent 224
+(no output)
+
+$ adb shell "dumpsys window | grep -E isKeyguardShowing | head -1"
+isKeyguardShowing=true
+
+$ adb shell am start -a no.agrointel.orbit.action.TALK -p no.agrointel.orbit
+Starting: Intent { act=no.agrointel.orbit.action.TALK pkg=no.agrointel.orbit }
+Warning: Activity not started, its current task has been brought to the front
+
+WHILE LOCKED: PIN prompt on screen = true; app controls visible = false; call service records = 0; isKeyguardShowing=true
+
+tapped keys 1 2 3 4 and enter on the prompt
+
+AFTER THE PIN: isKeyguardShowing=false; call service records = 3; call-state = Listening
+
+$ adb shell locksettings clear --old 1234
+Lock credential cleared
+
+=> lock PASS: locked = PIN prompt, no app controls, no call service; after the PIN = keyguard gone and the call is live
+
+Widget instance on the home screen (added through the launcher's widget picker), 2026-11-13T11:01:14.811Z
+[1] id=3
+    host=HostId{user:0, app:10198, hostId:1024, pkg:com.google.android.apps.nexuslauncher}
+    provider=ProviderId{uid:10231, app:10231, cmp:ComponentInfo{no.agrointel.orbit/no.agrointel.orbit.OrbitWidget}, profile:UserHandle{0}}
+    host.callbacks=com.android.internal.appwidget.IAppWidgetHost$Stub$Proxy@4ce6e07
+    views=android.widget.RemoteViews@1d52b34
+    views_bitmap_memory=0
+tapping it (phone unlocked) started a call: call-state = Listening
+=> widget tap PASS

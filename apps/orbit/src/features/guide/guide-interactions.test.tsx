@@ -229,7 +229,7 @@ describe("highlight, clear, click, and go", () => {
       </I18nProvider>,
     );
 
-    const refusedFull = await runAppAction({ action: "go", path: "https://pecorva.com/cameras" });
+    const refusedFull = await runAppAction({ action: "go", path: "https://barnstar.dev/cameras" });
     expect(refusedFull.isError).toBe(true);
     expect(refusedFull.result.startsWith("Not done:")).toBe(true);
 

@@ -10,7 +10,7 @@ import type { BadgeVariant } from "../../design";
 import type { MessageKey } from "../../i18n";
 import { isTauriRuntime } from "../../lib/orion";
 
-export const PRICING_URL = "https://pecorva.com/pricing/";
+export const PRICING_URL = "https://barnstar.dev/pricing/";
 
 export const DEFAULT_FREE_BILLING: BillingStatus = {
   plan: "free",

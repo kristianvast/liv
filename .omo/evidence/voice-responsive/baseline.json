@@ -1,0 +1,186 @@
+{
+  "herd": {
+    "text": "Who is in my herd?",
+    "turn": [
+      {
+        "ms": 358,
+        "kind": "voice-caption-user",
+        "value": "YouWho is in my herd?"
+      },
+      {
+        "ms": 375,
+        "kind": "state",
+        "value": "working"
+      },
+      {
+        "ms": 375,
+        "kind": "row",
+        "value": "running | Looking through your herd"
+      },
+      {
+        "ms": 377,
+        "kind": "state",
+        "value": "listening"
+      },
+      {
+        "ms": 377,
+        "kind": "row",
+        "value": "done | Found 28 animals"
+      },
+      {
+        "ms": 377,
+        "kind": "voice-caption-assistant",
+        "value": "OrionThere are 28 animals in your herd. I checked the records on this computer."
+      }
+    ],
+    "before": [
+      {
+        "ms": 0,
+        "kind": "state",
+        "value": "idle"
+      },
+      {
+        "ms": 0,
+        "kind": "access-dialog",
+        "value": "closed"
+      },
+      {
+        "ms": 78,
+        "kind": "state",
+        "value": "connecting"
+      },
+      {
+        "ms": 245,
+        "kind": "state",
+        "value": "listening"
+      },
+      {
+        "ms": 245,
+        "kind": "voice-caption-assistant",
+        "value": "OrionHello, Orion here. How can I help?"
+      }
+    ]
+  },
+  "browser": {
+    "text": "open http://127.0.0.1:5241/",
+    "turn": [
+      {
+        "ms": 264,
+        "kind": "voice-caption-user",
+        "value": "Youopen http://127.0.0.1:5241/"
+      },
+      {
+        "ms": 274,
+        "kind": "state",
+        "value": "working"
+      },
+      {
+        "ms": 274,
+        "kind": "row",
+        "value": "running | Opening 127.0.0.1"
+      },
+      {
+        "ms": 275,
+        "kind": "access-dialog",
+        "value": "open"
+      },
+      {
+        "ms": 437,
+        "kind": "access-dialog",
+        "value": "closed"
+      },
+      {
+        "ms": 954,
+        "kind": "state",
+        "value": "listening"
+      },
+      {
+        "ms": 954,
+        "kind": "row",
+        "value": "done | Opened 127.0.0.1"
+      },
+      {
+        "ms": 957,
+        "kind": "state",
+        "value": "working"
+      },
+      {
+        "ms": 957,
+        "kind": "row",
+        "value": "running | Pointing out where to look on the page"
+      },
+      {
+        "ms": 3959,
+        "kind": "row",
+        "value": "running | Pointing out where to look on the page3s"
+      },
+      {
+        "ms": 4959,
+        "kind": "row",
+        "value": "running | Pointing out where to look on the page4s"
+      },
+      {
+        "ms": 5959,
+        "kind": "row",
+        "value": "running | Pointing out where to look on the page5s"
+      },
+      {
+        "ms": 6959,
+        "kind": "row",
+        "value": "running | Pointing out where to look on the page6s"
+      },
+      {
+        "ms": 7970,
+        "kind": "row",
+        "value": "running | Pointing out where to look on the page7s"
+      },
+      {
+        "ms": 8959,
+        "kind": "row",
+        "value": "running | Pointing out where to look on the page8s"
+      },
+      {
+        "ms": 8995,
+        "kind": "state",
+        "value": "listening"
+      },
+      {
+        "ms": 8996,
+        "kind": "row",
+        "value": "error | Could not finish on the web page"
+      },
+      {
+        "ms": 8997,
+        "kind": "voice-caption-assistant",
+        "value": "OrionI opened the page and marked where to start."
+      }
+    ],
+    "before": [
+      {
+        "ms": 0,
+        "kind": "state",
+        "value": "idle"
+      },
+      {
+        "ms": 0,
+        "kind": "access-dialog",
+        "value": "closed"
+      },
+      {
+        "ms": 50,
+        "kind": "state",
+        "value": "connecting"
+      },
+      {
+        "ms": 171,
+        "kind": "state",
+        "value": "listening"
+      },
+      {
+        "ms": 171,
+        "kind": "voice-caption-assistant",
+        "value": "OrionHello, Orion here. How can I help?"
+      }
+    ]
+  }
+}

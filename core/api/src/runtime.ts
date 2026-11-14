@@ -37,6 +37,7 @@ export function serveCore(db: CoreDb, defaultPort: number) {
       provider: process.env.MAIL_PROVIDER,
       apiKey: process.env.MAIL_API_KEY,
       from: process.env.MAIL_FROM,
+      replyTo: process.env.MAIL_REPLY_TO || undefined,
     }),
     links: {
       ...(process.env.PUBLIC_SITE_URL ? { siteUrl: process.env.PUBLIC_SITE_URL } : {}),

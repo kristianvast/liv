@@ -34,7 +34,7 @@ import type { FarmFolders } from "./farm-folders";
 export const GATEWAY_MODEL = "orbit-default";
 const SESSION_REF = "core-session";
 const SESSION_FILE = "account-session.enc.json";
-const DEFAULT_SITE_URL = "https://pecorva.com";
+const DEFAULT_SITE_URL = "https://barnstar.dev";
 const GOOGLE_LOGIN_TTL_MS = 10 * 60_000;
 const FARM_HEADER = "x-orbit-farm";
 
@@ -84,7 +84,7 @@ export interface AccountServiceOptions {
   /** Which farm folder is open (this PC's own farm when `active` is null). */
   folders?: FarmFolders;
   coreUrl: string | null;
-  /** Website that runs Google sign-in for the app; https://pecorva.com when null or unset. */
+  /** Website that runs Google sign-in for the app; https://barnstar.dev when null or unset. */
   siteUrl?: string | null;
   repo: Repository;
   secrets: SecretStore;

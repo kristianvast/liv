@@ -1,0 +1,107 @@
+{
+ "restartSlow": "FREE -> bash_184 READY (delay 1500)",
+ "stateWhileRunning": "working",
+ "at3_7s": [
+  {
+   "status": "running",
+   "text": "Working on your request",
+   "elapsed": "3s",
+   "stop": true
+  }
+ ],
+ "at6_2s": [
+  {
+   "status": "running",
+   "text": "Working on your request",
+   "elapsed": "6s",
+   "stop": true
+  }
+ ],
+ "afterSecondQuestion": [
+  {
+   "status": "running",
+   "text": "Working on your request",
+   "elapsed": "6s",
+   "stop": true
+  },
+  {
+   "status": "done",
+   "text": "Found 28 animals",
+   "elapsed": null,
+   "stop": false
+  }
+ ],
+ "twoSecondsAfterStop": [
+  {
+   "status": "stopped",
+   "text": "Stopped working on your request",
+   "elapsed": null,
+   "stop": false
+  },
+  {
+   "status": "done",
+   "text": "Found 28 animals",
+   "elapsed": null,
+   "stop": false
+  }
+ ],
+ "orionSaid": [
+  "OrionThere are 28 animals in your herd. I checked the records on this computer.",
+  "OrionGood news. It was stopped."
+ ],
+ "c4b": {
+  "elapsedFirst": "3s",
+  "elapsedSecond": "6s",
+  "grew": true,
+  "answeredWhileRunning": true,
+  "staysStopped": true,
+  "pass": true
+ },
+ "savedRow": {
+  "status": "aborted",
+  "text": "Ask Orion to workrequest: build me a calving overview7.5 sStopped"
+ },
+ "log": [
+  {
+   "at": "2026-11-11T22:33:29.439Z",
+   "name": "goto",
+   "detail": "http://127.0.0.1:5231/ (locale en, theme light)"
+  },
+  {
+   "at": "2026-11-11T22:33:29.714Z",
+   "name": "type",
+   "detail": "build me a calving overview"
+  },
+  {
+   "at": "2026-11-11T22:33:36.078Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/final/c4b-job-running-elapsed.png"
+  },
+  {
+   "at": "2026-11-11T22:33:36.083Z",
+   "name": "type",
+   "detail": "Who is in my herd? (job still running)"
+  },
+  {
+   "at": "2026-11-11T22:33:36.243Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/final/c4b-answered-while-running.png"
+  },
+  {
+   "at": "2026-11-11T22:33:37.049Z",
+   "name": "click",
+   "detail": "activity-stop"
+  },
+  {
+   "at": "2026-11-11T22:33:39.309Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/final/c4b-job-stopped.png"
+  },
+  {
+   "at": "2026-11-11T22:33:40.608Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/final/c4b-history-stopped-row.png"
+  }
+ ],
+ "restartFast": "FREE -> bash_187 READY (delay 5)"
+}

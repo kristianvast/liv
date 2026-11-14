@@ -1,0 +1,37 @@
+{
+ "connected": "listening",
+ "connectMs": 675,
+ "micNotice": "Microphone access is turned offOrbit could not open your microphone. Allow micro",
+ "afterGreeting": [
+  "assistant: Hello, Orion here. How can I help?"
+ ],
+ "answerMs": 2462,
+ "afterAnswer": {
+  "captions": [
+   "assistant: Hello, Orion here. How can I help?",
+   "user: How many animals are in my herd?",
+   "assistant: You have 24 cattle and 4 horses on the farm, making 28 animals"
+  ],
+  "rows": [
+   "done: Checked farm overview"
+  ]
+ },
+ "highlight": {
+  "note": "Orion: Settings is right here",
+  "onSettings": true
+ },
+ "afterPoint": {
+  "captions": [
+   "user: How many animals are in my herd?",
+   "assistant: You have 24 cattle and 4 horses on the farm, making 28 animals in total.",
+   "user: Where are the settings? Point at them on my screen."
+  ],
+  "rows": [
+   "done: Checked farm overview",
+   "done: Checked this screen",
+   "done: Marked it on your screen"
+  ]
+ },
+ "coreLogTail": "QA_CORE_READY\n[mail:verify_email] to=qa-voice@example.com subject=\"Confirm your Pecorva email address\"\nConfirm your email address to finish setting up your Pecorva account:\n\n\nThe link works for 48 hours. If you did not create an account, ignore this email.",
+ "orionLogTail": "ORION_READY {\"port\":7881}\nORION_READY {\"port\":7881}"
+}

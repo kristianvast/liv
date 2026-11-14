@@ -45,7 +45,7 @@ export const voice: Catalog<typeof en> = {
     "Orbit fikk ikke åpnet mikrofonen. Tillat mikrofontilgang i nettleser- eller systeminnstillingene, eller fortsett ved å skrive til Orion nedenfor.",
   "plan.requiredTitle": "Talesamtaler med Orion krever en Orbit-plan",
   "plan.requiredBody":
-    "Direktetale kjører i Pecorvas sky. Start 30 dagers gratis prøveperiode eller velg en plan i Innstillinger for å snakke med Orion.",
+    "Direktetale kjører i Barnstars sky. Start 30 dagers gratis prøveperiode eller velg en plan i Innstillinger for å snakke med Orion.",
   "plan.budgetTitle": "Taleminuttene er brukt opp for denne perioden",
   "plan.budgetBody":
     "Gården har brukt opp de inkluderte taleminuttene for denne perioden. Endre planen i Innstillinger, eller fortsett i tekstchatten.",

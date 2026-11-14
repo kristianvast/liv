@@ -1,0 +1,8 @@
+    0ms -> {"type":"conversation_initiation_client_data","dynamic_variables":{"farm_name":"Demo Farm","conversation_recap":""}}
+    1ms <- {"type":"conversation_initiation_metadata","conversation_initiation_metadata_event":{"conversation_id":"mock-71dcbd50-2e2a-43d8-8f92-cf61591a8c1b","agent_output_audio_format":"pcm_16000","user_input_audio_format":"pcm_16000"}}
+    1ms <- {"type":"agent_response","agent_response_event":{"agent_response":"Hello, Orion here. How can I help?","event_id":1}}
+    1ms -> {"type":"user_message","text":"Who is in my herd?"}
+    1ms <- {"type":"agent_response","agent_response_event":{"agent_response":"I'll check.","event_id":2}}
+    1ms <- {"type":"client_tool_call","client_tool_call":{"tool_name":"db_query","tool_call_id":"mock-1","parameters":{"query":"animals.list","params":{}}}}
+    3ms -> {"type":"client_tool_result","tool_call_id":"mock-1","result":"{\"rows\":[{\"id\":\"fcfc21f0-7dac-4d7e-a425-b02395af6cb0\",\"species\":\"cattle\",\"name\":\"Duke\",\"earTagNumber\":\"BF-2001\",\"nationalId\":\"CATTLE-600200\",\"identifierScheme\":nu
+    3ms <- {"type":"agent_response","agent_response_event":{"agent_response":"There are 28 animals in your herd. I checked the records on this computer.","event_id":3}}

@@ -1,0 +1,77 @@
+{
+ "locale": {
+  "html": "en",
+  "stored": "en",
+  "keys": [
+   "orbit.theme",
+   "orbit.locale"
+  ]
+ },
+ "widgetBefore": {
+  "state": "idle",
+  "rect": {
+   "x": 272,
+   "y": 325.796875,
+   "width": 1125,
+   "height": 170
+  }
+ },
+ "listening": "listening",
+ "path": "/",
+ "orb": {
+  "tag": "CANVAS",
+  "w": 182,
+  "h": 134,
+  "canvas": {
+   "w": 182,
+   "h": 134
+  }
+ },
+ "answer": "Talk to OrionListeningMuteOpen in chatEnd callFound 28 animalsOrionHello, Orion here. How can I help?YouWho is in my herd?OrionThere are 28 animals in your herd. I checked the records on this computer.Send",
+ "rows": [
+  {
+   "status": "done",
+   "text": "Found 28 animals"
+  }
+ ],
+ "forbidden": {
+  "db_query": false,
+  "db_mutate": false,
+  "{": false,
+  "animals.list": false
+ },
+ "stateAfter": "listening",
+ "consoleErrors": "n/a",
+ "log": [
+  {
+   "at": "2026-11-11T22:01:39.560Z",
+   "name": "goto",
+   "detail": "http://127.0.0.1:5231/ (locale en, theme light)"
+  },
+  {
+   "at": "2026-11-11T22:01:39.604Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c1-home-before.png"
+  },
+  {
+   "at": "2026-11-11T22:01:39.968Z",
+   "name": "click",
+   "detail": "home-voice-start"
+  },
+  {
+   "at": "2026-11-11T22:01:40.053Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c1-home-listening.png"
+  },
+  {
+   "at": "2026-11-11T22:01:40.068Z",
+   "name": "type",
+   "detail": "Who is in my herd? + Enter"
+  },
+  {
+   "at": "2026-11-11T22:01:40.250Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c2-home-answer.png"
+  }
+ ]
+}

@@ -1,0 +1,36 @@
+[orion] ORION_READY {"port":7718}
+[vite] 
+[vite]   VITE v6.4.5  ready in 83 ms
+[vite] 
+[vite]   ➜  Local:   http://127.0.0.1:5183/
+[orion-fresh] ORION_READY {"port":7719}
+[vite-fresh] 
+[vite-fresh]   VITE v6.4.5  ready in 73 ms
+[vite-fresh] 
+[vite-fresh]   ➜  Local:   http://127.0.0.1:5184/
+
+Running 20 tests using 1 worker
+
+  ✓   1 [chromium] › web/cameras.spec.ts:3:1 › cameras page renders the barn map, filters by location, and adds a camera (840ms)
+  ✓   2 [chromium] › web/chat.spec.ts:4:1 › list cows streams an answer with a completed herd_query tool card (1.3s)
+  ✓   3 [chromium] › web/chat.spec.ts:12:1 › find cameras runs camera_discover without an approval prompt (768ms)
+  ✓   4 [chromium] › web/chat.spec.ts:18:1 › a new session appears in the sidebar and survives a reload (858ms)
+  ✓   5 [chromium] › web/farm-views.spec.ts:16:1 › Home shows a card for each ready-made view and a card opens its page (640ms)
+  ✓   6 [chromium] › web/farm-views.spec.ts:39:1 › the herd view narrows to what needs a look, finds an animal and opens its panel (606ms)
+  ✓   7 [chromium] › web/farm-views.spec.ts:66:1 › the calendar view works out what is due from the recorded inseminations (532ms)
+  ✓   8 [chromium] › web/farm-views.spec.ts:90:1 › the camera wall shows a picture for cameras that are online and a status for the rest (536ms)
+  ✓   9 [chromium] › web/herd.spec.ts:11:1 › herd table lists the seeded cows (505ms)
+  ✓  10 [chromium] › web/herd.spec.ts:20:1 › animal drawer shows read-only wearable details without sensor attach actions (624ms)
+  ✓  11 [chromium] › web/home.spec.ts:4:1 › home loads with the seeded herd counts (470ms)
+  ✓  12 [chromium] › web/local-ui.spec.ts:10:1 › Orion builds your own Orbit, the app opens it, safe mode skips it, and you can switch back (15.3s)
+  ✓  13 [chromium] › web/pages.spec.ts:4:1 › a page Orion builds shows up in the menu and reads farm data (813ms)
+  ✓  14 [chromium] › web/voice-no-microphone.spec.ts:4:1 › without a microphone, typed questions still get an answer (956ms)
+  ✓  15 [chromium] › web/voice.spec.ts:44:1 › a call starts from the Home widget and answers in plain words (878ms)
+  ✓  16 [chromium] › web/voice.spec.ts:61:1 › a spoken conversation is kept in chat and continues there (1.1s)
+  ✓  17 [chromium] › web/voice.spec.ts:83:1 › Orion points at Settings, opens it, and the call follows to that page (1.5s)
+  ✓  18 [chromium] › web/voice.spec.ts:98:1 › Orion shows the page it opened in its browser and marks where to start (1.6s)
+  ✓  19 [chromium] › web/voice.spec.ts:111:1 › a bigger job is handed over and Orion reports back when it is ready (901ms)
+  ✓  20 [fresh] › web/minimal-first.spec.ts:20:1 › Orbit starts minimal and Orion adds the herd module (1.7s)
+
+  20 passed (36.2s)
+EXIT=0

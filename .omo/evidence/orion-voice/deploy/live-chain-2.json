@@ -1,0 +1,14 @@
+{
+ "highlight": "Orion: Settings is right here in the sidebar.",
+ "replyArrived": true,
+ "timeline": [
+  "assistant (voice): Hello, Orion here. How can I help?",
+  "user (voice): Where are the settings? Point at them on my screen.",
+  "assistant (voice): I've pointed at Settings for you on the sidebar on the left."
+ ],
+ "stageRows": [
+  "done: Checked this screen",
+  "done: Marked it on your screen"
+ ],
+ "history": "usage: {\"tokensUsed\":0,\"voiceSecondsUsed\":15,\"tokenAllowance\":2000000,\"voiceSecondsAllowance\":1800}\nconversations: 2 | newest: {\"title\":\"Where are the settings? Point at them on my screen.\",\"messageCount\":3}\n  assistant (voice): Hello, Orion here. How can I help?\n  user (voice): Where are the settings? Point at them on my screen.\n  assistant (voice): I've pointed at Settings for you on the sidebar on the left."
+}

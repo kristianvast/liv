@@ -1,0 +1,76 @@
+{
+ "stage": {
+  "w": 830,
+  "h": 302,
+  "x": 557,
+  "y": 161
+ },
+ "pane": {
+  "cls": "orbit-thread-pane",
+  "tag": "SECTION"
+ },
+ "orb": {
+  "w": 328.6875,
+  "h": 214
+ },
+ "overflowDesktop": {
+  "sw": 1440,
+  "iw": 1440
+ },
+ "transcript": "Talk to OrionListeningMuteEnd callFound 28 animalsOrionHello, Orion here. How can I help?YouWho is in my herd?OrionThere are 28 animals in your herd. I checked the records on this computer.SendHello, Orion here. How can I help?Who is in my herd?Read farm recordsanimals.list2 msDoneThere are 28 animals in your herd. I checked the records on this computer.",
+ "browserView": {
+  "text": "Herdhttp://127.0.0.1:7831/pages/qa/herd/index.html",
+  "frame": {
+   "w": 324.015625,
+   "h": 227.8125
+  },
+  "img": {
+   "nw": 2560,
+   "nh": 1800
+  }
+ },
+ "browserHighlight": {
+  "x": 587.015625,
+  "y": -47.703125,
+  "w": 242.75,
+  "h": 11.125,
+  "text": "Orion: Start here."
+ },
+ "spoken": true,
+ "rows": [
+  "done: Found 28 animals",
+  "done: Opened 127.0.0.1",
+  "done: Marked the spot on the page"
+ ],
+ "afterEnd": {
+  "paneOn": false,
+  "stage": "gone"
+ },
+ "log": [
+  {
+   "at": "2026-11-11T22:02:34.142Z",
+   "name": "goto",
+   "detail": "http://127.0.0.1:5231/chat (locale en, theme light)"
+  },
+  {
+   "at": "2026-11-11T22:02:35.611Z",
+   "name": "click",
+   "detail": "chat-voice-button"
+  },
+  {
+   "at": "2026-11-11T22:02:35.684Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c3-chat-stage-1440-light.png"
+  },
+  {
+   "at": "2026-11-11T22:02:35.824Z",
+   "name": "type",
+   "detail": "open http://127.0.0.1:7831/pages/qa/herd/index.html"
+  },
+  {
+   "at": "2026-11-11T22:02:36.524Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c8-browser-view-1440-light.png"
+  }
+ ]
+}

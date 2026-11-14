@@ -1,0 +1,315 @@
+{
+  "1440-light": {
+    "viewport": {
+      "w": 1440,
+      "h": 900,
+      "dpr": 1
+    },
+    "guideHighlight": {
+      "left": 12,
+      "top": 302,
+      "width": 223,
+      "height": 52
+    },
+    "guidePointer": {
+      "left": 173,
+      "top": 337,
+      "width": 32,
+      "height": 32
+    },
+    "guideNote": {
+      "left": 12,
+      "top": 364,
+      "width": 247,
+      "height": 54
+    },
+    "closeBtn": {
+      "left": 210,
+      "top": 369,
+      "width": 44,
+      "height": 44
+    },
+    "browserView": {
+      "left": 903,
+      "top": 170,
+      "width": 505,
+      "height": 365
+    },
+    "browserFrame": {
+      "left": 904,
+      "top": 235,
+      "width": 503,
+      "height": 299
+    },
+    "browserHighlight": {
+      "left": 1195,
+      "top": 333,
+      "width": 183,
+      "height": 42
+    },
+    "browserNote": {
+      "left": 1120,
+      "top": 382,
+      "width": 256,
+      "height": 42
+    },
+    "horizontalOverflow": false,
+    "midClickPhase": "moving",
+    "browserScrolledRect": {
+      "view": {
+        "left": 903,
+        "top": 170,
+        "width": 505,
+        "height": 365
+      },
+      "highlight": {
+        "left": 1195,
+        "top": 333,
+        "width": 183,
+        "height": 42
+      },
+      "note": {
+        "left": 1120,
+        "top": 382,
+        "width": 256,
+        "height": 42
+      }
+    }
+  },
+  "1440-dark": {
+    "viewport": {
+      "w": 1440,
+      "h": 900,
+      "dpr": 1
+    },
+    "guideHighlight": {
+      "left": 12,
+      "top": 302,
+      "width": 223,
+      "height": 52
+    },
+    "guidePointer": {
+      "left": 173,
+      "top": 337,
+      "width": 32,
+      "height": 32
+    },
+    "guideNote": {
+      "left": 12,
+      "top": 364,
+      "width": 247,
+      "height": 54
+    },
+    "closeBtn": {
+      "left": 210,
+      "top": 369,
+      "width": 44,
+      "height": 44
+    },
+    "browserView": {
+      "left": 903,
+      "top": 170,
+      "width": 505,
+      "height": 365
+    },
+    "browserFrame": {
+      "left": 904,
+      "top": 235,
+      "width": 503,
+      "height": 299
+    },
+    "browserHighlight": {
+      "left": 1195,
+      "top": 333,
+      "width": 183,
+      "height": 42
+    },
+    "browserNote": {
+      "left": 1120,
+      "top": 382,
+      "width": 256,
+      "height": 42
+    },
+    "horizontalOverflow": false,
+    "midClickPhase": "moving",
+    "browserScrolledRect": {
+      "view": {
+        "left": 903,
+        "top": 170,
+        "width": 505,
+        "height": 365
+      },
+      "highlight": {
+        "left": 1195,
+        "top": 333,
+        "width": 183,
+        "height": 42
+      },
+      "note": {
+        "left": 1120,
+        "top": 382,
+        "width": 256,
+        "height": 42
+      }
+    }
+  },
+  "390-light": {
+    "viewport": {
+      "w": 390,
+      "h": 844,
+      "dpr": 3
+    },
+    "guideHighlight": {
+      "left": 257,
+      "top": 60,
+      "width": 121,
+      "height": 52
+    },
+    "guidePointer": {
+      "left": 344,
+      "top": 95,
+      "width": 32,
+      "height": 32
+    },
+    "guideNote": {
+      "left": 131,
+      "top": 122,
+      "width": 247,
+      "height": 54
+    },
+    "closeBtn": {
+      "left": 329,
+      "top": 127,
+      "width": 44,
+      "height": 44
+    },
+    "browserView": {
+      "left": 16,
+      "top": 577,
+      "width": 358,
+      "height": 277
+    },
+    "browserFrame": {
+      "left": 17,
+      "top": 642,
+      "width": 356,
+      "height": 211
+    },
+    "browserHighlight": {
+      "left": 223,
+      "top": 711,
+      "width": 129,
+      "height": 30
+    },
+    "browserNote": {
+      "left": 95,
+      "top": 748,
+      "width": 256,
+      "height": 42
+    },
+    "horizontalOverflow": false,
+    "midClickPhase": "moving",
+    "browserScrolledRect": {
+      "view": {
+        "left": 16,
+        "top": 547,
+        "width": 358,
+        "height": 277
+      },
+      "highlight": {
+        "left": 223,
+        "top": 681,
+        "width": 129,
+        "height": 30
+      },
+      "note": {
+        "left": 95,
+        "top": 718,
+        "width": 256,
+        "height": 42
+      }
+    }
+  },
+  "390-dark": {
+    "viewport": {
+      "w": 390,
+      "h": 844,
+      "dpr": 3
+    },
+    "guideHighlight": {
+      "left": 257,
+      "top": 60,
+      "width": 121,
+      "height": 52
+    },
+    "guidePointer": {
+      "left": 344,
+      "top": 95,
+      "width": 32,
+      "height": 32
+    },
+    "guideNote": {
+      "left": 131,
+      "top": 122,
+      "width": 247,
+      "height": 54
+    },
+    "closeBtn": {
+      "left": 329,
+      "top": 127,
+      "width": 44,
+      "height": 44
+    },
+    "browserView": {
+      "left": 16,
+      "top": 577,
+      "width": 358,
+      "height": 277
+    },
+    "browserFrame": {
+      "left": 17,
+      "top": 642,
+      "width": 356,
+      "height": 211
+    },
+    "browserHighlight": {
+      "left": 223,
+      "top": 711,
+      "width": 129,
+      "height": 30
+    },
+    "browserNote": {
+      "left": 95,
+      "top": 748,
+      "width": 256,
+      "height": 42
+    },
+    "horizontalOverflow": false,
+    "midClickPhase": "moving",
+    "browserScrolledRect": {
+      "view": {
+        "left": 16,
+        "top": 547,
+        "width": 358,
+        "height": 277
+      },
+      "highlight": {
+        "left": 223,
+        "top": 681,
+        "width": 129,
+        "height": 30
+      },
+      "note": {
+        "left": 95,
+        "top": 718,
+        "width": 256,
+        "height": 42
+      }
+    }
+  },
+  "reflow-320-text-spacing": {
+    "viewportW": 320,
+    "docScrollW": 320,
+    "horizontalOverflow": false
+  }
+}

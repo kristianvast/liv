@@ -17,8 +17,8 @@ const catalog = [
     id: "cam2",
     name: "2 cameras",
     cameras: 2,
-    monthly: 49,
-    yearly: 490,
+    monthly: 47,
+    yearly: 470,
     orionTokens: 3_000_000,
     voiceMinutes: 60,
   },
@@ -40,6 +40,33 @@ const catalog = [
     orionTokens: 8_000_000,
     voiceMinutes: 150,
   },
+  {
+    id: "cam8",
+    name: "8 cameras",
+    cameras: 8,
+    monthly: 111,
+    yearly: 1110,
+    orionTokens: 10_000_000,
+    voiceMinutes: 200,
+  },
+  {
+    id: "cam12",
+    name: "12 cameras",
+    cameras: 12,
+    monthly: 137,
+    yearly: 1370,
+    orionTokens: 14_000_000,
+    voiceMinutes: 280,
+  },
+  {
+    id: "cam16",
+    name: "16 cameras",
+    cameras: 16,
+    monthly: 155,
+    yearly: 1550,
+    orionTokens: 18_000_000,
+    voiceMinutes: 350,
+  },
 ] as const;
 
 test.each([undefined, "Bearer unknown", "Bearer orb_s_unknown", "Bearer legacy-farm-token"])(
@@ -56,7 +83,7 @@ test.each([undefined, "Bearer unknown", "Bearer orb_s_unknown", "Bearer legacy-f
       trialDays: 30,
       plans: catalog,
       hardware: [
-        { id: "box", name: "Pecorva box", price: 920 },
+        { id: "box", name: "Barnstar box", price: 920 },
         { id: "camera", name: "Tested camera", price: 150 },
       ],
     });
@@ -74,7 +101,7 @@ test("a signed-in account receives the same EUR catalog without a farm header", 
     trialDays: 30,
     plans: catalog,
     hardware: [
-      { id: "box", name: "Pecorva box", price: 920 },
+      { id: "box", name: "Barnstar box", price: 920 },
       { id: "camera", name: "Tested camera", price: 150 },
     ],
   });

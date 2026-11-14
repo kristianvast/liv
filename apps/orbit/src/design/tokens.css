@@ -747,7 +747,7 @@ a {
 }
 
 /* Continue with Google: Google's own pill button (outline in light, filled black in dark), as on
-   pecorva.com's sign-in page. */
+   barnstar.dev's sign-in page. */
 .orbit-google {
   display: grid;
   gap: var(--space-3);

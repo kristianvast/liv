@@ -1,0 +1,226 @@
+[
+ {
+  "label": "1440",
+  "theme": "light",
+  "homeTheme": "light",
+  "herdCardTotal": "28",
+  "herdCardAttention": "3 need a look",
+  "calendarNext": "Next: Calving due, Ruby DK-1013, tomorrow",
+  "camerasSummary": "2 of 3 online",
+  "cardFrameTheme": "http://127.0.0.1:7821/pages/qa/herd/card.html?theme=light&lang=en-US",
+  "docScrollable": false,
+  "overflowX": false,
+  "herdCount": "28 animals",
+  "url": "/pages/herd",
+  "attention": [
+   "Poppy",
+   "Rosa",
+   "Ruby"
+  ],
+  "search": 1,
+  "cow": {
+   "name": "Bella",
+   "tag": "DK-1001",
+   "milk": "33.7 kg/day (7-day avg)"
+  },
+  "upcoming": [
+   "pregnancy-check-due:Luna",
+   "expected-calving:Ruby",
+   "dry-off-due:Ivy",
+   "expected-calving:Pearl",
+   "pregnancy-check-due:Molly",
+   "expected-calving:Poppy",
+   "pregnancy-check-due:Dolly",
+   "dry-off-due:Hazel",
+   "expected-calving:Willow",
+   "expected-calving:Saga"
+  ],
+  "cameras": {
+   "summary": "2 of 3 online",
+   "tiles": [
+    "Calving pen:online",
+    "Stable aisle:offline",
+    "Robot entrance:online"
+   ]
+  },
+  "errors": [
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ]
+ },
+ {
+  "label": "1440",
+  "theme": "dark",
+  "homeTheme": "dark",
+  "herdCardTotal": "28",
+  "herdCardAttention": "3 need a look",
+  "calendarNext": "Next: Calving due, Ruby DK-1013, tomorrow",
+  "camerasSummary": "2 of 3 online",
+  "cardFrameTheme": "http://127.0.0.1:7821/pages/qa/herd/card.html?theme=dark&lang=en-US",
+  "docScrollable": false,
+  "overflowX": false,
+  "herdCount": "28 animals",
+  "url": "/pages/herd",
+  "attention": [
+   "Poppy",
+   "Rosa",
+   "Ruby"
+  ],
+  "search": 1,
+  "cow": {
+   "name": "Bella",
+   "tag": "DK-1001",
+   "milk": "33.7 kg/day (7-day avg)"
+  },
+  "upcoming": [
+   "pregnancy-check-due:Luna",
+   "expected-calving:Ruby",
+   "dry-off-due:Ivy",
+   "expected-calving:Pearl",
+   "pregnancy-check-due:Molly",
+   "expected-calving:Poppy",
+   "pregnancy-check-due:Dolly",
+   "dry-off-due:Hazel",
+   "expected-calving:Willow",
+   "expected-calving:Saga"
+  ],
+  "cameras": {
+   "summary": "2 of 3 online",
+   "tiles": [
+    "Calving pen:online",
+    "Stable aisle:offline",
+    "Robot entrance:online"
+   ]
+  },
+  "errors": [
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ]
+ },
+ {
+  "label": "390",
+  "theme": "light",
+  "homeTheme": "light",
+  "herdCardTotal": "28",
+  "herdCardAttention": "3 need a look",
+  "calendarNext": "Next: Calving due, Ruby DK-1013, tomorrow",
+  "camerasSummary": "2 of 3 online",
+  "cardFrameTheme": "http://127.0.0.1:7821/pages/qa/herd/card.html?theme=light&lang=en-US",
+  "docScrollable": false,
+  "overflowX": false,
+  "herdCount": "28 animals",
+  "url": "/pages/herd",
+  "attention": [
+   "Poppy",
+   "Rosa",
+   "Ruby"
+  ],
+  "search": 1,
+  "cow": {
+   "name": "Bella",
+   "tag": "DK-1001",
+   "milk": "33.7 kg/day (7-day avg)"
+  },
+  "upcoming": [
+   "pregnancy-check-due:Luna",
+   "expected-calving:Ruby",
+   "dry-off-due:Ivy",
+   "expected-calving:Pearl",
+   "pregnancy-check-due:Molly",
+   "expected-calving:Poppy",
+   "pregnancy-check-due:Dolly",
+   "dry-off-due:Hazel",
+   "expected-calving:Willow",
+   "expected-calving:Saga"
+  ],
+  "cameras": {
+   "summary": "2 of 3 online",
+   "tiles": [
+    "Calving pen:online",
+    "Stable aisle:offline",
+    "Robot entrance:online"
+   ]
+  },
+  "errors": [
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ]
+ },
+ {
+  "label": "390",
+  "theme": "dark",
+  "homeTheme": "dark",
+  "herdCardTotal": "28",
+  "herdCardAttention": "3 need a look",
+  "calendarNext": "Next: Calving due, Ruby DK-1013, tomorrow",
+  "camerasSummary": "2 of 3 online",
+  "cardFrameTheme": "http://127.0.0.1:7821/pages/qa/herd/card.html?theme=dark&lang=en-US",
+  "docScrollable": false,
+  "overflowX": false,
+  "herdCount": "28 animals",
+  "url": "/pages/herd",
+  "attention": [
+   "Poppy",
+   "Rosa",
+   "Ruby"
+  ],
+  "search": 1,
+  "cow": {
+   "name": "Bella",
+   "tag": "DK-1001",
+   "milk": "33.7 kg/day (7-day avg)"
+  },
+  "upcoming": [
+   "pregnancy-check-due:Luna",
+   "expected-calving:Ruby",
+   "dry-off-due:Ivy",
+   "expected-calving:Pearl",
+   "pregnancy-check-due:Molly",
+   "expected-calving:Poppy",
+   "pregnancy-check-due:Dolly",
+   "dry-off-due:Hazel",
+   "expected-calving:Willow",
+   "expected-calving:Saga"
+  ],
+  "cameras": {
+   "summary": "2 of 3 online",
+   "tiles": [
+    "Calving pen:online",
+    "Stable aisle:offline",
+    "Robot entrance:online"
+   ]
+  },
+  "errors": [
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "pageerror: SecurityError: Failed to read the 'localStorage' property from 'Window': The document is sandboxed and lacks the 'allow-same-origin' flag.",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+   "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ]
+ }
+]

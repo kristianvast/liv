@@ -18,11 +18,11 @@ You **do not** need a commercial license to use unmodified Orbit on your own far
 
 A commercial software license covers the code in this repository. AgroIntel also provides two separate paid offerings that are not part of the open-source codebase:
 
-1. **Pecorva model weights:** Proprietary computer-vision models for cattle and horses, built to run on a local Jetson edge box in the barn or through our cloud API.
+1. **Barnstar model weights:** Proprietary computer-vision models for cattle and horses, built to run on a local Jetson edge box in the barn or through our cloud API.
 2. **Hosted Core & LLM gateway:** Managed Postgres + ElectricSQL cloud sync and a metered LLM gateway for farms and commercial partners that prefer not to manage their own cloud infrastructure or model API keys.
 
 ## Get in touch
 
-To discuss commercial licensing, OEM partnerships, or access to Pecorva model weights and hosted APIs, contact Kristian Vastveit at [kristian@agrointel.no](mailto:kristian@agrointel.no).
+To discuss commercial licensing, OEM partnerships, or access to Barnstar model weights and hosted APIs, contact Kristian Vastveit at [kristian@agrointel.no](mailto:kristian@agrointel.no).
 
 See [LICENSING.md](LICENSING.md) for how the open-source and commercial licenses fit together.

@@ -30,18 +30,30 @@ for (const item of [...plans, ...hardware]) {
     const found = await stripe(
       `prices?${new URLSearchParams({ "lookup_keys[]": price.key, active: "true" })}`,
     );
-    if (!Array.isArray(found.data) || found.data.length === 0) {
-      const form = new URLSearchParams({
-        product: productId,
-        currency,
-        unit_amount: String(price.amount * 100),
-        lookup_key: price.key,
-      });
-      if (price.interval) form.set("recurring[interval]", price.interval);
-      await stripe("prices", form, `price-${price.key}`);
-    } else {
-      string(object(found.data[0]).id, "price id");
+    const current =
+      Array.isArray(found.data) && found.data.length > 0 ? object(found.data[0]) : null;
+    const amount = price.amount * 100;
+    if (current && current.unit_amount === amount) {
+      string(current.id, "price id");
+      console.log(price.key);
+      continue;
     }
-    console.log(price.key);
+    // Stripe prices cannot be edited: a changed amount gets a new price that takes over the
+    // lookup key, and the old one is archived (existing subscriptions keep their old price).
+    const form = new URLSearchParams({
+      product: productId,
+      currency,
+      unit_amount: String(amount),
+      lookup_key: price.key,
+      transfer_lookup_key: "true",
+    });
+    if (price.interval) form.set("recurring[interval]", price.interval);
+    await stripe("prices", form, `price-${price.key}-${amount}`);
+    if (current)
+      await stripe(
+        `prices/${string(current.id, "price id")}`,
+        new URLSearchParams({ active: "false" }),
+      );
+    console.log(`${price.key} ${current ? "replaced" : "created"} at ${price.amount}`);
   }
 }

@@ -1,0 +1,207 @@
+bun test v1.4.4 (38afee6c8)
+
+test/push-alerts.test.ts:
+20 |   expect(await f.change(app, row)).toEqual({
+21 |     status: 200,
+22 |     body: { results: [{ seq: 1, status: "applied" }] },
+23 |   });
+24 |   await transport.done;
+25 |   expect(transport.messages).toEqual(
+                                  ^
+error: expect(received).toEqual(expected)
+
+  [
+    {
+      "message": {
+        "android": {
+          "notification": {
+            "body_loc_args": [
+              "Dagros",
+            ],
+            "body_loc_key": "push_alert_body_named",
+            "channel_id": "alerts",
+-           "title_loc_key": "push_calving_title",
++           "title_loc_key": "mutation",
+          },
+          "priority": "HIGH",
+        },
+        "data": {
+          "animalId": "15748dac-61c8-49ea-906e-57dca7354a0d",
+          "farmId": "00000000-0000-4000-8000-0000000000b1",
+          "kind": "calving_alert",
+          "observationId": "c79ebd62-f08e-4ab0-a149-6fee0b77b75c",
+        },
+        "token": "mine",
+      },
+    },
+    {
+      "message": {
+        "android": {
+          "notification": {
+            "body_loc_args": [
+              "Dagros",
+            ],
+            "body_loc_key": "push_alert_body_named",
+            "channel_id": "alerts",
+-           "title_loc_key": "push_calving_title",
++           "title_loc_key": "mutation",
+          },
+          "priority": "HIGH",
+        },
+        "data": {
+          "animalId": "15748dac-61c8-49ea-906e-57dca7354a0d",
+          "farmId": "00000000-0000-4000-8000-0000000000b1",
+          "kind": "calving_alert",
+          "observationId": "c79ebd62-f08e-4ab0-a149-6fee0b77b75c",
+        },
+        "token": "theirs",
+      },
+    },
+  ]
+
+- Expected  - 2
++ Received  + 2
+
+      at <anonymous> (/Users/kristianvastveit/projects/orbit/core/api/test/push-alerts.test.ts:25:30)
+(fail) new calving_alert alerts reach all farm members with localized animal body [23.47ms]
+(pass) new health_event alerts reach all farm members with localized animal body [17.83ms]
+(pass) new heat_alert alerts reach all farm members with localized animal body [13.57ms]
+49 |   if (animalId)
+50 |     await f.db.update(pg.animals).set({ name: null }).where(eq(pg.animals.id, animalId));
+51 |   const row = f.observation({ animal_id: animalId });
+52 |   await f.change(app, row);
+53 |   await transport.done;
+54 |   expect(transport.messages).toEqual([
+                                  ^
+error: expect(received).toEqual(expected)
+
+  [
+    {
+      "message": {
+        "android": {
+          "notification": {
+            "body_loc_args": [
+              "1001",
+            ],
+            "body_loc_key": "push_alert_body_named",
+            "channel_id": "alerts",
+-           "title_loc_key": "push_calving_title",
++           "title_loc_key": "mutation",
+          },
+          "priority": "HIGH",
+        },
+        "data": {
+          "animalId": "0299be1b-98fc-4ce9-b1fd-bca8dabdd6f4",
+          "farmId": "00000000-0000-4000-8000-0000000000b1",
+          "kind": "calving_alert",
+          "observationId": "dc54f854-dcc7-4594-84c7-2e379fdf3fa7",
+        },
+        "token": "phone",
+      },
+    },
+  ]
+
+- Expected  - 1
++ Received  + 1
+
+      at <anonymous> (/Users/kristianvastveit/projects/orbit/core/api/test/push-alerts.test.ts:54:30)
+(fail) alerts use tag body when an animal name is absent [14.40ms]
+49 |   if (animalId)
+50 |     await f.db.update(pg.animals).set({ name: null }).where(eq(pg.animals.id, animalId));
+51 |   const row = f.observation({ animal_id: animalId });
+52 |   await f.change(app, row);
+53 |   await transport.done;
+54 |   expect(transport.messages).toEqual([
+                                  ^
+error: expect(received).toEqual(expected)
+
+  [
+    {
+      "message": {
+        "android": {
+          "notification": {
+            "body_loc_key": "push_alert_body_unnamed",
+            "channel_id": "alerts",
+-           "title_loc_key": "push_calving_title",
++           "title_loc_key": "mutation",
+          },
+          "priority": "HIGH",
+        },
+        "data": {
+          "animalId": "",
+          "farmId": "00000000-0000-4000-8000-0000000000b1",
+          "kind": "calving_alert",
+          "observationId": "47595170-2fe6-4f84-b8fe-306150bcbaa1",
+        },
+        "token": "phone",
+      },
+    },
+  ]
+
+- Expected  - 1
++ Received  + 1
+
+      at <anonymous> (/Users/kristianvastveit/projects/orbit/core/api/test/push-alerts.test.ts:54:30)
+(fail) alerts use unnamed body when an animal name is absent [11.28ms]
+91 |   await f.change(app, sentinel);
+92 |   await f.change(app, { ...sentinel, hlc: `${String(NOW.getTime()).padStart(15, "0")}:000002:pc` });
+93 |   const next = f.observation();
+94 |   await f.change(app, next);
+95 |   await transport.done;
+96 |   expect(transport.messages).toEqual(
+                                  ^
+error: expect(received).toEqual(expected)
+
+  [
+    {
+      "message": {
+        "android": {
+          "notification": {
+            "body_loc_key": "push_alert_body_unnamed",
+            "channel_id": "alerts",
+-           "title_loc_key": "push_calving_title",
++           "title_loc_key": "mutation",
+          },
+          "priority": "HIGH",
+        },
+        "data": {
+          "animalId": "",
+          "farmId": "00000000-0000-4000-8000-0000000000b1",
+          "kind": "calving_alert",
+          "observationId": "5378ac1a-4800-4d1c-9fdb-f3aa6843351a",
+        },
+        "token": "phone",
+      },
+    },
+    {
+      "message": {
+        "android": {
+          "notification": {
+            "body_loc_key": "push_alert_body_unnamed",
+            "channel_id": "alerts",
+-           "title_loc_key": "push_calving_title",
++           "title_loc_key": "mutation",
+          },
+          "priority": "HIGH",
+        },
+        "data": {
+          "animalId": "",
+          "farmId": "00000000-0000-4000-8000-0000000000b1",
+          "kind": "calving_alert",
+          "observationId": "d792b85a-a6e5-4dc6-a72c-01027ed12ab4",
+        },
+        "token": "phone",
+      },
+    },
+  ]
+
+- Expected  - 2
++ Received  + 2
+
+      at <anonymous> (/Users/kristianvastveit/projects/orbit/core/api/test/push-alerts.test.ts:96:30)
+(fail) old deleted nonalert repeated and updated observations send nothing [15.79ms]
+
+ 2 pass
+ 4 fail
+ 12 expect() calls
+Ran 6 tests across 1 file. [765.00ms]

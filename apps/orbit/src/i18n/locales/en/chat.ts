@@ -216,7 +216,7 @@ export const chat = {
   "planError.planRequiredTitle": "Orion cloud model needs a plan or your own key",
   "planError.budgetExceededTitle": "Orion cloud allowance used up for this period",
   "planError.planRequiredBody":
-    "Orbit and Orion are open source and free when you connect your own AI key or subscription in Providers, or you can choose a Pen or Barn plan to run Orion on Pecorva's cloud.",
+    "Orbit and Orion are open source and free when you connect your own AI key or subscription in Providers, or you can choose a Pen or Barn plan to run Orion on Barnstar's cloud.",
   "planError.budgetExceededBody":
     "Your farm has reached its included Orion allowance for the current billing period. Connect your own AI key in Providers or manage your plan in Settings.",
   "planError.modelRequiredTitle": "Set up an AI model for Orion",

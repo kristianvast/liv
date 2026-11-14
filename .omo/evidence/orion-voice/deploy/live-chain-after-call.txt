@@ -1,0 +1,8 @@
+usage: {"tokensUsed":0,"voiceSecondsUsed":8,"tokenAllowance":2000000,"voiceSecondsAllowance":1800}
+conversations: 1 | newest: {"title":"How many animals are in my herd?","messageCount":4}
+  assistant (voice): Hello, Orion here. How can I help?
+  user (voice): How many animals are in my herd?
+  tool db_query done {"query":"farm.summary","params":"{}"}
+  user (voice): Where are the settings? Point at them on my screen.
+  assistant (voice): You have 24 cattle and 4 horses on the farm, making 28 animals in total.
+EXIT=0

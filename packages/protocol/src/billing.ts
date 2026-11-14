@@ -1,7 +1,7 @@
 import { type Static, Type } from "typebox";
 import { UsageSource } from "./account";
 
-const PlanId = Type.Enum(["free", "orion", "cam2", "cam4", "cam6"]);
+const PlanId = Type.Enum(["free", "orion", "cam2", "cam4", "cam6", "cam8", "cam12", "cam16"]);
 
 /** One billing account's allowance: the farm's plan or the person's own plan. */
 export const AccountAllowance = Type.Object({
@@ -55,7 +55,7 @@ export const BillingPlans = Type.Object({
   trialDays: Type.Number({ minimum: 0 }),
   plans: Type.Array(
     Type.Object({
-      id: Type.Enum(["free", "orion", "cam2", "cam4", "cam6"]),
+      id: Type.Enum(["free", "orion", "cam2", "cam4", "cam6", "cam8", "cam12", "cam16"]),
       name: Type.String(),
       cameras: Type.Number({ minimum: 0 }),
       monthly: Type.Optional(Type.Number({ minimum: 0 })),
@@ -85,7 +85,7 @@ export const BillingRequests = {
   /** account: whose plan to buy; the farm's by default when a farm is open and you manage it. */
   "billing.checkout": {
     params: Type.Object({
-      plan: Type.Enum(["orion", "cam2", "cam4", "cam6"]),
+      plan: Type.Enum(["orion", "cam2", "cam4", "cam6", "cam8", "cam12", "cam16"]),
       interval: Type.Enum(["month", "year"]),
       account: Type.Optional(BillingAccount),
     }),

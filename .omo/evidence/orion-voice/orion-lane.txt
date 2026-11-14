@@ -1,0 +1,41 @@
+typecheck:
+@orion/agent typecheck: Exited with code 0
+EXIT=0
+
+test:
+(pass) voice observation writes keep the shared mutation undo snapshot [23.20ms]
+(pass) voice binding tools refuse a second wearable on the same animal [24.98ms]
+(pass) a slow tool answers within its budget and later emits its real result and a voice note [24.73ms]
+
+ 135 pass
+ 0 fail
+ 548 expect() calls
+Ran 135 tests across 24 files. [12.88s]
+EXIT=0
+
+lint:
+Checked 98 files in 23ms. No fixes applied.
+EXIT=0
+
+voice test names:
+13:test("a real mock voice socket greets and answers a herd question using the actual animal count", async () => {
+74:test("another protocol socket cannot report turns or tools for a call", async () => {
+98:test("closing the SDK socket still accepts final reports until stop", async () => {
+123:test("orion_task answers Started while streaming and later ends its tool and sends a voice note", async () => {
+6:test("spoken turns and finished voice tools survive reopening with voice markers", async () => {
+43:test("voice start returns earlier chat and spoken turns in conversation_recap", async () => {
+61:test("a chat continuation sees spoken turns in the real mock model context and excludes tool history", async () => {
+103:test("a turn recorded during streaming emits immediately and is persisted before agent.settled", async () => {
+142:test("whitespace-only turns leave history and title unchanged and first speech titles a conversation", async () => {
+159:test("recap drops the oldest complete turns to stay under four thousand characters", async () => {
+166:test("recap retains the end of an oversized latest turn with its speaker label", async () => {
+67:test("worker voice writes cannot change cameras", async () => {
+93:test("client frames received before the upstream opens are flushed in their original order", async () => {
+128:test("voice observation writes keep the shared mutation undo snapshot", async () => {
+159:test("voice binding tools refuse a second wearable on the same animal", async () => {
+194:test("a slow tool answers within its budget and later emits its real result and a voice note", async () => {
+5:test("voice browser open and highlight emit JPEG views and close clears the image", async () => {
+7:test("live transport authenticates Core and relays text bytes verbatim", async () => {
+64:test("local relay forwards opaque frames and budget close 4402 through a real WebSocket", async () => {
+102:test("voice socket paths enforce token call existence and one connection", async () => {
+EXIT=0

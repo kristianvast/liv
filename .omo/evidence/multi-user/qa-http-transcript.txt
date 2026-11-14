@@ -1,0 +1,92 @@
+=== Account without a farm: /v1/me
+>>> GET /v1/me 
+HTTP/1.1 200 OK
+{"user":{"id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","email":"kari@farm.test","name":null,"emailVerified":true},"farms":[],"personal":{"plan":"free"}}
+
+=== Session without farm: LLM on personal free month
+>>> POST /v1/llm/v1/chat/completions {"model":"orbit-default","messages":[{"role":"user","content":"hi"}]}
+HTTP/1.1 200 OK
+{"id":"c1","choices":[{"index":0,"message":{"role":"assistant","content":"hi"}}],"usage":{"prompt_tokens":100,"completion_tokens":50}}
+
+=== Personal checkout without farm (Stripe not configured here; must not create a farm)
+>>> POST /v1/billing/checkout {"plan":"orion","interval":"month"}
+HTTP/1.1 503 Service Unavailable
+{"error":{"code":"not_configured","message":"Stripe is not configured"}}
+
+>>> SQL select count(*) as farms from farms
+[{"farms":0}]
+
+FARM=15339424-1bd6-40cb-8a2d-0630b86af807 MEMBER_ID=285956a3-2c70-4621-b8e2-8b62a5c0cb59
+=== Invite with useFarmPlan=false
+{"id":"24f59270-eede-4565-a598-d00ef32ba424","farmId":"15339424-1bd6-40cb-8a2d-0630b86af807","email":"kari@farm.test","role":"worker","useFarmPlan":false,"monthlyTokenLimit":null,"createdAt":"2026-11-12T15:32:19.447Z","expiresAt":"2026-11-19T15:32:19.447Z"}
+>>> POST /v1/invites/accept {"code":"orb_i_1XVYntL9NbJ4iTx1Fl4Ald7OmBEZ_u4c"}
+HTTP/1.1 200 OK
+{"farm":{"id":"15339424-1bd6-40cb-8a2d-0630b86af807","role":"worker"}}
+
+>>> SQL insert into farm_subscriptions (farm_id, plan, interval, status) values ('15339424-1bd6-40cb-8a2d-0630b86af807','cam2','month','active') returning farm_id, plan
+[{"farm_id":"15339424-1bd6-40cb-8a2d-0630b86af807","plan":"cam2"}]
+
+=== Member call on farm while not allowed -> billed to personal
+>>> POST /v1/llm/v1/chat/completions {"model":"orbit-default","messages":[{"role":"user","content":"hi"}]}
+HTTP/1.1 200 OK
+{"id":"c1","choices":[{"index":0,"message":{"role":"assistant","content":"hi"}}],"usage":{"prompt_tokens":100,"completion_tokens":50}}
+
+>>> GET /v1/billing/status 
+HTTP/1.1 200 OK
+{"plan":"free","trialEndsAt":"2026-12-12T15:32:19.351Z","interval":null,"status":"free","currentPeriodEnd":null,"cancelAtPeriodEnd":false,"usage":{"tokensUsed":300,"voiceSecondsUsed":0,"tokenAllowance":2000000,"voiceSecondsAllowance":1800},"account":"personal","usageSource":null,"farmPlanAllowed":false,"member":{"tokensUsed":0,"tokenLimit":null},"personal":{"plan":"free","trialEndsAt":"2026-12-12T15:32:19.351Z","tokensUsed":300,"tokenAllowance":2000000},"farm":{"plan":"cam2","trialEndsAt":null,"tokensUsed":0,"tokenAllowance":3000000}}
+
+=== Owner allows the farm plan
+>>> PATCH /v1/farms/15339424-1bd6-40cb-8a2d-0630b86af807/members/285956a3-2c70-4621-b8e2-8b62a5c0cb59 {"useFarmPlan":true}
+HTTP/1.1 200 OK
+{"member":{"userId":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","email":"kari@farm.test","name":null,"role":"worker","createdAt":"2026-11-12T15:32:19.464Z","useFarmPlan":true,"monthlyTokenLimit":null,"usageSource":null,"usage":{"farmTokens":0,"ownTokens":150,"voiceSeconds":0}}}
+
+>>> POST /v1/llm/v1/chat/completions {"model":"orbit-default","messages":[{"role":"user","content":"hi"}]}
+HTTP/1.1 200 OK
+{"id":"c1","choices":[{"index":0,"message":{"role":"assistant","content":"hi"}}],"usage":{"prompt_tokens":100,"completion_tokens":50}}
+
+>>> SQL select farm_id, user_id, account_id, total_tokens from llm_usage order by created_at
+[{"farm_id":null,"user_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","account_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","total_tokens":150},{"farm_id":"15339424-1bd6-40cb-8a2d-0630b86af807","user_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","account_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","total_tokens":150},{"farm_id":"15339424-1bd6-40cb-8a2d-0630b86af807","user_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","account_id":"15339424-1bd6-40cb-8a2d-0630b86af807","total_tokens":150}]
+
+=== Members list with per-member usage (owner view)
+>>> GET /v1/farms/15339424-1bd6-40cb-8a2d-0630b86af807/members 
+HTTP/1.1 200 OK
+{"members":[{"userId":"0bd2c795-ca2d-4de5-8b45-fd0c0794a5cf","email":"owner@farm.test","name":null,"role":"owner","createdAt":"2026-11-12T15:32:19.437Z","useFarmPlan":true,"monthlyTokenLimit":null,"usageSource":null,"usage":{"farmTokens":0,"ownTokens":0,"voiceSeconds":0}},{"userId":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","email":"kari@farm.test","name":null,"role":"worker","createdAt":"2026-11-12T15:32:19.464Z","useFarmPlan":true,"monthlyTokenLimit":null,"usageSource":null,"usage":{"farmTokens":150,"ownTokens":150,"voiceSeconds":0}}]}
+
+=== Member switches to own plan
+>>> PATCH /v1/farms/15339424-1bd6-40cb-8a2d-0630b86af807/me {"usageSource":"own"}
+HTTP/1.1 200 OK
+{"member":{"userId":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","email":"kari@farm.test","name":null,"role":"worker","createdAt":"2026-11-12T15:32:19.464Z","useFarmPlan":true,"monthlyTokenLimit":null,"usageSource":"own","usage":{"farmTokens":150,"ownTokens":150,"voiceSeconds":0}}}
+
+>>> POST /v1/llm/v1/chat/completions {"model":"orbit-default","messages":[{"role":"user","content":"hi"}]}
+HTTP/1.1 200 OK
+{"id":"c1","choices":[{"index":0,"message":{"role":"assistant","content":"hi"}}],"usage":{"prompt_tokens":100,"completion_tokens":50}}
+
+>>> PATCH /v1/farms/15339424-1bd6-40cb-8a2d-0630b86af807/me {"usageSource":"farm"}
+HTTP/1.1 200 OK
+{"member":{"userId":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","email":"kari@farm.test","name":null,"role":"worker","createdAt":"2026-11-12T15:32:19.464Z","useFarmPlan":true,"monthlyTokenLimit":null,"usageSource":"farm","usage":{"farmTokens":150,"ownTokens":300,"voiceSeconds":0}}}
+
+=== Cap: limit 150 tokens (member already used 150 on farm) -> 429 member_limit
+>>> PATCH /v1/farms/15339424-1bd6-40cb-8a2d-0630b86af807/members/285956a3-2c70-4621-b8e2-8b62a5c0cb59 {"monthlyTokenLimit":150}
+HTTP/1.1 200 OK
+{"member":{"userId":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","email":"kari@farm.test","name":null,"role":"worker","createdAt":"2026-11-12T15:32:19.464Z","useFarmPlan":true,"monthlyTokenLimit":150,"usageSource":"farm","usage":{"farmTokens":150,"ownTokens":300,"voiceSeconds":0}}}
+
+>>> POST /v1/llm/v1/chat/completions {"model":"orbit-default","messages":[{"role":"user","content":"hi"}]}
+HTTP/1.1 429 Too Many Requests
+{"error":{"code":"member_limit","message":"farm allowance for you is used up this month; switch to your own plan or ask the farm owner"}}
+
+=== Restricting an owner -> 409 owner_usage
+>>> PATCH /v1/farms/15339424-1bd6-40cb-8a2d-0630b86af807/members/0bd2c795-ca2d-4de5-8b45-fd0c0794a5cf {"useFarmPlan":false}
+HTTP/1.1 409 Conflict
+{"error":{"code":"owner_usage","message":"owners always have unrestricted farm plan access"}}
+
+=== Owner removes the member
+>>> DELETE /v1/farms/15339424-1bd6-40cb-8a2d-0630b86af807/members/285956a3-2c70-4621-b8e2-8b62a5c0cb59 
+HTTP/1.1 204 No Content
+
+>>> GET /v1/farms/15339424-1bd6-40cb-8a2d-0630b86af807/members 
+HTTP/1.1 200 OK
+{"members":[{"userId":"0bd2c795-ca2d-4de5-8b45-fd0c0794a5cf","email":"owner@farm.test","name":null,"role":"owner","createdAt":"2026-11-12T15:32:19.437Z","useFarmPlan":true,"monthlyTokenLimit":null,"usageSource":null,"usage":{"farmTokens":0,"ownTokens":0,"voiceSeconds":0}}]}
+
+>>> SQL select farm_id, user_id, account_id, total_tokens from llm_usage order by created_at
+[{"farm_id":null,"user_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","account_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","total_tokens":150},{"farm_id":"15339424-1bd6-40cb-8a2d-0630b86af807","user_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","account_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","total_tokens":150},{"farm_id":"15339424-1bd6-40cb-8a2d-0630b86af807","user_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","account_id":"15339424-1bd6-40cb-8a2d-0630b86af807","total_tokens":150},{"farm_id":"15339424-1bd6-40cb-8a2d-0630b86af807","user_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","account_id":"285956a3-2c70-4621-b8e2-8b62a5c0cb59","total_tokens":150}]
+

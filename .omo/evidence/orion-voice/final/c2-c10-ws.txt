@@ -1,0 +1,51 @@
+commit: c54c837 + working tree, 2026-11-11T22:33:57.602Z
+
+### start #1
+READY
+
+### curl -i wrong token
+HTTP/1.1 401 Unauthorized
+
+### curl -i right token, unknown call
+HTTP/1.1 404 Not Found
+
+### talk
+session 01a1ccbf-1b66-7367-b887-9bad530f1ac6
+voice.start -> {"path":"/voice/qa/722faf60-e9b2-43f2-b46e-9be08890989b","variables":{"farm_name":"Demo Farm","conversation_recap":""}}
+agent: Hello, Orion here. How can I help?
+tool call: db_query {"query":"animals.list","params":{}}
+agent: There are 28 animals in your herd. I checked the records on this computer.
+items after talk + chat: [
+ "assistant (voice): Hello, Orion here. How can I help?",
+ "user (voice): Who is in my herd?",
+ "tool db_query done",
+ "assistant (voice): There are 28 animals in your herd. I checked the records on this computer.",
+ "user: hello after the call",
+ "assistant: This is the Orion mock model. You said: \"hello after the call\". I can help with your herd."
+]
+listed: {"title":"About: Who is in my","messageCount":5}
+PHASE talk OK
+EXIT=0
+
+### stop #1
+PORT 7833 FREE
+
+### start #2 (same data dir)
+READY
+
+### reopen
+items after restart: [
+ "assistant (voice): Hello, Orion here. How can I help?",
+ "user (voice): Who is in my herd?",
+ "tool db_query done",
+ "assistant (voice): There are 28 animals in your herd. I checked the records on this computer.",
+ "user: hello after the call",
+ "assistant: This is the Orion mock model. You said: \"hello after the call\". I can help with your herd."
+]
+recap after restart: "Orion: Hello, Orion here. How can I help?\nFarmer: Who is in my herd?\nOrion: There are 28 animals in your herd. I checked the records on this computer.\nFarmer: hello after the call\nOrion: This is the Orion mock model. You said: \"hello after the call\". I can help with your herd."
+PHASE reopen OK
+EXIT=0
+
+### teardown
+PORT 7833 FREE
+ls: /var/folders/x8/7wh9r8wx4_q47yf73zz25ht00000gn/T/ulw-orbit-voice.Eae95TrLry/qa-data-ws2: No such file or directory

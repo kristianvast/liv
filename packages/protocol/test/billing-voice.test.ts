@@ -47,7 +47,7 @@ describe("billing and voice wire contracts", () => {
     };
     expect(validateResult("billing.status", status).ok).toBe(true);
     expect(validateResult("billing.status", { ...status, trialEndsAt: 30 }).ok).toBe(false);
-    for (const plan of ["free", "orion", "cam2", "cam4", "cam6"]) {
+    for (const plan of ["free", "orion", "cam2", "cam4", "cam6", "cam8", "cam12", "cam16"]) {
       for (const trialEndsAt of ["2026-12-01T00:00:00Z", null]) {
         expect(validateResult("billing.status", { ...status, plan, trialEndsAt }).ok).toBe(true);
       }
@@ -73,7 +73,7 @@ describe("billing and voice wire contracts", () => {
           ...(locked ? {} : { monthly: 20, yearly: 200 }),
         },
       ],
-      hardware: [{ id: "box", name: "Pecorva box", ...(locked ? {} : { price: 920 }) }],
+      hardware: [{ id: "box", name: "Barnstar box", ...(locked ? {} : { price: 920 }) }],
     };
     expect(validateResult("billing.plans", catalogue).ok).toBe(true);
     expect(validateResult("billing.plans", { ...catalogue, plans: [{ id: "orion" }] }).ok).toBe(

@@ -14,7 +14,7 @@ export interface OrionConfig {
   gatewayUrl: string | null;
   /** Orbit cloud (Core) base URL (--core-url or ORBIT_CORE_URL): accounts, sync, cloud model. */
   coreUrl?: string | null;
-  /** Website for Google sign-in (env ORBIT_SITE_URL); https://pecorva.com when unset. */
+  /** Website for Google sign-in (env ORBIT_SITE_URL); https://barnstar.dev when unset. */
   siteUrl?: string | null;
   /** Orbit source checkout Orion may edit (--app-source or ORBIT_APP_SOURCE); null in installed builds. */
   appSource: string | null;

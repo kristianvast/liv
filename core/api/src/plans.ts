@@ -13,8 +13,8 @@ export const plans = [
     id: "cam2",
     name: "2 cameras",
     cameras: 2,
-    monthly: 49,
-    yearly: 490,
+    monthly: 47,
+    yearly: 470,
     orionTokens: 3_000_000,
     voiceMinutes: 60,
   },
@@ -36,10 +36,37 @@ export const plans = [
     orionTokens: 8_000_000,
     voiceMinutes: 150,
   },
+  {
+    id: "cam8",
+    name: "8 cameras",
+    cameras: 8,
+    monthly: 111,
+    yearly: 1110,
+    orionTokens: 10_000_000,
+    voiceMinutes: 200,
+  },
+  {
+    id: "cam12",
+    name: "12 cameras",
+    cameras: 12,
+    monthly: 137,
+    yearly: 1370,
+    orionTokens: 14_000_000,
+    voiceMinutes: 280,
+  },
+  {
+    id: "cam16",
+    name: "16 cameras",
+    cameras: 16,
+    monthly: 155,
+    yearly: 1550,
+    orionTokens: 18_000_000,
+    voiceMinutes: 350,
+  },
 ] as const;
 
 export const hardware = [
-  { id: "box", name: "Pecorva box", price: 920, lookupKey: "pecorva_box" },
+  { id: "box", name: "Barnstar box", price: 920, lookupKey: "pecorva_box" },
   { id: "camera", name: "Tested camera", price: 150, lookupKey: "pecorva_camera" },
 ] as const;
 

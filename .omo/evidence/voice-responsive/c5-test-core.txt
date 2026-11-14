@@ -1,0 +1,586 @@
+@core/api test: bun test v1.4.4 (38afee6c8)
+@core/api test: 
+@core/api test: test/billing-trial.test.ts:
+@core/api test: (pass) the free month grants Orion allowances and reports its end while plan stays free [86.61ms]
+@core/api test: (pass) an unconfirmed owner gets no free month until the address is confirmed [57.89ms]
+@core/api test: (pass) the free month permits the LLM gateway and records usage [20.33ms]
+@core/api test: (pass) the free month is over at 2026-11-19T12:00:00Z and blocks the model [26.11ms]
+@core/api test: (pass) the free month is over at 2026-11-20T12:00:00Z and blocks the model [20.54ms]
+@core/api test: (pass) status clears trialEndsAt after the free month [28.50ms]
+@core/api test: (pass) free month status counts the single token and voice pool from the owner's creation date [23.55ms]
+@core/api test: (pass) the gateway refuses an exhausted free pool from the previous calendar month [23.10ms]
+@core/api test: (pass) the earliest owner account starts the month even if another owner joined later [81.61ms]
+@core/api test: (pass) a farm without an owner has no free month [78.63ms]
+@core/api test: (pass) a paid active plan supersedes the free month [51.09ms]
+@core/api test: (pass) a paid trialing plan supersedes the free month [64.42ms]
+@core/api test: (pass) a farm budget override still grants model access after the free month [26.53ms]
+@core/api test: (pass) a zero budget override exhausts an available free allowance [39.91ms]
+@core/api test: (pass) a zero budget override exhausts an available cam2 allowance [30.76ms]
+@core/api test: 
+@core/api test: test/farm-code.test.ts:
+@core/api test: (pass) a commit restores its manifest and only that farm can fetch its blobs [51.59ms]
+@core/api test: (pass) members with role owner read but only code editors push [29.40ms]
+@core/api test: (pass) members with role manager read but only code editors push [30.42ms]
+@core/api test: (pass) members with role worker read but only code editors push [21.41ms]
+@core/api test: (pass) members with role viewer read but only code editors push [22.51ms]
+@core/api test: (pass) legacy tokens cannot read or write farm code [12.71ms]
+@core/api test: (pass) concurrent commits with one parent cannot overwrite each other [22.60ms]
+@core/api test: (pass) refuses unsafe path .env [10.30ms]
+@core/api test: (pass) refuses unsafe path ../secret [22.28ms]
+@core/api test: (pass) refuses unsafe path /absolute [19.38ms]
+@core/api test: (pass) refuses unsafe path node_modules/lib.js [23.72ms]
+@core/api test: (pass) refuses unsafe path pages/x/.git/config [8.76ms]
+@core/api test: (pass) rejects secret content or an oversized file [26.56ms]
+@core/api test: (pass) rejects secret content or an oversized file [45.34ms]
+@core/api test: (pass) rejects secret content or an oversized file [47.82ms]
+@core/api test: (pass) rejects absent and incorrectly hashed blobs without advancing the head [18.60ms]
+@core/api test: (pass) bounds expanded file bytes even when many paths reuse one blob [49.25ms]
+@core/api test: 
+@core/api test: test/push.test.ts:
+@core/api test: (pass) device tokens move on upsert and only their owner can delete them [14.31ms]
+@core/api test: (pass) notify orion_done delivers only to caller devices with exact FCM shape [15.07ms]
+@core/api test: (pass) notify orion_needs_you delivers only to caller devices with exact FCM shape [13.63ms]
+@core/api test: (pass) notify refuses unauthorized principal 401 [9.08ms]
+@core/api test: (pass) notify refuses unauthorized principal 403 [9.36ms]
+@core/api test: (pass) notify refuses unauthorized principal 403 [10.50ms]
+@core/api test: (pass) notify refuses unauthorized principal 400 [11.47ms]
+@core/api test: (pass) FCM 404 UNREGISTERED removes the device [19.54ms]
+@core/api test: (pass) FCM 400 UNREGISTERED removes the device [9.37ms]
+@core/api test: (pass) device routes work and sends skip without a project id [10.34ms]
+@core/api test: (pass) device input requires an Android token and notify validates its payload [9.83ms]
+@core/api test: (pass) notify enforces title and sessionId length boundaries [10.52ms]
+@core/api test: Push delivery failed {
+@core/api test:   error: "Simulated FCM network failure",
+@core/api test: }
+@core/api test: (pass) notify responds before FCM completes and survives delivery rejection [13.18ms]
+@core/api test: 
+@core/api test: test/feedback.test.ts:
+@core/api test: (pass) feedback > stores feedback with optional session: %s [8.59ms]
+@core/api test: (pass) feedback > stores feedback with optional session: %s [7.82ms]
+@core/api test: (pass) feedback > ignores a farm the user cannot act on: 00000000-0000-4000-8000-0000000000b2 [7.76ms]
+@core/api test: (pass) feedback > ignores a farm the user cannot act on: not-a-uuid [8.37ms]
+@core/api test: (pass) feedback > rejects invalid feedback 0 [5.96ms]
+@core/api test: (pass) feedback > rejects invalid feedback %# [5.55ms]
+@core/api test: (pass) feedback > rejects invalid feedback 2 [5.78ms]
+@core/api test: (pass) feedback > rejects invalid feedback 3 [7.11ms]
+@core/api test: (pass) feedback > rejects invalid feedback 4 [6.14ms]
+@core/api test: (pass) feedback > rejects invalid feedback 5 [6.74ms]
+@core/api test: (pass) feedback > rejects invalid feedback 6 [6.40ms]
+@core/api test: (pass) feedback > rejects invalid feedback 7 [5.98ms]
+@core/api test: (pass) feedback > rejects invalid feedback 8 [6.20ms]
+@core/api test: (pass) feedback > rejects invalid feedback 9 [5.95ms]
+@core/api test: (pass) feedback > malformed JSON returns the error envelope [5.62ms]
+@core/api test: (pass) feedback > enforces rolling persistent limits, including parallel calls: %s [25.29ms]
+@core/api test: (pass) feedback > enforces rolling persistent limits, including parallel calls: %s [33.37ms]
+@core/api test: (pass) feedback > changing a client supplied forwarded hop cannot bypass the IP limit [17.69ms]
+@core/api test: (pass) submissions > requires a valid session: %s [6.85ms]
+@core/api test: (pass) submissions > requires a valid session: legacy-farm-token [5.02ms]
+@core/api test: (pass) submissions > requires a valid session: orb_s_invalid [5.80ms]
+@core/api test: (pass) submissions > stores UTF-8 bytes and the member farm [7.39ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: /absolute.ts [5.07ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: ../secret [5.49ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: src/../secret [6.51ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: src//file [4.95ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: ./file [5.31ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: C:/file [6.24ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: src\file [4.96ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: -file [5.45ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: src/.hidden [7.16ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: src/file..ts [5.53ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx [5.21ms]
+@core/api test: (pass) submissions > rejects unsafe file paths: src/ [7.16ms]
+@core/api test: (pass) submissions > rejects invalid builds 0 [5.76ms]
+@core/api test: (pass) submissions > rejects invalid builds 1 [5.98ms]
+@core/api test: (pass) submissions > rejects invalid builds 2 [5.63ms]
+@core/api test: (pass) submissions > rejects invalid builds 3 [5.24ms]
+@core/api test: (pass) submissions > rejects invalid builds 4 [6.45ms]
+@core/api test: (pass) submissions > rejects invalid builds 5 [5.56ms]
+@core/api test: (pass) submissions > rejects invalid builds 6 [5.07ms]
+@core/api test: (pass) submissions > rejects invalid builds 7 [5.85ms]
+@core/api test: (pass) submissions > rejects invalid builds 8 [5.62ms]
+@core/api test: (pass) submissions > rejects invalid builds 9 [5.09ms]
+@core/api test: (pass) submissions > rejects invalid builds 10 [5.33ms]
+@core/api test: (pass) submissions > accepts exactly 512 KiB and rejects larger UTF-8 content across files [13.21ms]
+@core/api test: (pass) submissions > lists only the caller's own submissions newest first without bodies [9.96ms]
+@core/api test: (pass) owner review > disabled admin returns 404: GET /v1/admin/feedback [5.34ms]
+@core/api test: (pass) owner review > disabled admin returns 404: PATCH /v1/admin/feedback/00000000-0000-4000-8000-0000000000b1 [5.68ms]
+@core/api test: (pass) owner review > disabled admin returns 404: GET /v1/admin/submissions [4.92ms]
+@core/api test: (pass) owner review > disabled admin returns 404: GET /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [4.23ms]
+@core/api test: (pass) owner review > disabled admin returns 404: PATCH /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [5.31ms]
+@core/api test: (pass) owner review > wrong admin token returns 401: GET /v1/admin/feedback [5.51ms]
+@core/api test: (pass) owner review > wrong admin token returns 401: PATCH /v1/admin/feedback/00000000-0000-4000-8000-0000000000b1 [5.33ms]
+@core/api test: (pass) owner review > wrong admin token returns 401: GET /v1/admin/submissions [5.56ms]
+@core/api test: (pass) owner review > wrong admin token returns 401: GET /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [5.82ms]
+@core/api test: (pass) owner review > wrong admin token returns 401: PATCH /v1/admin/submissions/00000000-0000-4000-8000-0000000000b1 [4.71ms]
+@core/api test: (pass) owner review > admin HTML is disabled without a token and served without assets when enabled [12.22ms]
+@core/api test: (pass) owner review > lists feedback, changes status and filters the result [8.28ms]
+@core/api test: (pass) owner review > reviews builds with metadata lists and file bodies only in detail [10.48ms]
+@core/api test: (pass) owner review > rejects invalid review input and missing resources [6.12ms]
+@core/api test: (pass) sends notifications through the log mailer without submission file bodies [7.56ms]
+@core/api test: (pass) a failed notification still persists and accepts both requests [7.13ms]
+@core/api test: (pass) allows website CORS on /v1/feedback [6.97ms]
+@core/api test: (pass) allows website CORS on /v1/submissions [6.56ms]
+@core/api test: 
+@core/api test: test/multi-user-voice.test.ts:
+@core/api test: (pass) voice without farm permission meters personal seconds with farm header %s [18.75ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_kFEb2YCqGLhm-8UXMpUJNdomAtZad4Qa
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) voice without farm permission meters personal seconds with farm header %s [21.17ms]
+@core/api test: (pass) voice uses the personal account's exhausted allowance without a farm [12.56ms]
+@core/api test: (pass) a personal free month requires a confirmed email before voice access [12.89ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_aXp88oUL2LqCZN4jjwdtdIO5GkBocuyG
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) a zero member cap blocks farm billed voice [20.38ms]
+@core/api test: 
+@core/api test: test/billing-webhook-contract.test.ts:
+@core/api test: (pass) subscription webhook accepts orion from metadata [10.13ms]
+@core/api test: (pass) subscription webhook accepts orion from lookup-month [7.12ms]
+@core/api test: (pass) subscription webhook accepts orion from lookup-year [8.58ms]
+@core/api test: (pass) subscription webhook accepts cam2 from metadata [7.65ms]
+@core/api test: (pass) subscription webhook accepts cam2 from lookup-month [9.45ms]
+@core/api test: (pass) subscription webhook accepts cam2 from lookup-year [8.92ms]
+@core/api test: (pass) subscription webhook accepts cam4 from metadata [8.17ms]
+@core/api test: (pass) subscription webhook accepts cam4 from lookup-month [10.05ms]
+@core/api test: (pass) subscription webhook accepts cam4 from lookup-year [13.14ms]
+@core/api test: (pass) subscription webhook accepts cam6 from metadata [6.79ms]
+@core/api test: (pass) subscription webhook accepts cam6 from lookup-month [7.60ms]
+@core/api test: (pass) subscription webhook accepts cam6 from lookup-year [7.82ms]
+@core/api test: (pass) subscription webhook accepts cam8 from metadata [8.33ms]
+@core/api test: (pass) subscription webhook accepts cam8 from lookup-month [12.60ms]
+@core/api test: (pass) subscription webhook accepts cam8 from lookup-year [9.94ms]
+@core/api test: (pass) subscription webhook accepts cam12 from metadata [8.60ms]
+@core/api test: (pass) subscription webhook accepts cam12 from lookup-month [9.02ms]
+@core/api test: (pass) subscription webhook accepts cam12 from lookup-year [9.88ms]
+@core/api test: (pass) subscription webhook accepts cam16 from metadata [12.56ms]
+@core/api test: (pass) subscription webhook accepts cam16 from lookup-month [10.28ms]
+@core/api test: (pass) subscription webhook accepts cam16 from lookup-year [8.67ms]
+@core/api test: (pass) subscription webhook rejects invalid metadata plan pen [9.50ms]
+@core/api test: (pass) subscription webhook rejects invalid metadata plan barn [11.18ms]
+@core/api test: (pass) subscription webhook rejects invalid metadata plan free [10.81ms]
+@core/api test: (pass) subscription webhook rejects invalid metadata plan cam3 [9.19ms]
+@core/api test: (pass) subscription webhook rejects invalid metadata plan unknown [10.06ms]
+@core/api test: (pass) subscription webhook rejects invalid lookup key pecorva_pen_monthly [9.58ms]
+@core/api test: (pass) subscription webhook rejects invalid lookup key pecorva_barn_yearly [8.29ms]
+@core/api test: (pass) subscription webhook rejects invalid lookup key pecorva_cam3_monthly [6.89ms]
+@core/api test: (pass) subscription webhook rejects invalid lookup key other_cam2_monthly [8.20ms]
+@core/api test: (pass) a paid subscription checkout records hardware and mails once alongside the plan [11.54ms]
+@core/api test: (pass) delayed subscription hardware payment mails once even with distinct success events [13.24ms]
+@core/api test: 
+@core/api test: test/billing.test.ts:
+@core/api test: (pass) a signed subscription update changes billing status and allowances [13.55ms]
+@core/api test: (pass) invalid signature t=1,v1=bad does not apply an event [7.89ms]
+@core/api test: (pass) invalid signature t=1793966400,v1=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa does not apply an event [6.67ms]
+@core/api test: (pass) invalid signature  does not apply an event [6.79ms]
+@core/api test: (pass) a correctly signed event outside the five minute window is rejected [6.56ms]
+@core/api test: (pass) replaying a signed event cannot overwrite a newer subscription [9.70ms]
+@core/api test: (pass) an older subscription event delivered late never overwrites newer state [11.29ms]
+@core/api test: (pass) the Stripe customer link decides the farm even when metadata names an old farm id [7.84ms]
+@core/api test: (pass) hardware orders keep shipping, wait for delayed payments and email once when paid [10.17ms]
+@core/api test: (pass) a completed plan checkout emails the buyer how to sign in to Orbit [8.09ms]
+@core/api test: 
+@core/api test: test/multi-user-migration.test.ts:
+@core/api test: (pass) multi-user migration preserves existing access and backfills both billing ledgers [440.54ms]
+@core/api test: 
+@core/api test: test/voice-demo.test.ts:
+@core/api test: (pass) POST /v1/voice/demo/session > webrtc (default) returns a conversation token [4.76ms]
+@core/api test: (pass) POST /v1/voice/demo/session > websocket returns a signed url [2.39ms]
+@core/api test: (pass) POST /v1/voice/demo/session > bad body is 400 without an upstream call [1.15ms]
+@core/api test: (pass) POST /v1/voice/demo/session > missing key or agent is 503 not_configured [1.48ms]
+@core/api test: voice demo: ElevenLabs /v1/convai/conversation/token returned 401
+@core/api test: (pass) POST /v1/voice/demo/session > upstream failure is 502 and does not leak the upstream body [2.36ms]
+@core/api test: (pass) POST /v1/voice/demo/session > per-IP limit returns 429 with Retry-After, then recovers after the window [9.10ms]
+@core/api test: (pass) POST /v1/voice/demo/session > daily cap returns 429 until the next UTC day [4.94ms]
+@core/api test: (pass) POST /v1/voice/demo/session > CORS preflight from https://barnstar.dev is allowed [1.26ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > hanging up keeps the remaining time: a verified 30 s call leaves 150 s for the next one [3.66ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > used up: 429 allowance_used until the first call leaves the 25 h window [5.46ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > a client that talks past max_seconds is charged the real length [5.91ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > spoofed leading X-Forwarded-For hops, the same IPv6 /64 and a new app instance do not reset it [5.95ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > parallel requests from one visitor never grant more than the allowance [3.82ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > an open call blocks the next one with call_active [2.24ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > a credential that never became a call is refunded after 15 min, not before [3.11ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > a failing conversation lookup fails closed and keeps the reservation [3.20ms]
+@core/api test: voice demo: ElevenLabs /v1/convai/conversation/token returned 500
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > an upstream mint failure does not consume the allowance [3.29ms]
+@core/api test: (pass) voice demo allowance (180 s per 25 h per visitor) > client address is the last X-Forwarded-For hop; IPv6 groups by /64 [0.61ms]
+@core/api test: 
+@core/api test: test/push-alerts.test.ts:
+@core/api test: (pass) new calving_alert alerts reach all farm members with localized animal body [21.00ms]
+@core/api test: (pass) new health_event alerts reach all farm members with localized animal body [14.57ms]
+@core/api test: (pass) new heat_alert alerts reach all farm members with localized animal body [16.94ms]
+@core/api test: (pass) alerts use tag body when an animal name is absent [22.65ms]
+@core/api test: (pass) alerts use unnamed body when an animal name is absent [12.57ms]
+@core/api test: (pass) old deleted nonalert repeated and updated observations send nothing [17.89ms]
+@core/api test: 
+@core/api test: test/orion-voice-agent.test.ts:
+@core/api test: (pass) without an agent id it creates every tool and then the agent that uses them [0.22ms]
+@core/api test: (pass) with an agent id it updates that agent's own tools and creates only the missing ones [0.09ms]
+@core/api test: (pass) when the agent is refused, the tools made in that run are removed again [0.14ms]
+@core/api test: (pass) a refusal from ElevenLabs stops the sync and names the request [0.02ms]
+@core/api test: 
+@core/api test: test/multi-user-billing.test.ts:
+@core/api test: (pass) personal billing status works without a farm header [12.09ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_Op_NACIMe1lyKUQRXQnBVatOC50UZ6c9
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) a worker may manage personal checkout while on a farm [14.36ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i__nofPqZul9nTtWpwVO6yPjaN5wbyiA0E
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) a worker may manage personal portal while on a farm [12.64ms]
+@core/api test: (pass) an owner can explicitly choose personal checkout despite having a farm header [10.64ms]
+@core/api test: (pass) personal portal works without a farm header [10.27ms]
+@core/api test: (pass) subscription webhooks resolve a personal customer to the user account [8.67ms]
+@core/api test: (pass) deleting an account refuses a running personal subscription [178.17ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_eljOkTVULsEc9jRqOtX4NX6VLpe54HGU
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) me reports membership billing settings and the personal paid plan [20.39ms]
+@core/api test: 
+@core/api test: test/relay.test.ts:
+@core/api test: (pass) client pipes verbatim frames both ways and propagates client close [14.83ms]
+@core/api test: (pass) client?channel=voice&voiceId=voice-1 pipes verbatim frames both ways and propagates client close [11.41ms]
+@core/api test: (pass) host channel close 4003 preserves application codes or maps to offline [12.65ms]
+@core/api test: (pass) host channel close 1000 preserves application codes or maps to offline [10.75ms]
+@core/api test: (pass) replacing a host closes the old host with 4409 and its clients with 4410 [12.53ms]
+@core/api test: (pass) host disconnect closes clients and status becomes offline [12.42ms]
+@core/api test: (pass) another member of the same farm cannot reach this account's host [13.93ms]
+@core/api test: (pass) refuses missing session before upgrade [9.38ms]
+@core/api test: (pass) refuses nonmember before upgrade [10.29ms]
+@core/api test: (pass) refuses bad farm before upgrade [9.73ms]
+@core/api test: (pass) refuses offline before upgrade [9.60ms]
+@core/api test: (pass) refuses invalid channel before upgrade [11.64ms]
+@core/api test: (pass) refuses missing voice id before upgrade [12.46ms]
+@core/api test: (pass) requires upgrade and farm header while status remains ordinary HTTP [13.23ms]
+@core/api test: (pass) ninth client is refused with 429 too_many [24.53ms]
+@core/api test: (pass) text at the 8 MiB envelope limit relays both ways [40.82ms]
+@core/api test: (pass) binary closes only its channel with the required code [13.20ms]
+@core/api test: (pass) oversize closes only its channel with the required code [17.79ms]
+@core/api test: (pass) host-oversize closes only its channel with the required code [18.11ms]
+@core/api test: 
+@core/api test: test/accounts.test.ts:
+@core/api test: (pass) registration and sign-in > eight-character passwords register; seven characters fail weak_password [79.47ms]
+@core/api test: (pass) registration and sign-in > register signs in, stores only an argon2id hash and a hashed session token [75.52ms]
+@core/api test: (pass) registration and sign-in > duplicate emails, weak passwords and bad addresses are refused [144.07ms]
+@core/api test: (pass) registration and sign-in > wrong passwords and unknown emails get the same 401, then 429 after repeated failures [404.35ms]
+@core/api test: (pass) registration and sign-in > logout revokes the session and expired sessions stop working [140.77ms]
+@core/api test: (pass) Google sign-in > creates a verified passwordless user, consent and device session without email [16.88ms]
+@core/api test: (pass) Google sign-in > returning subjects sign in without terms even when their Google email changes [11.50ms]
+@core/api test: (pass) Google sign-in > links an existing password account by lowercase email and verifies it [197.63ms]
+@core/api test: (pass) Google sign-in > rejects wrong audience tokens [7.66ms]
+@core/api test: (pass) Google sign-in > rejects expired tokens [6.83ms]
+@core/api test: (pass) Google sign-in > rejects future issued tokens [6.67ms]
+@core/api test: (pass) Google sign-in > rejects wrong issuer tokens [7.31ms]
+@core/api test: (pass) Google sign-in > rejects missing subject tokens [7.22ms]
+@core/api test: (pass) Google sign-in > rejects a bad signature and malformed credentials [94.56ms]
+@core/api test: (pass) Google sign-in > requires a verified email: {"email_verified":false} [6.87ms]
+@core/api test: (pass) Google sign-in > requires a verified email: {"email_verified":"true"} [9.74ms]
+@core/api test: (pass) Google sign-in > requires a verified email: {"email":null} [7.26ms]
+@core/api test: (pass) Google sign-in > new users must accept terms and missing configuration disables sign-in [9.12ms]
+@core/api test: (pass) Google sign-in > passwordless login and change fail cleanly; reset can set an eight-character password [311.57ms]
+@core/api test: (pass) Google sign-in > permits the Barnstar website CORS preflight and response [8.33ms]
+@core/api test: (pass) farms and members > claiming a local farm id makes the caller owner; a second claim is refused [133.09ms]
+@core/api test: (pass) farms and members > creating a new farm writes the farm row and lists it in /v1/me [73.76ms]
+@core/api test: (pass) farms and members > owners and managers manage members within their rank; the last owner stays [208.42ms]
+@core/api test: (pass) invites > only the invited email can accept, once, before expiry; revoked codes stop working [392.73ms]
+@core/api test: (pass) invites > workers cannot invite and managers cannot invite owners [194.49ms]
+@core/api test: (pass) farm data with user sessions > roles decide which tables a member may change [200.42ms]
+@core/api test: (pass) farm data with user sessions > sessions need the farm header and a membership; legacy farm tokens still work [145.53ms]
+@core/api test: (pass) farm data with user sessions > the cloud model alias maps to Core's default upstream model and is metered per farm [136.25ms]
+@core/api test: (pass) account lifecycle > sign-up requires accepting the terms and records the data-sharing choice [66.28ms]
+@core/api test: (pass) account lifecycle > a verify link works once, only before it expires, and gates invite acceptance [152.01ms]
+@core/api test: (pass) account lifecycle > password reset never reveals accounts, signs out everywhere and works once [311.89ms]
+@core/api test: (pass) account lifecycle > sessions are listed per device and can be revoked one by one [132.41ms]
+@core/api test: (pass) account lifecycle > deleting an account needs the plan cancelled, wipes the sole-owned cloud farm and keeps exports [265.15ms]
+@core/api test: (pass) account lifecycle > an Orbit farm adopts the empty cloud farm bought on the website, plan included [135.24ms]
+@core/api test: (pass) account lifecycle > a cloud farm that already holds data is never adopted [70.27ms]
+@core/api test: 
+@core/api test: test/billing-gateway.test.ts:
+@core/api test: (pass) a free session farm gets plan_required before calling a model [7.61ms]
+@core/api test: (pass) a paid farm at its allowance gets budget_exceeded [7.28ms]
+@core/api test: (pass) a farm budget override wins over its paid plan allowance [7.41ms]
+@core/api test: (pass) Vertex thinking tokens count toward the farm allowance [9.47ms]
+@core/api test: (pass) billing status includes metered voice usage [10.63ms]
+@core/api test: 
+@core/api test: test/voice-agent.test.ts:
+@core/api test: (pass) agent relays opaque frames in order before upstream opens and meters on client close [11.07ms]
+@core/api test: (pass) agent persists periodic usage and closes both sockets at the shared allowance [1011.38ms]
+@core/api test: (pass) upstream closing ends the agent client connection [9.64ms]
+@core/api test: 
+@core/api test: test/billing-voice-trial.test.ts:
+@core/api test: (pass) the free month grants voice access [13.51ms]
+@core/api test: (pass) previous calendar month voice consumes the free pool [9.04ms]
+@core/api test: (pass) day 31 ends free voice access [8.96ms]
+@core/api test: 
+@core/api test: test/billing-checkout.test.ts:
+@core/api test: (pass) workers cannot start a farm checkout [15.05ms]
+@core/api test: (pass) checkout resolves a lookup price and attaches the farm to session and subscription [18.32ms]
+@core/api test: (pass) website preflight reaches account route /v1/me/sessions [9.15ms]
+@core/api test: (pass) website preflight reaches account route /v1/me/export [13.23ms]
+@core/api test: (pass) website preflight reaches account route /v1/me/password [11.03ms]
+@core/api test: (pass) website preflight and public plans use the allowed origin [5.68ms]
+@core/api test: (pass) unverified accounts cannot start a checkout [14.55ms]
+@core/api test: (pass) with automatic tax on, checkouts collect VAT ids and billing addresses [12.99ms]
+@core/api test: (pass) without automatic tax the checkout carries no tax fields [9.12ms]
+@core/api test: (pass) checkout without x-orbit-farm buys a personal plan without creating a farm [10.97ms]
+@core/api test: 
+@core/api test: test/multi-user.test.ts:
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_oO_sqIZsDIa50jIrCwHee9F0VBPkJxiN
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) accepted invite without farm permission bills the member's personal free month [9.87ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_zXOTXzlRcTZnb5rKOcVzRyVnX0_YoEM-
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) granting farm permission changes the next request's billing account [10.42ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_nAOHuE6GwRUnimAb98UqCuAeoc_Q4urW
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) member list splits farm and own tokens and hides other people's usage from workers [10.04ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_OBHDp87pO59kUuEb_QtljyglH-Ty9r6Z
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) member cap rejects a request at the calendar month's farm token limit [9.63ms]
+@core/api test: (pass) owners cannot be restricted with {"useFarmPlan":false} [6.41ms]
+@core/api test: (pass) owners cannot be restricted with {"monthlyTokenLimit":0} [6.29ms]
+@core/api test: (pass) a session without a farm uses its own confirmed free month [7.45ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_4rGdeiZTULZTADbvNfkvioi2KIDtEDY4
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) choosing own source routes farm requests to personal billing and reports both accounts [14.97ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_EgszHl4MnfOfUjH7s0GMV2pFIjfgmjQa
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) automatic source falls back to personal when the farm has no allowance [11.32ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_XDv1MptzAcF5AODKjhcv6W962jxMCSSD
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) explicit farm source without permission still charges personal [9.78ms]
+@core/api test: [mail:farm_invite] to=member@example.test subject="You are invited to a farm on Barnstar"
+@core/api test: You have been invited to join a farm as worker.
+@core/api test: 
+@core/api test: 1. Install Orbit: https://github.com/kristianvast/orbit/releases/latest
+@core/api test: 2. Sign in or create an account with this email address (member@example.test).
+@core/api test: 3. In Settings > Account, enter this invite code:
+@core/api test: 
+@core/api test: orb_i_8GA76e-ArBKLqL_9aJUNwbWCyZarUJp2
+@core/api test: 
+@core/api test: The invite works for 7 days.
+@core/api test: (pass) promotion to owner restores unlimited farm permission [9.29ms]
+@core/api test: 
+@core/api test: test/relay-runtime.test.ts:
+@core/api test: @core/api listening on :61757
+@core/api test: (pass) production runtime serves relay alongside both voice upgrade routes [11.53ms]
+@core/api test: 
+@core/api test: test/billing-checkout-contract.test.ts:
+@core/api test: (pass) checkout uses the Stripe lookup for orion/month [6.10ms]
+@core/api test: (pass) checkout uses the Stripe lookup for orion/year [6.64ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam2/month [5.95ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam2/year [6.76ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam4/month [6.40ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam4/year [6.75ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam6/month [5.62ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam6/year [5.97ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam8/month [5.39ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam8/year [5.80ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam12/month [5.73ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam12/year [5.49ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam16/month [11.18ms]
+@core/api test: (pass) checkout uses the Stripe lookup for cam16/year [5.53ms]
+@core/api test: (pass) checkout rejects invalid plan pen [5.17ms]
+@core/api test: (pass) checkout rejects invalid plan barn [5.52ms]
+@core/api test: (pass) checkout rejects invalid plan free [4.82ms]
+@core/api test: (pass) checkout rejects invalid plan cam3 [4.81ms]
+@core/api test: (pass) checkout rejects invalid plan unknown [5.64ms]
+@core/api test: (pass) checkout rejects invalid plan %s [4.82ms]
+@core/api test: (pass) checkout rejects invalid plan %s [4.62ms]
+@core/api test: (pass) checkout rejects invalid interval monthly [5.42ms]
+@core/api test: (pass) checkout rejects invalid interval  [5.35ms]
+@core/api test: (pass) checkout rejects invalid interval %s [4.88ms]
+@core/api test: (pass) checkout rejects invalid interval %s [5.54ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"box":-1} [5.72ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"box":0.5} [5.49ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"box":3} [5.38ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"box":"1"} [4.89ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"box":null} [4.56ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":-1} [4.59ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":1.5} [5.41ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":17} [5.14ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":"2"} [5.90ms]
+@core/api test: (pass) /v1/billing/checkout rejects invalid hardware quantities {"cameras":null} [6.05ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":-1} [5.59ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":0.5} [5.39ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":3} [6.64ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":"1"} [4.96ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"box":null} [4.61ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":-1} [4.90ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":1.5} [4.45ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":17} [5.21ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":"2"} [5.70ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects invalid hardware quantities {"cameras":null} [7.99ms]
+@core/api test: (pass) /v1/billing/checkout caps hardware at 2 boxes and 16 cameras [7.87ms]
+@core/api test: (pass) /v1/billing/hardware-checkout caps hardware at 2 boxes and 16 cameras [6.23ms]
+@core/api test: (pass) combined checkout adds hardware, shipping and buyer metadata to the subscription [5.66ms]
+@core/api test: (pass) a yearly checkout states what is due today; a monthly one carries no note [8.94ms]
+@core/api test: (pass) hardware checkout requires a session (%s) [5.40ms]
+@core/api test: (pass) hardware checkout requires a session (Bearer invalid) [5.37ms]
+@core/api test: (pass) hardware checkout requires a session (Bearer orb_s_invalid) [5.54ms]
+@core/api test: (pass) hardware checkout uses the account email and supplied redirects without a farm header [7.98ms]
+@core/api test: (pass) /v1/billing/checkout rejects unsafe successUrl [6.99ms]
+@core/api test: (pass) /v1/billing/checkout rejects unsafe cancelUrl [6.77ms]
+@core/api test: (pass) /v1/billing/checkout refuses to send the buyer to a foreign https site via successUrl [6.29ms]
+@core/api test: (pass) /v1/billing/checkout refuses to send the buyer to a foreign https site via cancelUrl [6.09ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects unsafe successUrl [4.80ms]
+@core/api test: (pass) /v1/billing/hardware-checkout rejects unsafe cancelUrl [6.46ms]
+@core/api test: (pass) /v1/billing/hardware-checkout refuses to send the buyer to a foreign https site via successUrl [6.58ms]
+@core/api test: (pass) /v1/billing/hardware-checkout refuses to send the buyer to a foreign https site via cancelUrl [6.11ms]
+@core/api test: (pass) checkout passes a website redirect with its own path and query through to Stripe [7.23ms]
+@core/api test: (pass) a configured website origin may receive the buyer even when the defaults point elsewhere [10.20ms]
+@core/api test: (pass) the billing portal returns to the website and refuses a foreign return address [8.40ms]
+@core/api test: 
+@core/api test: test/billing-migration.test.ts:
+@core/api test: (pass) 0007 maps legacy subscriptions and replaces the plan CHECK [323.76ms]
+@core/api test: (pass) 0013 widens the plan CHECK to the 8, 12 and 16 camera plans [310.18ms]
+@core/api test: 
+@core/api test: test/api.test.ts:
+@core/api test: (pass) basics > /healthz reports ok without a token [4.41ms]
+@core/api test: (pass) basics > /health reports ok without a token [4.65ms]
+@core/api test: (pass) basics > v1 routes require a valid bearer token [4.04ms]
+@core/api test: (pass) basics > issued tokens are stored hashed and resolve to their farm [3.43ms]
+@core/api test: (pass) basics > migrate is idempotent [3.35ms]
+@core/api test: (pass) POST /v1/changes > camera layouts migrate and accept farm-scoped JSON updates with row LWW [5.10ms]
+@core/api test: (pass) POST /v1/changes > applies a valid row, then LWW: equal/older is stale, newer wins [5.58ms]
+@core/api test: (pass) POST /v1/changes > rejects rows for another farm, bad enums and malformed values [3.98ms]
+@core/api test: (pass) POST /v1/changes > soft deletes keep the row; delete ops without deleted_at are rejected [4.81ms]
+@core/api test: (pass) POST /v1/changes > rejects oversized and malformed requests [3.44ms]
+@core/api test: (pass) single active wearable per animal > a newer wearable binding ends the older one with a cloud HLC [6.35ms]
+@core/api test: (pass) single active wearable per animal > an older conflicting binding is stored already ended [5.39ms]
+@core/api test: (pass) single active wearable per animal > the wearable flag must match the device kind [4.97ms]
+@core/api test: (pass) GET /v1/shape > animals forces the farm filter and forwards Electric headers [3.29ms]
+@core/api test: (pass) GET /v1/shape > camera_layouts forces the farm filter and forwards Electric headers [3.12ms]
+@core/api test: (pass) GET /v1/shape > refuses non-synced tables [2.95ms]
+@core/api test: (pass) POST /v1/llm/* > forwards with Core's key and records usage from a JSON response [5.20ms]
+@core/api test: (pass) POST /v1/llm/* > meters streamed (SSE) responses and asks OpenAI-style streams for usage [4.45ms]
+@core/api test: (pass) POST /v1/llm/* > refuses farms over their monthly budget without calling upstream [4.13ms]
+@core/api test: (pass) POST /v1/llm/* > returns 503 when no upstream is configured [3.48ms]
+@core/api test: 
+@core/api test: test/chats.test.ts:
+@core/api test: (pass) chat history is private to its author even for other farm members [10.60ms]
+@core/api test: (pass) every chat route requires a user session and farm membership [5.60ms]
+@core/api test: (pass) append unions immutable entry IDs and pages a readable transcript [8.69ms]
+@core/api test: (pass) rename persists and deletion cannot be resurrected by an offline append [7.89ms]
+@core/api test: (pass) chat writes reject malformed entries and oversized requests [5.40ms]
+@core/api test: (pass) deleting an author removes their chat history without affecting other authors [122.46ms]
+@core/api test: 
+@core/api test: test/billing-plans.test.ts:
+@core/api test: (pass) plans return the complete EUR catalog publicly without requiring a session (%s) [6.13ms]
+@core/api test: (pass) plans return the complete EUR catalog publicly without requiring a session (Bearer unknown) [5.66ms]
+@core/api test: (pass) plans return the complete EUR catalog publicly without requiring a session (Bearer orb_s_unknown) [4.81ms]
+@core/api test: (pass) plans return the complete EUR catalog publicly without requiring a session (Bearer legacy-farm-token) [4.81ms]
+@core/api test: (pass) a signed-in account receives the same EUR catalog without a farm header [5.71ms]
+@core/api test: 
+@core/api test: test/voice-agent-errors.test.ts:
+@core/api test: (pass) agent refuses missing session before upgrading [7.74ms]
+@core/api test: (pass) agent refuses bad session before upgrading [6.90ms]
+@core/api test: (pass) agent refuses missing farm before upgrading [7.28ms]
+@core/api test: (pass) agent refuses nonmember farm before upgrading [8.40ms]
+@core/api test: (pass) agent refuses no allowance before upgrading [8.79ms]
+@core/api test: (pass) agent refuses spent allowance before upgrading [9.96ms]
+@core/api test: (pass) agent returns 503 for missing agent id without charging [9.83ms]
+@core/api test: (pass) agent returns 503 for missing API key without charging [9.02ms]
+@core/api test: (pass) agent returns 502 for provider rejection without charging [9.02ms]
+@core/api test: (pass) agent returns 502 for missing signed URL without charging [7.91ms]
+@core/api test: (pass) agent returns 502 for malformed provider JSON without charging [11.16ms]
+@core/api test: (pass) agent returns 502 for provider unreachable without charging [8.66ms]
+@core/api test: (pass) agent requires a WebSocket upgrade after entitlement checks [9.04ms]
+@core/api test: 
+@core/api test:  391 pass
+@core/api test:  0 fail
+@core/api test:  1263 expect() calls
+@core/api test: Ran 391 tests across 26 files. [22.36s]
+@core/api test: Exited with code 0

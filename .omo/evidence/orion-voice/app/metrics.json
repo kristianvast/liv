@@ -1,0 +1,45 @@
+{
+  "fix1_noFinishedTurnsOnStage": true,
+  "fix2_singleComposerInChat": {
+    "stageHasVoiceInput": false,
+    "composerPlaceholder": "Type to Orion in this call…"
+  },
+  "fix4_pinnedOutsideTranscript": true,
+  "fix5_plainToolCardSummary": {
+    "collapsedToolCardText": "Read farm recordsthe herd list1 msDone",
+    "hasPlainWords": true,
+    "noQueryName": true
+  },
+  "fix6_stoppedStaysStopped": [
+    {
+      "status": "done",
+      "text": "Found 28 animals"
+    },
+    {
+      "status": "stopped",
+      "text": "Stopped working on your request"
+    }
+  ],
+  "fix3_and_4_geometry": {
+    "desktopBrowserGeom": {
+      "browserWidth": 804,
+      "browserHeight": 630,
+      "transcriptHeight": 208,
+      "stageHeight": 400,
+      "compactOrbSize": {
+        "w": 42,
+        "h": 42
+      }
+    },
+    "mobileBrowserGeom": {
+      "browserWidth": 314,
+      "transcriptHeight": 152,
+      "docScrollWidth": 390,
+      "docClientWidth": 390
+    }
+  },
+  "miclessFallback": {
+    "micErrorVisible": true,
+    "answeredWithoutMic": true
+  }
+}

@@ -1,0 +1,26 @@
+Registered and verified owner; farm a3ce5954-2c5e-4503-8537-10b35079930a
+Registered and verified other; farm d1acadfc-f02c-495f-adc1-9a64a483143d
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json;charset=utf-8
+Date: Fri, 13 Nov 2026 10:18:29 GMT
+Content-Length: 33
+
+{"error":{"code":"unauthorized"}}
+HTTP/1.1 403 Forbidden
+Content-Type: application/json;charset=utf-8
+Date: Fri, 13 Nov 2026 10:18:29 GMT
+Content-Length: 30
+
+{"error":{"code":"forbidden"}}
+HTTP/1.1 409 Conflict
+Content-Type: application/json;charset=utf-8
+Date: Fri, 13 Nov 2026 10:18:29 GMT
+Content-Length: 31
+
+{"error":{"code":"pc_offline"}}
+Before host: {"online":false}
+With host: {"online":true}
+Host open envelope: {"t":"open","ch":"fb27346c-c368-40a6-97e9-39b7bf2809b1","channel":"protocol"}
+Phone to host: {"t":"data","ch":"fb27346c-c368-40a6-97e9-39b7bf2809b1","d":" {\"from\":\"phone\"} "}
+Host to phone: " {\"from\":\"farm-PC\"} "
+Host disconnected: {"code":4410,"status":{"online":false}}

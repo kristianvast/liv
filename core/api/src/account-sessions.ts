@@ -26,7 +26,7 @@ export function registerSessionRoutes(
   db: CoreDb,
   runtime: AccountRuntime,
 ) {
-  const { now, deliver, requireSession, wrap } = runtime;
+  const { now, links, deliver, requireSession, wrap } = runtime;
   routes.post(
     "/v1/me/password",
     requireSession,
@@ -55,7 +55,7 @@ export function registerSessionRoutes(
             ),
           );
       });
-      await deliver(emails.passwordChanged(user.email));
+      await deliver(emails.passwordChanged(links, user.email));
       return c.body(null, 204);
     }),
   );
@@ -160,7 +160,7 @@ export function registerSessionRoutes(
         .from(hardwareOrders)
         .where(or(eq(hardwareOrders.userId, user.id), eq(hardwareOrders.email, user.email))),
     ]);
-    c.header("content-disposition", `attachment; filename="pecorva-account-${user.id}.json"`);
+    c.header("content-disposition", `attachment; filename="barnstar-account-${user.id}.json"`);
     return c.json({
       exportedAt: now().toISOString(),
       profile,

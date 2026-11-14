@@ -1,0 +1,68 @@
+{
+ "restartSlow": "FREE -> bash_141 READY (delay 700)",
+ "widgetStateWhileRunning": "working",
+ "t0": [
+  {
+   "status": "running",
+   "text": "Working on your request",
+   "elapsed": null,
+   "stop": true
+  }
+ ],
+ "t1": [
+  {
+   "status": "running",
+   "text": "Working on your request",
+   "elapsed": null,
+   "stop": true
+  }
+ ],
+ "afterSecondQuestion": [
+  {
+   "status": "running",
+   "text": "Working on your request",
+   "elapsed": null,
+   "stop": true
+  },
+  {
+   "status": "done",
+   "text": "Found 28 animals",
+   "elapsed": null,
+   "stop": false
+  }
+ ],
+ "error": "Timed out waiting for: row stopped (last value: null)",
+ "log": [
+  {
+   "at": "2026-11-11T22:09:22.000Z",
+   "name": "goto",
+   "detail": "http://127.0.0.1:5231/ (locale en, theme light)"
+  },
+  {
+   "at": "2026-11-11T22:09:22.378Z",
+   "name": "type",
+   "detail": "build me a calving overview"
+  },
+  {
+   "at": "2026-11-11T22:09:24.861Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c4b-job-running.png"
+  },
+  {
+   "at": "2026-11-11T22:09:24.867Z",
+   "name": "type",
+   "detail": "Who is in my herd? (while the job runs)"
+  },
+  {
+   "at": "2026-11-11T22:09:25.057Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c4b-answered-while-running.png"
+  },
+  {
+   "at": "2026-11-11T22:09:25.866Z",
+   "name": "click",
+   "detail": "activity-stop"
+  }
+ ],
+ "restartFast": "FREE -> bash_144 READY (delay 5)"
+}

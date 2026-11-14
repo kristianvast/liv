@@ -1,0 +1,18 @@
+typecheck:
+@core/api typecheck: Exited with code 0
+EXIT=0
+
+test:
+@core/api test: (pass) agent returns 502 for provider unreachable without charging [7.26ms]
+@core/api test: (pass) agent requires a WebSocket upgrade after entitlement checks [7.18ms]
+@core/api test: 
+@core/api test:  284 pass
+@core/api test:  0 fail
+@core/api test:  945 expect() calls
+@core/api test: Ran 284 tests across 16 files. [12.45s]
+@core/api test: Exited with code 0
+EXIT=0
+
+lint:
+Checked 55 files in 22ms. No fixes applied.
+EXIT=0

@@ -214,7 +214,7 @@ the sender's base back into the cloud.
 
 ## Accounts, farm roles and invites (Core)
 
-- **Billing:** `core/api/src/plans.ts` defines the `free`, `orion`, `cam2`, `cam4` and `cam6` plans and hardware.
+- **Billing:** `core/api/src/plans.ts` defines the `free`, `orion`, `cam2`, `cam4`, `cam6`, `cam8`, `cam12` and `cam16` plans and hardware.
   Session members read `/v1/billing/status`; owners and managers create Stripe checkout and
   portal sessions. Stripe-signed `/v1/billing/webhook` events update farm subscriptions in the
   same transaction as their idempotency claim. Stripe customer IDs stay farm-scoped.
@@ -256,7 +256,7 @@ the sender's base back into the cloud.
   `db.mutate` and the agent's farm tools (`forbidden`).
 - **Google sign-in in the app:** Google refuses its sign-in inside app windows, so
   `account.googleStart` opens `<site>/account/app/?callback=http://127.0.0.1:<port>/account/google/<state>`
-  (site `https://pecorva.com`, `ORBIT_SITE_URL` overrides) in the system browser. The site's Google
+  (site `https://barnstar.dev`, `ORBIT_SITE_URL` overrides) in the system browser. The site's Google
   button sends the credential back in the URL fragment; Orion's page posts it to itself (same-origin
   only, state single-use, 10 minutes) and Orion signs in with it at `POST /v1/auth/google`.
 - **First-run setup (`useNeedsSetup`):** when `account.status` is `"signed_out"` and
@@ -411,7 +411,7 @@ against the real device before showing their data or controls; validated catalog
   model was chosen: provider `orbit-gateway`, model `orbit-default`, sent to
   `<core>/v1/llm/v1` with the session and `x-orbit-farm`; Core maps `orbit-default` to
   `LLM_DEFAULT_MODEL` and calls the provider with its own key. Signing out clears that default.
-  Plans are `free`, `orion`, `cam2`, `cam4` and `cam6`; Core supplies their names, prices
+  Plans are `free`, `orion`, `cam2`, `cam4`, `cam6`, `cam8`, `cam12` and `cam16`; Core supplies their names, prices
   and allowances through `billing.plans`. A free Orion month keeps the `free` plan with
   `trialEndsAt` and cloud allowances. Calls without an allowance return 402 `plan_required`, while BYO
   providers remain available. `farm_budgets` overrides the token allowance; legacy farm API

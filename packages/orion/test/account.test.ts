@@ -521,7 +521,7 @@ describe("Orion account", () => {
       const { url, opened } = await c.request("account.googleStart", {});
       expect(opened).toBe(false);
       const site = new URL(url);
-      expect(`${site.origin}${site.pathname}`).toBe("https://pecorva.com/account/app/");
+      expect(`${site.origin}${site.pathname}`).toBe("https://barnstar.dev/account/app/");
       return new URL(site.searchParams.get("callback") as string);
     };
     const post = (callback: URL, body: unknown, origin = callback.origin) =>

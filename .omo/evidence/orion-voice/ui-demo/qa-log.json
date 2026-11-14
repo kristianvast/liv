@@ -1,0 +1,173 @@
+[
+ {
+  "name": "desktop-light idle orb box",
+  "detail": {
+   "x": 290,
+   "y": 343.796875,
+   "width": 940,
+   "height": 270
+  }
+ },
+ {
+  "name": "desktop-light ask present idle",
+  "detail": 1
+ },
+ {
+  "name": "desktop-light ask present during call",
+  "detail": 0
+ },
+ {
+  "name": "desktop-light starters present during call",
+  "detail": 0
+ },
+ {
+  "name": "desktop-light activities",
+  "detail": [
+   "Found 28 animals",
+   "Checked this screen",
+   "Marked it on your screen"
+  ]
+ },
+ {
+  "name": "desktop-light call orb box",
+  "detail": {
+   "x": 290,
+   "y": 221.796875,
+   "width": 940,
+   "height": 270
+  }
+ },
+ {
+  "name": "desktop-light overflow",
+  "detail": {
+   "sw": 1280,
+   "iw": 1280
+  }
+ },
+ {
+  "name": "desktop-light stage orb box",
+  "detail": {
+   "x": 571,
+   "y": 211,
+   "width": 642,
+   "height": 270
+  }
+ },
+ {
+  "name": "desktop-light call survived navigation",
+  "detail": "listening"
+ },
+ {
+  "name": "desktop-light ask present after end",
+  "detail": 1
+ },
+ {
+  "name": "desktop-dark idle orb box",
+  "detail": {
+   "x": 290,
+   "y": 343.796875,
+   "width": 940,
+   "height": 270
+  }
+ },
+ {
+  "name": "desktop-dark ask present idle",
+  "detail": 1
+ },
+ {
+  "name": "desktop-dark ask present during call",
+  "detail": 0
+ },
+ {
+  "name": "desktop-dark starters present during call",
+  "detail": 0
+ },
+ {
+  "name": "desktop-dark activities",
+  "detail": [
+   "Found 28 animals",
+   "Checked this screen",
+   "Marked it on your screen"
+  ]
+ },
+ {
+  "name": "desktop-dark call orb box",
+  "detail": {
+   "x": 290,
+   "y": 221.796875,
+   "width": 940,
+   "height": 270
+  }
+ },
+ {
+  "name": "desktop-dark overflow",
+  "detail": {
+   "sw": 1280,
+   "iw": 1280
+  }
+ },
+ {
+  "name": "desktop-dark ask present after end",
+  "detail": 1
+ },
+ {
+  "name": "phone-light idle orb box",
+  "detail": {
+   "x": 34,
+   "y": 550.171875,
+   "width": 322,
+   "height": 222
+  }
+ },
+ {
+  "name": "phone-light ask present idle",
+  "detail": 1
+ },
+ {
+  "name": "phone-light ask present during call",
+  "detail": 0
+ },
+ {
+  "name": "phone-light starters present during call",
+  "detail": 0
+ },
+ {
+  "name": "phone-light activities",
+  "detail": [
+   "Found 28 animals",
+   "Checked this screen",
+   "Marked it on your screen"
+  ]
+ },
+ {
+  "name": "phone-light call orb box",
+  "detail": {
+   "x": 34,
+   "y": 175.390625,
+   "width": 322,
+   "height": 222
+  }
+ },
+ {
+  "name": "phone-light overflow",
+  "detail": {
+   "sw": 390,
+   "iw": 390
+  }
+ },
+ {
+  "name": "phone-light ask present after end",
+  "detail": 1
+ },
+ {
+  "name": "settings default",
+  "detail": "male"
+ },
+ {
+  "name": "settings after reload",
+  "detail": {
+   "value": "female",
+   "stored": "female"
+  }
+ }
+]

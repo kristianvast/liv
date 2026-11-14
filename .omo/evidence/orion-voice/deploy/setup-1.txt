@@ -1,0 +1,9 @@
+@core/api voice:setup: created agent agent_9801m76gmvhke6pbeqm50xq0xp74
+@core/api voice:setup: tool db_query tool_6201m76gmtrefz6b3ez882e6tryn
+@core/api voice:setup: tool db_mutate tool_7701m76gmty0epyr33dba3tte11z
+@core/api voice:setup: tool app tool_4001m76gmv30esha7jhbd1d2q5h7
+@core/api voice:setup: tool browser tool_8001m76gmv7zf8qtzqd2242xmt8z
+@core/api voice:setup: tool orion_task tool_1101m76gmvcxf33v371f3g8rx8wy
+@core/api voice:setup: Set VOICE_AGENT_ID=agent_9801m76gmvhke6pbeqm50xq0xp74 for the Core API.
+@core/api voice:setup: Exited with code 0
+EXIT=0

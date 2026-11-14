@@ -130,7 +130,7 @@ export function registerEmailRoutes(routes: Hono<AccountEnv>, db: CoreDb, runtim
         await tx.delete(loginFailures).where(eq(loginFailures.email, user.email));
         return user.email;
       });
-      await deliver(emails.passwordChanged(address));
+      await deliver(emails.passwordChanged(links, address));
       return c.body(null, 204);
     }),
   );

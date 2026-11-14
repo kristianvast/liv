@@ -19,7 +19,7 @@ The Orbit monorepo (including the Orbit desktop app, the Orion agent sidecar, Co
 
 This repository contains the source code for Orbit, Orion, and Core. Two related offerings are separate from the open-source codebase and are not granted under the AGPL-3.0-only license:
 
-- **Pecorva livestock vision model weights:** Pre-trained computer-vision weights for cattle and horses (run locally on a Jetson edge box or in the cloud) are proprietary to AgroIntel and licensed separately.
+- **Barnstar livestock vision model weights:** Pre-trained computer-vision weights for cattle and horses (run locally on a Jetson edge box or in the cloud) are proprietary to AgroIntel and licensed separately.
 - **Hosted Core API and LLM gateway:** You can run Orbit purely locally with your own LLM API keys or self-host Core, or you can subscribe to AgroIntel's hosted Core sync service and metered LLM gateway.
 
 ## Contributor License Agreement (CLA)

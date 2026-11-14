@@ -23,9 +23,9 @@ Today, Orion scaffolds connectors in `<data-dir>/workspace/connectors/<name>` an
 - Publish catalog skills verified against real farm exports and local LAN APIs for additional milking robots, collars, boluses, ear tag sensors, and scales.
 - Automated conversion from approved farm-shared submissions (`/v1/admin/submissions`) into branch pull requests for `skills/`.
 
-## 3. Pecorva vision models on a Jetson edge box
+## 3. Barnstar vision models on a Jetson edge box
 
-Orbit discovers ONVIF cameras on the barn LAN (`camera_discover`) and streams them through the bundled `go2rtc` relay onto the barn map. Next, we are connecting barn cameras to Pecorva computer-vision models:
+Orbit discovers ONVIF cameras on the barn LAN (`camera_discover`) and streams them through the bundled `go2rtc` relay onto the barn map. Next, we are connecting barn cameras to Barnstar computer-vision models:
 
 - Local inference on an NVIDIA Jetson edge box on the farm LAN (or via Core for farms without an edge box).
 - Continuous posture, gait, calving, and health observations for cattle and horses written into `observations` and surfaced in Orion and on Home.

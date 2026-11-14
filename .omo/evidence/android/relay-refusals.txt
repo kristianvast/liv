@@ -1,0 +1,55 @@
+Relay refusals, 2026-11-13T10:37:18.606Z, Core http://127.0.0.1:8797
+
+## no session
+$ curl -i -sS --max-time 5 -H Connection: Upgrade -H Upgrade: websocket -H Sec-WebSocket-Version: 13 -H Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ== -H 'x-orbit-farm: 00000000-0000-4000-8000-00000000f001' http://127.0.0.1:8797/v1/relay/client
+HTTP/1.1 401 Unauthorized
+Content-Type: application/json;charset=utf-8
+Date: Fri, 13 Nov 2026 10:37:18 GMT
+Content-Length: 33
+
+{"error":{"code":"unauthorized"}}
+=> PASS (expected /^HTTP\/1\.1 401/)
+
+## another account's session on this farm
+$ curl -i -sS --max-time 5 -H Connection: Upgrade -H Upgrade: websocket -H Sec-WebSocket-Version: 13 -H Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ== -H 'Authorization: Bearer <outsider session>' -H 'x-orbit-farm: 00000000-0000-4000-8000-00000000f001' http://127.0.0.1:8797/v1/relay/client
+HTTP/1.1 403 Forbidden
+Content-Type: application/json;charset=utf-8
+Date: Fri, 13 Nov 2026 10:37:18 GMT
+Content-Length: 30
+
+{"error":{"code":"forbidden"}}
+=> PASS (expected /^HTTP\/1\.1 403/)
+
+## phone access switched off on the PC
+$ curl -i -sS --max-time 5 -H Connection: Upgrade -H Upgrade: websocket -H Sec-WebSocket-Version: 13 -H Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ== -H 'Authorization: Bearer <owner session>' -H 'x-orbit-farm: 00000000-0000-4000-8000-00000000f001' http://127.0.0.1:8797/v1/relay/client
+HTTP/1.1 409 Conflict
+Content-Type: application/json;charset=utf-8
+Date: Fri, 13 Nov 2026 10:37:18 GMT
+Content-Length: 31
+
+{"error":{"code":"pc_offline"}}
+=> PASS (expected /^HTTP\/1\.1 409[\s\S]*pc_offline/)
+
+## relayed auth.providers
+relayed request {"type":"auth.providers"}
+answer: forbidden
+=> PASS (expected forbidden)
+
+## relayed settings.update toolAccess
+relayed request {"type":"settings.update","toolAccess":{"shell":true,"browser":true,"computer":true}}
+answer: forbidden
+=> PASS (expected forbidden)
+
+## relayed settings.update phoneAccess
+relayed request {"type":"settings.update","phoneAccess":false}
+answer: forbidden
+=> PASS (expected forbidden)
+
+## control: relayed settings.get still works
+=> PASS
+
+## the PC's settings are unchanged by the refused requests
+toolAccess before {"shell":false,"browser":false,"computer":false} after {"shell":false,"browser":false,"computer":false}, phoneAccess true
+=> PASS
+
+OVERALL PASS (8/8)

@@ -6,7 +6,7 @@ export function billingError(message: string): {
     return {
       code: "plan_required",
       message:
-        "Choose a plan to use Orion on Pecorva's cloud, or use your own AI key in Providers.",
+        "Choose a plan to use Orion on Barnstar's cloud, or use your own AI key in Providers.",
     };
   }
   if (/budget_exceeded|\b429\b/i.test(message)) {

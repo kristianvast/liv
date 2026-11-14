@@ -1,0 +1,6 @@
+Before host: {"online":false}
+With host: {"online":true}
+Host open envelope: {"t":"open","ch":"fb27346c-c368-40a6-97e9-39b7bf2809b1","channel":"protocol"}
+Phone to host: {"t":"data","ch":"fb27346c-c368-40a6-97e9-39b7bf2809b1","d":" {\"from\":\"phone\"} "}
+Host to phone: " {\"from\":\"farm-PC\"} "
+Host disconnected: {"code":4410,"status":{"online":false}}

@@ -1,0 +1,79 @@
+{
+ "stage": {
+  "w": 838,
+  "h": 210,
+  "y": 149
+ },
+ "layout": {
+  "paneVoice": "on",
+  "stageInsideTranscript": false,
+  "stageTextInputs": 0,
+  "composerPlaceholder": "Type to Orion in this call…",
+  "orb": {
+   "w": 182,
+   "h": 134
+  }
+ },
+ "afterAnswer": {
+  "answerInPane": 1,
+  "answerInTranscript": 1,
+  "questionInPane": 2,
+  "transcriptText": "Hello, Orion here. How can I help?Who is in my herd?Read farm recordsthe herd list3 msDoneThere are 28 animals in your herd. I checked the records on this computer.",
+  "stageText": "Talk to OrionListeningMuteEnd callFound 28 animals",
+  "sessionStreaming": false
+ },
+ "browser": {
+  "frame": {
+   "w": 791,
+   "h": 556.171875,
+   "y": 283.078125
+  },
+  "highlight": {
+   "w": 592.625,
+   "h": 27.1875
+  },
+  "title": "Herdhttp://127.0.0.1:7831/pages/qa/herd/index.htmlOrion: Start here.Orion: Start"
+ },
+ "withBrowser": {
+  "stage": {
+   "y": 149,
+   "h": 400
+  },
+  "transcript": {
+   "y": 549,
+   "h": 208
+  },
+  "orbVisible": true,
+  "endVisible": true,
+  "overflow": false
+ },
+ "toolRows": [
+  "db_query: Read farm recordsthe herd list3 msDone"
+ ],
+ "groupSummary": [
+  "Read farm recordsthe herd list3 msDone",
+  "2 steps-2 web lookups"
+ ],
+ "log": [
+  {
+   "at": "2026-11-11T22:23:10.420Z",
+   "name": "goto",
+   "detail": "http://127.0.0.1:5231/chat (locale en, theme light)"
+  },
+  {
+   "at": "2026-11-11T22:23:11.940Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c3-chat-stage-v2-1440-light.png"
+  },
+  {
+   "at": "2026-11-11T22:23:12.107Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c3-chat-stage-v2-answer.png"
+  },
+  {
+   "at": "2026-11-11T22:23:12.592Z",
+   "name": "screenshot",
+   "detail": "/Users/kristianvastveit/projects/orbit/.omo/evidence/orion-voice/c8-browser-view-v2-1440-light.png"
+  }
+ ]
+}

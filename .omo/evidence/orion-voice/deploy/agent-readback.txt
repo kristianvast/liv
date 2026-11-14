@@ -1,0 +1,59 @@
+{
+ "status": 200,
+ "name": "Orion (Orbit app)",
+ "llm": "gemini-3.8-flash",
+ "temperature": 0.3,
+ "tool_ids": [
+  "tool_6201m76gmtrefz6b3ez882e6tryn",
+  "tool_7701m76gmty0epyr33dba3tte11z",
+  "tool_4001m76gmv30esha7jhbd1d2q5h7",
+  "tool_8001m76gmv7zf8qtzqd2242xmt8z",
+  "tool_1101m76gmvcxf33v371f3g8rx8wy"
+ ],
+ "tools": [
+  "db_query:client",
+  "db_mutate:client",
+  "app:client",
+  "browser:client",
+  "orion_task:client",
+  "end_call:system"
+ ],
+ "promptChars": 2408,
+ "promptHasVars": true,
+ "first_message": "Hello, Orion here. How can I help?",
+ "language": "en",
+ "dynamicVars": {
+  "dynamic_variable_placeholders": {
+   "farm_name": "this farm",
+   "conversation_recap": ""
+  }
+ },
+ "asr": "scribe_realtime/pcm_16000",
+ "tts": "eleven_v4_turbo/EXAVITQu4vr4xnSDxMaL/pcm_16000",
+ "turn": "turn_v3",
+ "maxDuration": 1800,
+ "clientEvents": [
+  "audio",
+  "interruption",
+  "agent_response",
+  "user_transcript",
+  "agent_response_correction",
+  "agent_tool_response"
+ ],
+ "auth": true,
+ "overrides": {
+  "text_only": true,
+  "max_duration_seconds": false
+ }
+}
+EXIT=0
+
+--- update mode ---
+@core/api voice:setup: updated agent agent_9801m76gmvhke6pbeqm50xq0xp74
+@core/api voice:setup: tool db_query tool_6201m76gmtrefz6b3ez882e6tryn
+@core/api voice:setup: tool db_mutate tool_7701m76gmty0epyr33dba3tte11z
+@core/api voice:setup: tool app tool_4001m76gmv30esha7jhbd1d2q5h7
+@core/api voice:setup: tool browser tool_8001m76gmv7zf8qtzqd2242xmt8z
+@core/api voice:setup: tool orion_task tool_1101m76gmvcxf33v371f3g8rx8wy
+@core/api voice:setup: Exited with code 0
+EXIT=0
