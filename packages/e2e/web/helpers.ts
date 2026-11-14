@@ -36,21 +36,22 @@ export async function setToolAccess(
 }
 
 /**
- * Chat folds a turn's commands into one line, so this opens the latest turn's list and then waits
- * for that command's card to reach the status.
+ * Chat folds a turn's commands into one line, and the list closes again when the turn's items are
+ * replaced as it settles. So this opens the latest turn's list and reads that command's card as
+ * one step, and repeats the step until the card shows the status.
  */
 export async function expectTool(
   page: Page,
   toolName: string,
   status: "done" | "error",
-  timeout?: number,
+  timeout = 15_000,
 ): Promise<void> {
   const toggle = page.getByTestId("tool-group-toggle").last();
-  await expect(toggle).toBeVisible({ timeout });
-  if ((await toggle.getAttribute("aria-expanded")) !== "true") await toggle.click();
-  await expect(
-    page.locator(`[data-testid^="tool-card-"][data-tool-name="${toolName}"]`).last(),
-  ).toHaveAttribute("data-tool-status", status, { timeout });
+  const card = page.locator(`[data-testid^="tool-card-"][data-tool-name="${toolName}"]`).last();
+  await expect(async () => {
+    if ((await toggle.getAttribute("aria-expanded")) !== "true") await toggle.click();
+    await expect(card).toHaveAttribute("data-tool-status", status, { timeout: 1_000 });
+  }).toPass({ timeout });
 }
 
 export function assistantMessages(page: Page): Locator {
