@@ -567,39 +567,3 @@
     justify-self: start;
   }
 }
-
-.orbit-setup {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--space-3);
-  padding: var(--space-5);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  background: var(--bg-elevated);
-}
-
-.orbit-setup__title {
-  margin: 0;
-  font-family: var(--font-display);
-  font-size: var(--text-h3);
-  font-weight: 400;
-  line-height: var(--leading-tight);
-}
-
-.orbit-setup__body {
-  margin: 0;
-  max-inline-size: 52ch;
-  color: var(--text-secondary);
-}
-
-.orbit-setup__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2);
-}
-
-.orbit-setup__alt {
-  font-size: var(--text-sm);
-  color: var(--text-secondary);
-}

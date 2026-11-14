@@ -9,14 +9,13 @@ import {
   Sparkles,
 } from "lucide-react";
 import { type FormEvent, useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { Badge, Button, EmptyState, Skeleton } from "../design";
 import { PageCards, useCustomPages } from "../features/pages";
 import { HomeVoiceWidget } from "../features/voice";
 import { type MessageKey, type TranslateFn, useI18n } from "../i18n";
 import { type ModuleId, useModules } from "../lib/modules";
 import { useOrion, useOrionQuery } from "../lib/orion";
-import { useNeedsSetup } from "../lib/setup";
 import { formatPrimaryAnimalCount, useFarmSpecies } from "../lib/species";
 import { useTheme } from "./providers";
 import "./home.css";
@@ -149,7 +148,6 @@ export function HomePage() {
 
   const isMinimalHome = !isLoading && !anyEnabled && totalAnimals === 0;
   const orionOnline = useOrion().state === "open";
-  const needsSetup = useNeedsSetup();
   const isHorse = species === "horse";
 
   const suggestedQuestions: readonly MessageKey[] = isHorse
@@ -219,7 +217,7 @@ export function HomePage() {
     return (
       <div className="orbit-container orbit-home orbit-home--minimal" data-testid="home-minimal">
         <header className="orbit-home__head orbit-home__head--minimal">
-          {orionOnline && !needsSetup && (
+          {orionOnline && (
             <div className="orbit-home__meta">
               <Badge variant="ok" icon={<CheckCircle2 size={13} />} data-testid="home-alerts">
                 {t("home.minimal.badge")}
@@ -236,71 +234,33 @@ export function HomePage() {
           </p>
 
           <HomeVoiceWidget
-            ask={
-              needsSetup
-                ? undefined
-                : {
-                    value: question,
-                    onChange: setQuestion,
-                    onSubmit: submitQuestion,
-                    placeholder: t("home.minimal.placeholder"),
-                  }
-            }
+            ask={{
+              value: question,
+              onChange: setQuestion,
+              onSubmit: submitQuestion,
+              placeholder: t("home.ask.placeholder"),
+            }}
           >
-            {!needsSetup && (
-              <ul
-                className="orbit-starter-grid"
-                aria-label={t("home.minimal.startersLabel")}
-                data-testid="home-starter-chips"
-              >
-                {minimalStarters.map((starter) => (
-                  <li key={starter.id}>
-                    <button
-                      type="button"
-                      className="orbit-starter-tile"
-                      data-testid={`home-starter-${starter.id}`}
-                      onClick={() => openOrionWithQuestion(t(starter.promptKey))}
-                    >
-                      <span>{t(starter.labelKey)}</span>
-                      <ChevronRight size={15} aria-hidden="true" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <ul
+              className="orbit-starter-grid"
+              aria-label={t("home.minimal.startersLabel")}
+              data-testid="home-starter-chips"
+            >
+              {minimalStarters.map((starter) => (
+                <li key={starter.id}>
+                  <button
+                    type="button"
+                    className="orbit-starter-tile"
+                    data-testid={`home-starter-${starter.id}`}
+                    onClick={() => openOrionWithQuestion(t(starter.promptKey))}
+                  >
+                    <span>{t(starter.labelKey)}</span>
+                    <ChevronRight size={15} aria-hidden="true" />
+                  </button>
+                </li>
+              ))}
+            </ul>
           </HomeVoiceWidget>
-
-          {needsSetup && (
-            <section className="orbit-setup" data-testid="home-setup">
-              <h2 className="orbit-setup__title">{t("home.setup.title")}</h2>
-              <p className="orbit-setup__body">{t("home.setup.body")}</p>
-              <div className="orbit-setup__actions">
-                <Button
-                  variant="primary"
-                  onClick={() => void navigate("/settings#account")}
-                  data-testid="home-setup-sign-in"
-                >
-                  {t("home.setup.signIn")}
-                </Button>
-                <Button
-                  variant="secondary"
-                  onClick={() =>
-                    void navigate("/settings#account", { state: { accountMode: "register" } })
-                  }
-                  data-testid="home-setup-create"
-                >
-                  {t("home.setup.create")}
-                </Button>
-              </div>
-              <Link
-                to="/settings#providers"
-                className="orbit-setup__alt"
-                data-testid="home-setup-own-key"
-              >
-                {t("home.setup.ownKey")}
-              </Link>
-            </section>
-          )}
         </header>
 
         <PageCards pages={customPages} theme={theme} />

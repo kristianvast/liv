@@ -49,9 +49,8 @@ test("a call starts from the Home widget and answers in plain words", async ({ p
 
   await say(widget, "Who is in my herd?");
   await expect(widget).toContainText(HERD_ANSWER);
-  await expect(
-    widget.locator('[data-testid="activity-row"][data-status="done"]').first(),
-  ).toBeVisible();
+  // The orb shows the tool; the widget does not list it a second time.
+  await expect(widget.getByTestId("activity-row")).toHaveCount(0);
   await expect(widget).not.toContainText("db_query");
   await expect(widget).not.toContainText("animals.list");
 

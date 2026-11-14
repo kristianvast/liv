@@ -263,9 +263,11 @@ the sender's base back into the cloud.
   button sends the credential back in the URL fragment; Orion's page posts it to itself (same-origin
   only, state single-use, 10 minutes) and Orion signs in with it at `POST /v1/auth/google`.
 - **First-run setup (`useNeedsSetup`):** when `account.status` is `"signed_out"` and
-  `settings.get` reports no `availableModels`, Home renders the first-run setup card (`home-setup`)
-  offering to create a free Orbit account (30-day free trial of Orion, no card needed), sign in, or
-  configure a bring-your-own AI provider key in Settings.
+  `settings.get` reports no `availableModels`, the first-run gate in `apps/orbit/src/app/routes.tsx`
+  shows the welcome screen (`welcome-screen`) instead of the app: the account form, opened on
+  "Create account", and a link to bring your own AI provider key in Settings (Settings itself stays
+  reachable). After that first sign-in Home is shown once with a three-step tour (write, talk,
+  build); `orbit.firstRun` in localStorage (`lib/tour.ts`) remembers that it was seen.
 
 ## Feedback and sharing
 

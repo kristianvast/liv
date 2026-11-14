@@ -533,7 +533,9 @@ describe("Voice stage, activity rows, and plan errors in Chat", () => {
     });
 
     expect(stage).toHaveAttribute("data-voice-state", "working");
-    expect(screen.getByTestId("activity-row")).toHaveAttribute("data-status", "running");
+    // The orb shows the tool; the stage does not list it a second time.
+    expect(screen.getByTestId("voice-orb").getAttribute("aria-label")).toMatch(/: \S/);
+    expect(screen.queryByTestId("activity-row")).not.toBeInTheDocument();
     expect(screen.getByTestId("voice-stage-live-caption")).toHaveTextContent(
       "How many cows are in the calving pen?",
     );
@@ -569,8 +571,7 @@ describe("Voice stage, activity rows, and plan errors in Chat", () => {
       });
     });
 
-    expect(screen.getByTestId("activity-row")).toHaveAttribute("data-status", "done");
-    expect(screen.getByTestId("activity-row")).toHaveTextContent("2");
+    expect(screen.queryByTestId("activity-row")).not.toBeInTheDocument();
     expect(screen.queryByTestId("voice-stage-live-caption")).not.toBeInTheDocument();
     expect(stage).not.toHaveTextContent("Two cows are in the calving pen right now.");
 

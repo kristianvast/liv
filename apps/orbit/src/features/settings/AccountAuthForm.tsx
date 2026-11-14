@@ -50,15 +50,22 @@ export interface AccountAuthFormProps {
   readonly busy: boolean;
   readonly run: (action: () => Promise<void>) => Promise<void>;
   readonly onStatus: (next: AccountStatus) => void;
+  /** Which tab opens first; a link that asks for "register" in its state wins. */
+  readonly initialMode?: "login" | "register";
 }
 
-export function AccountAuthForm({ busy, run, onStatus }: AccountAuthFormProps) {
+export function AccountAuthForm({
+  busy,
+  run,
+  onStatus,
+  initialMode = "login",
+}: AccountAuthFormProps) {
   const t = useT();
   const { client } = useOrion();
   const { pushToast } = useToast();
   const wantsRegister = (useLocation().state as { accountMode?: string } | null)?.accountMode;
   const [mode, setMode] = useState<"login" | "register">(
-    wantsRegister === "register" ? "register" : "login",
+    wantsRegister === "register" ? "register" : initialMode,
   );
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");

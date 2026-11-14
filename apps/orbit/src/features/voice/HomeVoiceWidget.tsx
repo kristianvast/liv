@@ -16,8 +16,7 @@ export interface HomeAskField {
 }
 
 export interface HomeVoiceWidgetProps {
-  /** Home's ask box; without it (Orion cannot answer yet) only the call button shows. */
-  readonly ask?: HomeAskField;
+  readonly ask: HomeAskField;
   /** Starter questions, shown under the box while no call is live. */
   readonly children?: ReactNode;
 }
@@ -78,7 +77,11 @@ export function HomeVoiceWidget({ ask, children }: HomeVoiceWidgetProps) {
 
       {voice.isLive && (
         <div className="orbit-home-voice__live">
-          <ActivityList activities={voice.activities} onAbortTask={() => void voice.abortTask()} />
+          {/* The orb above already shows every tool; only a job that can be stopped gets a row. */}
+          <ActivityList
+            activities={voice.activities.filter((row) => row.canStop)}
+            onAbortTask={() => void voice.abortTask()}
+          />
           <VoiceCaptionsView
             captions={voice.captions}
             tentativeUserText={voice.tentativeUserText}
@@ -141,31 +144,22 @@ export function HomeVoiceWidget({ ask, children }: HomeVoiceWidgetProps) {
           </Button>
         </form>
       ) : (
-        <form
-          key="ask"
-          className="orbit-ask"
-          onSubmit={ask ? ask.onSubmit : (e) => e.preventDefault()}
-          data-testid="home-ask-form"
-        >
-          {ask && (
-            <>
-              <label htmlFor="home-ask-orion" className="orbit-visually-hidden">
-                {t("home.ask.label")}
-              </label>
-              <input
-                id="home-ask-orion"
-                data-testid="home-ask-input"
-                className="orbit-ask__input"
-                value={ask.value}
-                onChange={(e) => ask.onChange(e.target.value)}
-                placeholder={ask.placeholder}
-                autoComplete="off"
-              />
-            </>
-          )}
+        <form key="ask" className="orbit-ask" onSubmit={ask.onSubmit} data-testid="home-ask-form">
+          <label htmlFor="home-ask-orion" className="orbit-visually-hidden">
+            {t("home.ask.label")}
+          </label>
+          <input
+            id="home-ask-orion"
+            data-testid="home-ask-input"
+            className="orbit-ask__input"
+            value={ask.value}
+            onChange={(e) => ask.onChange(e.target.value)}
+            placeholder={ask.placeholder}
+            autoComplete="off"
+          />
           <Button
             type="button"
-            variant={ask ? "secondary" : "primary"}
+            variant="secondary"
             size="sm"
             icon={<Mic size={15} />}
             onClick={() => void voice.start({ resumeRecent: true })}
@@ -173,17 +167,15 @@ export function HomeVoiceWidget({ ask, children }: HomeVoiceWidgetProps) {
           >
             {t(voice.state === "ended" ? "voice.action.startAgain" : "voice.action.start")}
           </Button>
-          {ask && (
-            <Button
-              type="submit"
-              variant="primary"
-              size="sm"
-              icon={<ArrowUp size={16} />}
-              data-testid="home-ask-submit"
-            >
-              {t("home.ask.submit")}
-            </Button>
-          )}
+          <Button
+            type="submit"
+            variant="primary"
+            size="sm"
+            icon={<ArrowUp size={16} />}
+            data-testid="home-ask-submit"
+          >
+            {t("home.ask.submit")}
+          </Button>
         </form>
       )}
 

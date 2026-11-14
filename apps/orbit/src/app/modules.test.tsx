@@ -241,6 +241,8 @@ function createMinimalTestClient(options?: {
 }
 
 describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules", () => {
+  afterEach(() => window.localStorage.removeItem("orbit.firstRun"));
+
   it("renders only Home, Ask Orion, and Settings while loading and when all modules are disabled, then adds Cattle on modules.updated", async () => {
     const { client, emit, releaseInitialList } = createMinimalTestClient({
       holdModulesList: true,
@@ -328,7 +330,7 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
     expect(requestMock.mock.calls.filter(([type]) => type === "chat.prompt")).toHaveLength(1);
   });
 
-  it("offers the free account instead of the ask box on an install where Orion cannot answer yet", async () => {
+  it("shows only the welcome screen with the account form on an install where Orion cannot answer yet", async () => {
     const { client } = createMinimalTestClient({ needsSetup: true });
 
     render(
@@ -339,16 +341,42 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
       </MemoryRouter>,
     );
 
-    const signIn = await screen.findByTestId("home-setup-sign-in");
-    const create = screen.getByTestId("home-setup-create");
-    expect(signIn.compareDocumentPosition(create) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
-    fireEvent.click(create);
-    expect(screen.queryByTestId("home-ask-input")).not.toBeInTheDocument();
-
-    expect(await screen.findByTestId("account-mode-register")).toHaveAttribute(
+    const welcome = await screen.findByTestId("welcome-screen");
+    expect(within(welcome).getByTestId("account-mode-register")).toHaveAttribute(
       "aria-pressed",
       "true",
     );
+    expect(screen.queryByTestId("nav-home")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("home-ask-input")).not.toBeInTheDocument();
+
+    // Bringing your own AI key is still possible: Settings opens with the whole app around it.
+    fireEvent.click(within(welcome).getByTestId("welcome-own-key"));
+    expect(await screen.findByTestId("nav-home")).toBeInTheDocument();
+    expect(screen.queryByTestId("welcome-screen")).not.toBeInTheDocument();
+  });
+
+  it("walks a newly signed-in farmer through writing, talking and building, once", async () => {
+    window.localStorage.setItem("orbit.firstRun", "pending");
+    const { client } = createMinimalTestClient();
+
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <AppProviders initialClient={client}>
+          <AppRoutes />
+        </AppProviders>
+      </MemoryRouter>,
+    );
+
+    const tour = await screen.findByTestId("tour");
+    expect(tour).toHaveAttribute("data-step", "text");
+    fireEvent.click(screen.getByTestId("tour-next"));
+    expect(tour).toHaveAttribute("data-step", "talk");
+    fireEvent.click(screen.getByTestId("tour-next"));
+    expect(tour).toHaveAttribute("data-step", "build");
+    fireEvent.click(screen.getByTestId("tour-next"));
+
+    expect(screen.queryByTestId("tour")).not.toBeInTheDocument();
+    expect(window.localStorage.getItem("orbit.firstRun")).toBe("done");
   });
 
   it("drops a page from the menu as soon as an undo removes it from the workspace", async () => {

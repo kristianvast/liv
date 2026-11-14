@@ -44,7 +44,9 @@ export function VoiceStage() {
 
   const hasBrowserPage = Boolean(voice.sessionId && browserSessions[voice.sessionId]);
   const liveLine = selectStageLiveLine(voice.captions, voice.tentativeUserText);
-  const hasFeedContent = liveLine !== null || voice.activities.length > 0;
+  // The big orb already shows every tool; next to it only a job that can be stopped gets a row.
+  const stoppable = voice.activities.filter((row) => row.canStop);
+  const hasFeedContent = liveLine !== null || stoppable.length > 0;
 
   return (
     <section
@@ -154,10 +156,7 @@ export function VoiceStage() {
                       <span className="orbit-voice-live-line__text">{liveLine.text}</span>
                     </div>
                   )}
-                  <ActivityList
-                    activities={voice.activities}
-                    onAbortTask={() => void voice.abortTask()}
-                  />
+                  <ActivityList activities={stoppable} onAbortTask={() => void voice.abortTask()} />
                 </div>
               )}
             </div>
