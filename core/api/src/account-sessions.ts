@@ -4,6 +4,7 @@ import {
   type AccountEnv,
   ApiError,
   body,
+  hashPassword,
   iso,
   newPassword,
   UUID,
@@ -38,9 +39,7 @@ export function registerSessionRoutes(
       if (!(await verifyPassword(current, row?.passwordHash))) {
         throw new ApiError(401, "invalid_credentials", "current password is wrong");
       }
-      const passwordHash = await Bun.password.hash(newPassword(b.newPassword), {
-        algorithm: "argon2id",
-      });
+      const passwordHash = await hashPassword(newPassword(b.newPassword));
       const currentHash = await hashToken(c.get("sessionToken"));
       await db.transaction(async (tx) => {
         await tx.update(users).set({ passwordHash }).where(eq(users.id, user.id));

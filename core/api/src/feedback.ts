@@ -1,10 +1,11 @@
 import { createHash, timingSafeEqual } from "node:crypto";
-import { and, desc, eq, getTableColumns, gt, lte, sql } from "drizzle-orm";
+import { desc, eq, getTableColumns } from "drizzle-orm";
 import { type Context, Hono } from "hono";
 import { ADMIN_PAGE } from "./admin-page";
 import { hashToken, memberRole, resolveSession, type SessionUser } from "./auth";
-import { type CoreDb, feedback, feedbackRateEvents, submissions } from "./db";
+import { type CoreDb, feedback, submissions } from "./db";
 import type { EmailMessage, Mailer } from "./mailer";
+import { withinRate } from "./rate-limit";
 import { clientIp } from "./voice-demo";
 
 export interface FeedbackOptions {
@@ -141,23 +142,9 @@ export function createFeedbackRoutes(db: CoreDb, options: FeedbackOptions) {
       ? `user:${user.id}`
       : `ip:${await hashToken(clientIp(c.req.header("x-forwarded-for")))}`;
     const row = await db.transaction(async (tx) => {
-      await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${`feedback:${identity}`}))`);
-      const cutoff = new Date(at.getTime() - DAY_MS).toISOString();
-      await tx
-        .delete(feedbackRateEvents)
-        .where(
-          and(eq(feedbackRateEvents.identity, identity), lte(feedbackRateEvents.createdAt, cutoff)),
-        );
-      const [count] = await tx
-        .select({ n: sql<number>`count(*)::int` })
-        .from(feedbackRateEvents)
-        .where(
-          and(eq(feedbackRateEvents.identity, identity), gt(feedbackRateEvents.createdAt, cutoff)),
-        );
-      if ((count?.n ?? 0) >= 20) {
+      if (!(await withinRate(tx, identity, 20, DAY_MS, at))) {
         throw new FeedbackError(429, "rate_limited", "at most 20 feedback messages per 24 hours");
       }
-      await tx.insert(feedbackRateEvents).values({ identity, createdAt: at.toISOString() });
       const [inserted] = await tx
         .insert(feedback)
         .values({

@@ -1,6 +1,7 @@
 import { createHlc } from "@orbit/schema";
 import { sql } from "drizzle-orm";
 import { type Context, Hono, type Next } from "hono";
+import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
 import { registerAccountRoutes } from "./accounts";
 import { memberRole, type Principal, resolveSession, type TokenResolver } from "./auth";
@@ -197,7 +198,8 @@ export function createApp(options: AppOptions) {
     now,
   });
 
-  app.post("/v1/changes", farmAuth, async (c) => {
+  // A batch of 1,000 full rows fits well inside this; anything larger is not a sync request.
+  app.post("/v1/changes", bodyLimit({ maxSize: 8 * 1024 * 1024 }), farmAuth, async (c) => {
     let body: { changes?: unknown };
     try {
       body = await c.req.json();
@@ -241,7 +243,8 @@ export function createApp(options: AppOptions) {
     }),
   );
 
-  app.post("/v1/llm/*", farmAuth, (c) => {
+  // Room for a long conversation with pictures, and a ceiling so one request cannot fill memory.
+  app.post("/v1/llm/*", bodyLimit({ maxSize: 32 * 1024 * 1024 }), farmAuth, (c) => {
     const path = c.req.path.slice("/v1/llm".length) || "/";
     const principal = c.get("principal");
     return handleLlm(options.db, c.req.raw, principal.farmId, path, {

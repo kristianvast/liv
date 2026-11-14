@@ -2,10 +2,12 @@ import { and, eq, gte, lt, sql } from "drizzle-orm";
 import type { Hono } from "hono";
 import {
   type AccountEnv,
+  ADDRESS_ATTEMPTS_PER_HOUR,
   ApiError,
   body,
   EMAIL,
   email,
+  hashPassword,
   newPassword,
   str,
   verifyPassword,
@@ -15,6 +17,7 @@ import { createSession, hashToken } from "./auth";
 import { type CoreDb, loginFailures, userSessions, users } from "./db";
 import type { GoogleIdentity } from "./google-sign-in";
 import { emails } from "./mailer";
+import { addressIdentity, withinRate } from "./rate-limit";
 export function registerSignInRoutes(
   routes: Hono<AccountEnv>,
   db: CoreDb,
@@ -44,7 +47,17 @@ export function registerSignInRoutes(
       }
       const name = str(b.name, "name", { optional: true });
       const deviceName = str(b.deviceName, "deviceName", { optional: true });
-      const passwordHash = await Bun.password.hash(password, { algorithm: "argon2id" });
+      // Before the costly hash and the email: one address cannot mass-create accounts.
+      const from = await addressIdentity("register", c.req.header("x-forwarded-for"));
+      if (
+        from &&
+        !(await db.transaction((tx) =>
+          withinRate(tx, from, ADDRESS_ATTEMPTS_PER_HOUR, 60 * 60 * 1000, now()),
+        ))
+      ) {
+        throw new ApiError(429, "too_many_attempts", "too many sign-ups from here; try later");
+      }
+      const passwordHash = await hashPassword(password);
       const ts = now().toISOString();
       const [created] = await db
         .insert(users)

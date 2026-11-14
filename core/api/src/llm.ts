@@ -222,7 +222,9 @@ export async function handleLlm(
       method: "POST",
       headers,
       body,
-      signal: request.signal,
+      // The model gets ten minutes to answer; without a deadline a stuck upstream would hold
+      // this instance's request slot for the service's full one-hour timeout.
+      signal: AbortSignal.any([request.signal, AbortSignal.timeout(10 * 60 * 1000)]),
     });
   } catch (err) {
     return Response.json(

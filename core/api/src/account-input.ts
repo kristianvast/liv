@@ -10,6 +10,8 @@ export const RESET_TTL_MS = 60 * 60 * 1000;
 export const EMAIL_TOKEN_PREFIX = { verify: "orb_v_", reset: "orb_r_" } as const;
 export const RESEND_COOLDOWN_MS = 60 * 1000;
 export const RESETS_PER_HOUR = 3;
+/** Sign-ups and reset requests one network address may make in an hour. */
+export const ADDRESS_ATTEMPTS_PER_HOUR = 10;
 export const TERMS_VERSION = "2026-11";
 export const PAID_STATUSES = ["active", "trialing"];
 export const PASSWORD_MIN = 8;
@@ -128,10 +130,32 @@ export function farmIdParam(c: Ctx): string {
 // password (no account enumeration through login timing).
 export const DUMMY_HASH = Bun.password.hash("orbit-dummy-password", { algorithm: "argon2id" });
 
+// One argon2id hash takes about 64 MiB while it runs. An instance serves many requests at once,
+// so a burst of sign-ups or sign-ins would otherwise ask for more memory than the instance has.
+// Only this many run together; the rest wait their turn.
+const HASH_SLOTS = 3;
+let hashing = 0;
+const waiting: (() => void)[] = [];
+
+async function hashSlot<T>(work: () => Promise<T>): Promise<T> {
+  if (hashing < HASH_SLOTS) hashing++;
+  else await new Promise<void>((turn) => waiting.push(turn));
+  try {
+    return await work();
+  } finally {
+    // A waiting request takes this slot over; the count only drops when nobody waits.
+    const next = waiting.shift();
+    if (next) next();
+    else hashing--;
+  }
+}
+
+export function hashPassword(password: string): Promise<string> {
+  return hashSlot(() => Bun.password.hash(password, { algorithm: "argon2id" }));
+}
+
 export async function verifyPassword(password: string, hash: string | null | undefined) {
-  const valid = await Bun.password.verify(
-    password.slice(0, PASSWORD_MAX),
-    hash ?? (await DUMMY_HASH),
-  );
+  const against = hash ?? (await DUMMY_HASH);
+  const valid = await hashSlot(() => Bun.password.verify(password.slice(0, PASSWORD_MAX), against));
   return hash != null && valid;
 }

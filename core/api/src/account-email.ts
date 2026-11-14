@@ -2,9 +2,11 @@ import { and, eq, isNull } from "drizzle-orm";
 import type { Hono } from "hono";
 import {
   type AccountEnv,
+  ADDRESS_ATTEMPTS_PER_HOUR,
   ApiError,
   body,
   email,
+  hashPassword,
   newPassword,
   RESEND_COOLDOWN_MS,
   RESETS_PER_HOUR,
@@ -14,6 +16,7 @@ import type { AccountRuntime } from "./account-runtime";
 import { hashToken } from "./auth";
 import { type CoreDb, emailTokens, loginFailures, userSessions, users } from "./db";
 import { emails } from "./mailer";
+import { addressIdentity, withinRate } from "./rate-limit";
 export function registerEmailRoutes(routes: Hono<AccountEnv>, db: CoreDb, runtime: AccountRuntime) {
   const { now, links, deliver, issueEmailToken, tokensSince, requireSession, wrap } = runtime;
   routes.post(
@@ -71,6 +74,19 @@ export function registerEmailRoutes(routes: Hono<AccountEnv>, db: CoreDb, runtim
     "/v1/auth/password-reset",
     wrap(async (c) => {
       const address = email((await body(c)).email);
+      const from = await addressIdentity("reset", c.req.header("x-forwarded-for"));
+      if (
+        from &&
+        !(await db.transaction((tx) =>
+          withinRate(tx, from, ADDRESS_ATTEMPTS_PER_HOUR, 60 * 60 * 1000, now()),
+        ))
+      ) {
+        throw new ApiError(
+          429,
+          "too_many_attempts",
+          "too many reset requests from here; try later",
+        );
+      }
       const [user] = await db.select().from(users).where(eq(users.email, address)).limit(1);
       if (
         user &&
@@ -90,7 +106,7 @@ export function registerEmailRoutes(routes: Hono<AccountEnv>, db: CoreDb, runtim
       const b = await body(c);
       const code = str(b.token, "token", { max: 100 }) as string;
       const password = newPassword(b.password);
-      const passwordHash = await Bun.password.hash(password, { algorithm: "argon2id" });
+      const passwordHash = await hashPassword(password);
       const tokenHash = await hashToken(code);
       const address = await db.transaction(async (tx) => {
         const [row] = await tx

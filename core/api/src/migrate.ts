@@ -28,22 +28,27 @@ async function listMigrations(): Promise<Migration[]> {
 }
 
 export async function migrate(db: CoreDb): Promise<{ applied: string[] }> {
-  await db.execute(
-    sql`CREATE TABLE IF NOT EXISTS "__core_migrations" ("tag" text PRIMARY KEY NOT NULL, "applied_at" timestamp with time zone DEFAULT now() NOT NULL)`,
-  );
-  const done = new Set((await db.select().from(coreMigrations)).map((r) => r.tag));
-  const applied: string[] = [];
-  for (const m of await listMigrations()) {
-    if (done.has(m.tag)) continue;
-    const statements = (await Bun.file(m.file).text())
-      .split("--> statement-breakpoint")
-      .map((s) => s.trim())
-      .filter(Boolean);
-    await db.transaction(async (tx) => {
+  const migrations = await listMigrations();
+  // Several instances start together when the service scales out or rolls a new revision. The
+  // lock makes them take turns, and each reads what is already applied only once it holds the
+  // lock, so no migration runs twice.
+  return db.transaction(async (tx) => {
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtext('orbit-core-migrations'))`);
+    await tx.execute(
+      sql`CREATE TABLE IF NOT EXISTS "__core_migrations" ("tag" text PRIMARY KEY NOT NULL, "applied_at" timestamp with time zone DEFAULT now() NOT NULL)`,
+    );
+    const done = new Set((await tx.select().from(coreMigrations)).map((r) => r.tag));
+    const applied: string[] = [];
+    for (const m of migrations) {
+      if (done.has(m.tag)) continue;
+      const statements = (await Bun.file(m.file).text())
+        .split("--> statement-breakpoint")
+        .map((s) => s.trim())
+        .filter(Boolean);
       for (const s of statements) await tx.execute(sql.raw(s));
       await tx.insert(coreMigrations).values({ tag: m.tag });
-    });
-    applied.push(m.tag);
-  }
-  return { applied };
+      applied.push(m.tag);
+    }
+    return { applied };
+  });
 }

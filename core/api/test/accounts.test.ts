@@ -1040,3 +1040,38 @@ describe("account lifecycle", () => {
     expect(res).toMatchObject({ status: 409, body: { error: { code: "farm_not_empty" } } });
   });
 });
+
+test("one network address signs up ten times an hour; another address and the next hour are not held back", async () => {
+  const a = app();
+  const signUp = (n: number, address: string) =>
+    call(
+      a,
+      "POST",
+      "/v1/auth/register",
+      { email: `farmer${n}@farm.test`, password: PASSWORD, acceptTerms: true },
+      { "x-forwarded-for": address },
+    );
+  for (let n = 0; n < 10; n++) expect((await signUp(n, "203.0.113.7")).status).toBe(201);
+  const refused = await signUp(10, "203.0.113.7");
+  expect(refused.status).toBe(429);
+  expect(refused.body.error.code).toBe("too_many_attempts");
+  expect(await db.select().from(users).where(eq(users.email, "farmer10@farm.test"))).toEqual([]);
+
+  expect((await signUp(11, "198.51.100.4")).status).toBe(201);
+  clock += 61 * 60 * 1000;
+  expect((await signUp(12, "203.0.113.7")).status).toBe(201);
+}, 30_000);
+
+test("one network address asks for ten password resets an hour, whoever they are for", async () => {
+  const a = app();
+  const ask = (n: number) =>
+    call(
+      a,
+      "POST",
+      "/v1/auth/password-reset",
+      { email: `nobody${n}@farm.test` },
+      { "x-forwarded-for": "203.0.113.9" },
+    );
+  for (let n = 0; n < 10; n++) expect((await ask(n)).status).toBe(202);
+  expect((await ask(10)).status).toBe(429);
+});
