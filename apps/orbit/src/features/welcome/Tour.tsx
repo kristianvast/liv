@@ -55,11 +55,15 @@ function findTarget(targets: readonly string[]): Element | null {
   return null;
 }
 
-/** Where the step's control is on screen, kept current while Home loads, resizes or scrolls. */
+/**
+ * Where the step's control is on screen. Read every frame while the tour is open: Home keeps
+ * settling after it appears (fonts, the orb, data arriving), and none of that announces itself.
+ */
 function useTargetBox(targets: readonly string[]): Box | null {
   const [box, setBox] = useState<Box | null>(null);
 
   useLayoutEffect(() => {
+    let frame = 0;
     const measure = () => {
       const rect = findTarget(targets)?.getBoundingClientRect();
       setBox((prev) => {
@@ -73,20 +77,10 @@ function useTargetBox(targets: readonly string[]): Box | null {
           ? prev
           : next;
       });
+      frame = window.requestAnimationFrame(measure);
     };
     measure();
-    const mo = new MutationObserver(measure);
-    mo.observe(document.body, { childList: true, subtree: true });
-    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
-    ro?.observe(document.body);
-    window.addEventListener("resize", measure);
-    window.addEventListener("scroll", measure, true);
-    return () => {
-      mo.disconnect();
-      ro?.disconnect();
-      window.removeEventListener("resize", measure);
-      window.removeEventListener("scroll", measure, true);
-    };
+    return () => window.cancelAnimationFrame(frame);
   }, [targets]);
 
   return box;
