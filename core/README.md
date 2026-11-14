@@ -299,8 +299,9 @@ converges:
 - Artifact Registry repo `orbit-core` (image `core-api`).
 - Cloud SQL Postgres 17 `orbit-core-<env>` with `cloudsql.logical_decoding=on`, database and
   user `orbit` (granted `REPLICATION` by the one-shot Cloud Run job `orbit-core-<env>-dbinit`).
-  Staging is `db-f1-micro` without backups; production is `db-custom-1-3840` with daily backups,
-  PITR and deletion protection.
+  Staging is `db-f1-micro` without backups; production is `db-custom-1-3840` with daily backups
+  (14 kept), point-in-time recovery, deletion protection and `max_connections=200`, which covers
+  ten API instances with five connections each while a rollout overlaps two revisions.
 - Secrets `orbit-core-<env>-{DB_PASSWORD,DATABASE_URL,ELECTRIC_DATABASE_URL,ELECTRIC_SECRET,
   STRIPE_SECRET_KEY,STRIPE_WEBHOOK_SECRET,MAIL_API_KEY}`. Database and Electric secrets are
   generated; the others get the placeholder `unset` unless passed as `SECRET_<NAME>=...`.
@@ -312,7 +313,9 @@ converges:
   Direct VPC egress (private ranges) into it, which is what makes its calls to Electric count as
   internal.
 - API `orbit-core-<env>`: public Cloud Run, Cloud SQL attached, secrets as env, 3600 s timeout
-  (voice WebSockets). It migrates on start. Non-secret settings default to staging values; production
+  (voice WebSockets). Staging runs 0 to 2 instances with 512 MiB, production 1 to 10 with 1 GiB,
+  both at 80 requests per instance. It migrates on start; instances that start together take
+  turns behind a Postgres advisory lock. Non-secret settings default to staging values; production
   requires `PUBLIC_SITE_URL`, `CORE_CORS_ORIGINS`, `BILLING_SUCCESS_URL`, `BILLING_CANCEL_URL`.
 - GitHub Actions access: workload identity pool `orbit-github` / provider `github` (repo
   `kristianvast/orbit` only) and deployer `orbit-core-deployer` (Cloud Run developer, Artifact
@@ -330,6 +333,28 @@ production waits for approval in the `production` GitHub Environment. Repo varia
 `GCP_PROJECT`, `GCP_REGION`, `GCP_WIF_PROVIDER`, `GCP_DEPLOY_SA`. To ship the local working tree
 without Actions, run `ENV=staging core/deploy/deploy.sh` (Cloud Build, then deploy, then smoke).
 
+**Production.** The public address `https://api.barnstar.dev` is a Cloud Run domain mapping to
+`orbit-core-production`; the website and every installed Orbit use that address, so the service
+behind it can change without a new release. Production uses the live Stripe key with Stripe Tax on
+(`STRIPE_AUTOMATIC_TAX=true`, the default for production in `provision.sh`); Stripe adds tax only
+for the places the account is registered in. Staging keeps its own test-mode Stripe key. To ship a
+commit to production, run the workflow by hand with `environment=production`, or re-converge
+with the image built for that commit:
+
+```sh
+ENV=production PUBLIC_SITE_URL=https://barnstar.dev \
+  CORE_CORS_ORIGINS=https://barnstar.dev,https://www.barnstar.dev \
+  BILLING_SUCCESS_URL='https://barnstar.dev/account/?checkout=success' \
+  BILLING_CANCEL_URL='https://barnstar.dev/account/?checkout=cancel' \
+  IMAGE=europe-north1-docker.pkg.dev/agrointel-dd8f6/orbit-core/core-api:<12-char sha> \
+  bash core/deploy/provision.sh
+```
+
+Never edit `provision.sh` while it runs: bash reads a script as it goes. A domain mapping cannot
+be pointed at another service in place; delete it and create it again, and expect the address to
+keep reaching the old service for a few minutes while the certificate is issued. To see which
+service answers, request `/health?probe=<id>` and look that id up in the Cloud Run request log.
+
 **Stripe.** `ENV=<env> core/deploy/stripe-webhook.sh` registers `<api>/v1/billing/webhook`
 once, using the key in that environment's `STRIPE_SECRET_KEY` secret. It stores the signing
 secret, rolls the API, and runs `stripe-setup.ts` if prices are missing.
@@ -342,6 +367,21 @@ After deploying, issue one token per farm install (`cli.ts issue-token`).
   overshoot it. There is no per-model price weighting and no model allowlist yet.
 - **Token management.** No admin UI or API for tokens beyond the CLI. Revocation works by setting
   `api_tokens.revoked_at`.
-- **Rate limiting** per token is not implemented.
+- **Rate limiting.** One network address gets ten sign-ups and ten password-reset requests an
+  hour, one email gets ten failed sign-ins in 15 minutes, and feedback is capped at 20 a day; all
+  are counted in Postgres, so they hold across instances. A request with no `x-forwarded-for`
+  (local and test servers) is not limited by address. There is no limit per farm token or per
+  session on the model gateway beyond the monthly budget, and the website voice demo's burst
+  limit is kept per instance (its daily cap is in Postgres).
+- **Password hashing.** Three argon2id hashes run at once per instance (about 64 MiB each); more
+  wait their turn, so a burst of sign-ups is slower, never out of memory.
+- **Request size.** `/v1/changes` takes 8 MiB, `/v1/llm/*` 32 MiB, chat sync 1 MiB. A model call
+  is cut off after ten minutes.
+- **Phone relay needs one instance.** `/v1/relay/host` (Orion on the farm PC) and
+  `/v1/relay/client` (the phone) meet in the memory of one instance. With several instances a
+  phone that lands on another one is told `pc_offline` and has to retry. Before the phone app is
+  released, move the registry to shared storage or give the relay its own single-instance service.
+- **Budgets are checked, not reserved.** Calls that start together can each pass the same budget
+  or voice-allowance check.
 - **Unverified locally.** The Docker image and compose file have not been run on this machine
   (Docker is not allowed on the dev Mac). Verify them in CI.

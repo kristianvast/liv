@@ -223,7 +223,10 @@ the sender's base back into the cloud.
 - **Accounts** live in Core (`core/api/src/accounts.ts`): `POST /v1/auth/register|login|logout`,
   `GET /v1/me`. Passwords are argon2id hashes (`Bun.password`); session tokens (`orb_s_...`, 90
   days) and invite codes (`orb_i_...`) are stored only as SHA-256 hashes. Ten failed sign-ins per
-  email in 15 minutes answer 429; unknown emails and wrong passwords get the same 401.
+  email in 15 minutes answer 429; unknown emails and wrong passwords get the same 401. One network
+  address gets ten sign-ups and ten password-reset requests an hour (`rate-limit.ts`, counted in
+  Postgres so the limit holds across instances), and only three password hashes run at once per
+  instance.
 - **Farms and roles:** `farm_members` gives each user one role per farm: `owner`, `manager`,
   `worker` or `viewer`. The matrix is shared in `@orbit/schema/roles` (`canWriteTable`,
   `assignableRoles`, `canManageMember`) so Core and Orion enforce the same rule. Workers change
