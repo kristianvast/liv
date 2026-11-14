@@ -613,6 +613,8 @@ export class AccountService {
     await this.opts.secrets.delete(SESSION_REF);
     this.token = null;
     await this.opts.runtime.removeRuntimeApiKey(GATEWAY_PROVIDER).catch(() => undefined);
+    // Without a session the cloud model cannot answer, so it must not be listed as usable.
+    this.opts.runtime.unregisterProvider(GATEWAY_PROVIDER);
     const s = this.opts.settings.get();
     if (s.provider === GATEWAY_PROVIDER) this.opts.settings.update({ provider: null, model: null });
     this.save({ user: null, farm: null });

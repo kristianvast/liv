@@ -464,6 +464,9 @@ describe("Orion account", () => {
     });
     const out = await c.request("account.logout", {});
     expect(out).toMatchObject({ state: "signed_out", user: null, farm: null });
+    // Signed out, the cloud model is gone too: the app must not offer an Orion that cannot answer.
+    const { availableModels } = await c.request("settings.get");
+    expect(availableModels.filter((m) => m.provider === "orbit-gateway")).toEqual([]);
     const local = await c.request("db.mutate", {
       mutation: "animals.upsert",
       params: { animal: newAnimal },
