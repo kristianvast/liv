@@ -19,6 +19,16 @@ const FRESH_VITE_PORT = E2E_VITE_PORT + 1;
 const FRESH_TOKEN = "e2e-fresh";
 const FRESH_SPEC = /minimal-first\.spec\.ts/;
 
+// The seeded farm's browser has seen the tour of Home, on the app's origin and on the origin of
+// the farm's own build. The fresh-install spec starts without it and walks the tour.
+const tourSeen = {
+  cookies: [],
+  origins: [E2E_VITE_PORT, E2E_ORION_PORT].map((port) => ({
+    origin: `http://127.0.0.1:${port}`,
+    localStorage: [{ name: "orbit.tour", value: "seen" }],
+  })),
+};
+
 export default defineConfig({
   testDir: "./web",
   // One Orion instance and one data dir are shared, so specs run one at a time.
@@ -41,7 +51,11 @@ export default defineConfig({
     {
       name: "chromium",
       testIgnore: FRESH_SPEC,
-      use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 800 } },
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 1280, height: 800 },
+        storageState: tourSeen,
+      },
     },
     {
       name: "fresh",

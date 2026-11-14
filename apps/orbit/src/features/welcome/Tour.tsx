@@ -2,7 +2,7 @@ import { ArrowRight, Check, Hammer, MessageSquare, Mic, X } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Button } from "../../design";
 import { type MessageKey, useT } from "../../i18n";
-import { setFirstRun } from "../../lib/tour";
+import { markTourSeen } from "../../lib/tour";
 
 interface TourStep {
   readonly id: "text" | "talk" | "build";
@@ -92,7 +92,7 @@ function useTargetBox(targets: readonly string[]): Box | null {
   return box;
 }
 
-/** Three short stops on Home after the first sign-in: write to Orion, talk to it, build with it. */
+/** Three short stops on Home, once: write to Orion, talk to it, build with it. */
 export function Tour() {
   const t = useT();
   const [index, setIndex] = useState(0);
@@ -101,11 +101,11 @@ export function Tour() {
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [cardHeight, setCardHeight] = useState(0);
   const last = index === STEPS.length - 1;
-  const finish = () => setFirstRun("done");
+  const finish = markTourSeen;
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setFirstRun("done");
+      if (event.key === "Escape") markTourSeen();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);

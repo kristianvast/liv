@@ -241,8 +241,6 @@ function createMinimalTestClient(options?: {
 }
 
 describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules", () => {
-  afterEach(() => window.localStorage.removeItem("orbit.firstRun"));
-
   it("renders only Home, Ask Orion, and Settings while loading and when all modules are disabled, then adds Cattle on modules.updated", async () => {
     const { client, emit, releaseInitialList } = createMinimalTestClient({
       holdModulesList: true,
@@ -332,8 +330,6 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
   });
 
   it("puts the account form on Home in place of Orion, and holds Chat back, on an install where Orion cannot answer yet", async () => {
-    // This computer was set up before and someone signed out since.
-    window.localStorage.setItem("orbit.firstRun", "done");
     const { client } = createMinimalTestClient({ needsSetup: true });
 
     render(
@@ -355,16 +351,14 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
     expect(screen.queryByTestId("nav-chat")).not.toBeInTheDocument();
     expect(screen.queryByTestId("home-ask-input")).not.toBeInTheDocument();
     expect(screen.queryByTestId("home-voice-start")).not.toBeInTheDocument();
-    // Whoever signs in from this form gets the tour, also on a computer that had it before.
-    expect(window.localStorage.getItem("orbit.firstRun")).toBe("pending");
 
     // Bringing your own AI subscription is the other way in.
     fireEvent.click(within(setup).getByTestId("home-setup-own-key"));
     expect(await screen.findByTestId("settings-page-orion")).toBeInTheDocument();
   });
 
-  it("walks a newly signed-in farmer through writing, talking and building, once", async () => {
-    window.localStorage.setItem("orbit.firstRun", "pending");
+  it("walks a farmer who has not seen it through writing, talking and building, once", async () => {
+    window.localStorage.removeItem("orbit.tour");
     const { client } = createMinimalTestClient();
 
     render(
@@ -384,7 +378,7 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
     fireEvent.click(screen.getByTestId("tour-next"));
 
     expect(screen.queryByTestId("tour")).not.toBeInTheDocument();
-    expect(window.localStorage.getItem("orbit.firstRun")).toBe("done");
+    expect(window.localStorage.getItem("orbit.tour")).toBe("seen");
   });
 
   it("drops a page from the menu as soon as an undo removes it from the workspace", async () => {

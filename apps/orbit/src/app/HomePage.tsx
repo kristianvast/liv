@@ -19,7 +19,7 @@ import { type ModuleId, useModules } from "../lib/modules";
 import { useOrion, useOrionQuery } from "../lib/orion";
 import { useSetupState } from "../lib/setup";
 import { formatPrimaryAnimalCount, useFarmSpecies } from "../lib/species";
-import { useFirstRun } from "../lib/tour";
+import { useTourSeen } from "../lib/tour";
 import { useTheme } from "./providers";
 import "./home.css";
 
@@ -152,7 +152,7 @@ export function HomePage() {
   const isMinimalHome = !isLoading && !anyEnabled && totalAnimals === 0;
   const orionOnline = useOrion().state === "open";
   const setup = useSetupState();
-  const firstRun = useFirstRun();
+  const tourSeen = useTourSeen();
   const isHorse = species === "horse";
 
   const suggestedQuestions: readonly MessageKey[] = isHorse
@@ -230,7 +230,8 @@ export function HomePage() {
         {starters}
       </HomeVoiceWidget>
     ) : null;
-  const tour = firstRun === "pending" && setup === "ready" ? <Tour /> : null;
+  // The tour plays once, the first time Home has an Orion that can answer.
+  const tour = setup === "ready" && !tourSeen ? <Tour /> : null;
 
   if (isMinimalHome) {
     return (

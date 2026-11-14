@@ -59,6 +59,12 @@ describe("Orbit desktop smoke", () => {
     await expectMinimalNav(10_000);
   });
 
+  it("greets a first-time farmer with the tour of Home, which can be skipped", async () => {
+    await $('[data-testid="tour-skip"]').waitForDisplayed();
+    await $('[data-testid="tour-skip"]').click();
+    await $('[data-testid="tour"]').waitForExist({ reverse: true });
+  });
+
   it("opens Chat and gets a mock reply", async () => {
     await $('nav a.orbit-nav-link[href="/chat"]').click();
     await $('[data-testid="sessions-sidebar"]').waitForDisplayed();

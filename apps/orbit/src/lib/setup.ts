@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useOrion, useOrionEvent } from "./orion";
-import { setFirstRun, useFirstRun } from "./tour";
+import { useTourSeen } from "./tour";
 
 /**
  * True on an install where Orion cannot answer yet: nobody is signed in and no AI model is usable.
@@ -30,19 +30,13 @@ export type SetupState = "unknown" | "setup" | "ready";
 
 /**
  * Whether Orion can be used on this install. While it cannot, Home shows the account form in
- * place of the ask box and the call button, and Chat is held back. An install that was set up
- * before counts as ready while Orion is still starting, so the app does not flicker.
+ * place of the ask box and the call button, and Chat is held back. A computer where the tour has
+ * been seen counts as ready while Orion is still starting, so the app does not flicker.
  */
 export function useSetupState(): SetupState {
   const needsSetup = useNeedsSetup();
-  const firstRun = useFirstRun();
+  const tourSeen = useTourSeen();
 
-  useEffect(() => {
-    // Every time Home has to ask for a sign-in, the tour is due once Orion can answer.
-    if (needsSetup) setFirstRun("pending");
-    else if (needsSetup === false && firstRun === null) setFirstRun("done");
-  }, [needsSetup, firstRun]);
-
-  if (needsSetup === null) return firstRun === "done" ? "ready" : "unknown";
+  if (needsSetup === null) return tourSeen ? "ready" : "unknown";
   return needsSetup ? "setup" : "ready";
 }

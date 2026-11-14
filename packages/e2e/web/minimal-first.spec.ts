@@ -21,6 +21,13 @@ test("Orbit starts minimal and Orion adds the herd module", async ({ page }) => 
   // (a) Fresh install: Home, Chat and Settings only, with the Orion-first Home.
   await page.goto("/");
   await expect(page.getByTestId("home-minimal")).toBeVisible();
+  // The first Home with an Orion that can answer opens with the tour: write, talk, build.
+  const tour = page.getByTestId("tour");
+  for (const step of ["text", "talk", "build"]) {
+    await expect(tour).toHaveAttribute("data-step", step);
+    await page.getByTestId("tour-next").click();
+  }
+  await expect(tour).toHaveCount(0);
   await expect(page.getByTestId("home-ask-input")).toBeVisible();
   await expect(navLinks(page)).toHaveCount(3);
   await expect(page.getByTestId("nav-home")).toBeVisible();

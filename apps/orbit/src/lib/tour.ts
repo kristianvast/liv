@@ -1,26 +1,21 @@
 import { useSyncExternalStore } from "react";
 
-// Where a farmer is on the way in: "pending" from the moment Home asks them to sign in until the
-// tour of Home has been seen, "done" otherwise on an install where Orion can answer. Kept in localStorage so it survives
-// the restart after sign-in.
-const KEY = "orbit.firstRun";
-type FirstRun = "pending" | "done" | null;
+// Whether the tour of Home has been seen on this computer. Kept in localStorage, so it plays once.
+const KEY = "orbit.tour";
 
 const listeners = new Set<() => void>();
 
-function read(): FirstRun {
+function read(): boolean {
   try {
-    const raw = window.localStorage?.getItem(KEY);
-    return raw === "pending" || raw === "done" ? raw : null;
+    return window.localStorage?.getItem(KEY) === "seen";
   } catch {
-    return null;
+    return false;
   }
 }
 
-export function setFirstRun(next: "pending" | "done"): void {
-  if (read() === next) return;
+export function markTourSeen(): void {
   try {
-    window.localStorage?.setItem(KEY, next);
+    window.localStorage?.setItem(KEY, "seen");
   } catch {
     // Storage can be switched off; the tour is then simply not remembered.
   }
@@ -34,6 +29,6 @@ function subscribe(listener: () => void): () => void {
   };
 }
 
-export function useFirstRun(): FirstRun {
-  return useSyncExternalStore(subscribe, read, () => null);
+export function useTourSeen(): boolean {
+  return useSyncExternalStore(subscribe, read, () => false);
 }
