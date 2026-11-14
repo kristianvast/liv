@@ -10,6 +10,7 @@ import {
   isSameFile,
   protectedFileTools,
 } from "../src/agent/access";
+import { bundledShell } from "../src/agent/shell";
 import type { OrionApp } from "../src/app";
 import { SettingsStore } from "../src/settings";
 import { connect, record, removeDir, startApp, TOKEN, tempDir, waitFor } from "./helpers";
@@ -198,7 +199,9 @@ test("Orion's write and edit refuse Orbit's settings file by any spelling of its
   const [write, edit] = protectedFileTools(workspace, file);
   if (!write || !edit) throw new Error("no file tools");
   expect([write.name, edit.name]).toEqual(["write", "edit"]);
-  for (const path of ["../settings.json", file, `@${file}`, `${workspace}/../SETTINGS.json`]) {
+  // Linux file names are case-sensitive, so SETTINGS.json there is another file.
+  const otherCase = process.platform === "linux" ? [] : [`${workspace}/../SETTINGS.json`];
+  for (const path of ["../settings.json", file, `@${file}`, ...otherCase]) {
     await expect(
       write.execute(
         "w",
@@ -255,7 +258,9 @@ test("a live session has one bash, write and edit, and its write refuses the set
     }
   ).live;
   const tools = live.get(sessionId)?.agent?.agent.state.tools ?? [];
-  for (const name of ["bash", "write", "edit"])
+  // Windows has bash only where the installer's bundled shell sits next to Orion.
+  const shell = process.platform === "win32" && !bundledShell() ? "powershell" : "bash";
+  for (const name of [shell, "write", "edit"])
     expect(tools.filter((t) => t.name === name)).toHaveLength(1);
   const write = tools.find((t) => t.name === "write");
   // A fresh Orbit has no settings.json yet; creating one is refused too.

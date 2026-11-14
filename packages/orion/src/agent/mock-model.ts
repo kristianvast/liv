@@ -91,7 +91,25 @@ function textOf(message: Message | undefined): string {
   return "";
 }
 
-function replyFor(messages: Message[]): { text: string } | { call: ToolCall } {
+/** The tools the request offers: its system messages add and remove them in order. */
+function offeredTools(messages: Message[]): string[] {
+  const names = new Set<string>();
+  for (const message of messages) {
+    if (message.role !== "system") continue;
+    for (const tool of message.toolsAdded ?? []) names.add(tool.name);
+    for (const tool of message.toolsRemoved ?? []) names.delete(tool.name);
+  }
+  return [...names];
+}
+
+/** A PC without bash (Windows with no bundled shell) runs the mock's commands in PowerShell. */
+function availableTool(name: string, offered: string[]): string {
+  return name === "bash" && !offered.includes("bash") && offered.includes("powershell")
+    ? "powershell"
+    : name;
+}
+
+function replyFor(messages: Message[], offered: string[]): { text: string } | { call: ToolCall } {
   const last = messages[messages.length - 1];
   if (last?.role === "toolResult") {
     const result = textOf(last);
@@ -110,11 +128,12 @@ function replyFor(messages: Message[]): { text: string } | { call: ToolCall } {
   const trigger = MOCK_TRIGGERS.find((t) => t.match.test(prompt));
   if (trigger) {
     const index = messages.filter((m) => m.role === "assistant").length;
+    const name = availableTool(trigger.tool, offered);
     return {
       call: {
         type: "toolCall",
-        id: `mock_call_${index}_${trigger.tool}`,
-        name: trigger.tool,
+        id: `mock_call_${index}_${name}`,
+        name,
         arguments: trigger.args as ToolCall["arguments"],
       },
     };
@@ -172,7 +191,7 @@ export function registerMockProvider(
       };
       (async () => {
         stream.push({ type: "start", partial: message });
-        const reply = replyFor(context.messages);
+        const reply = replyFor(context.messages, offeredTools(context.messages));
         if ("call" in reply) {
           message.content.push(reply.call);
           stream.push({ type: "toolcall_start", contentIndex: 0, partial: message });

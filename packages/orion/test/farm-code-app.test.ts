@@ -62,6 +62,8 @@ async function fixtures() {
   );
   file(origin, "apps/orbit/src/theme.ts", theme("default", "old"));
   file(origin, ".gitignore", "node_modules\ndist\n");
+  // Same rule as Orbit's own repository: Windows checkouts keep LF line endings.
+  file(origin, ".gitattributes", "* text=auto eol=lf\n");
   await git(origin, "init", "--quiet", "--initial-branch", "main");
   await git(origin, "add", "-A");
   await git(origin, "commit", "--quiet", "-m", "release one");
