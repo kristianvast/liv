@@ -1,20 +1,17 @@
 import { Camera, MessageSquare, Plug, Plus, Tag } from "lucide-react";
-import { type ReactNode, useEffect, useState } from "react";
-import { Route, Routes, useLocation, useNavigate } from "react-router";
-import { BrandMark, Button, EmptyState, Skeleton } from "../design";
+import { type ReactNode, useState } from "react";
+import { Navigate, Route, Routes, useNavigate } from "react-router";
+import { Button, EmptyState, Skeleton } from "../design";
 import CamerasPage from "../features/cameras";
 import ChatPage from "../features/chat";
 import DevicesPage from "../features/devices";
 import HerdPage from "../features/herd";
 import CustomPageView from "../features/pages";
 import SettingsPage from "../features/settings";
-import { Tour, WelcomeScreen } from "../features/welcome";
 import { type MessageKey, useT } from "../i18n";
 import { type ModuleId, useModules } from "../lib/modules";
-import { useOrion } from "../lib/orion";
-import { useNeedsSetup } from "../lib/setup";
+import { useSetupState } from "../lib/setup";
 import { useFarmSpecies } from "../lib/species";
-import { setFirstRun, useFirstRun } from "../lib/tour";
 import { HomePage } from "./HomePage";
 import { useTheme } from "./providers";
 import { AppShell } from "./shell";
@@ -143,48 +140,18 @@ export function ModuleRoute({ moduleId, children }: ModuleRouteProps) {
   );
 }
 
-/**
- * A new install opens on the welcome screen instead of the app, until someone signs in or adds
- * their own AI key in Settings. After that first sign-in, Home is shown once with the tour.
- */
-function FirstRunGate() {
-  const needsSetup = useNeedsSetup();
-  const firstRun = useFirstRun();
-  const { state, stopped } = useOrion();
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    if (needsSetup === false && firstRun === null) setFirstRun("done");
-  }, [needsSetup, firstRun]);
-
-  if (!pathname.startsWith("/settings")) {
-    if (needsSetup) return <WelcomeScreen />;
-    // Until Orion has answered on an install that was never set up, show the mark alone, so the
-    // app does not flash by before the welcome screen. A failed start still gets the app and
-    // its restart button.
-    if (needsSetup === null && firstRun === null && !stopped && state === "connecting") {
-      return (
-        <div className="orbit-splash" data-testid="first-run-splash">
-          <BrandMark />
-        </div>
-      );
-    }
-  }
-  return (
-    <>
-      <AppShell />
-      {firstRun === "pending" && needsSetup === false && pathname === "/" && <Tour />}
-    </>
-  );
+/** Chat needs an Orion that can answer; until then Home asks the farmer to sign in. */
+function ChatRoute() {
+  return useSetupState() === "setup" ? <Navigate to="/" replace /> : <ChatPage />;
 }
 
 export function AppRoutes() {
   const { theme } = useTheme();
   return (
     <Routes>
-      <Route element={<FirstRunGate />}>
+      <Route element={<AppShell />}>
         <Route index element={<HomePage />} />
-        <Route path="chat" element={<ChatPage />} />
+        <Route path="chat" element={<ChatRoute />} />
         <Route
           path="herd"
           element={

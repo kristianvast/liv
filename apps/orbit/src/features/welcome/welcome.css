@@ -1,79 +1,67 @@
-.orbit-welcome {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
-  align-items: center;
-  gap: var(--space-12);
-  min-block-size: 100dvh;
-  max-inline-size: 64rem;
-  margin-inline: auto;
-  padding: var(--space-8);
-  background-color: var(--bg-canvas);
-}
-
-.orbit-welcome__intro {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-.orbit-welcome__headline {
-  margin: 0;
-  max-inline-size: 14ch;
-  font-family: var(--font-display);
-  font-size: clamp(2.25rem, 5vw, 3.5rem);
-  font-weight: 400;
-  line-height: 1.02;
-  text-wrap: balance;
-}
-
-.orbit-welcome__panel {
+.orbit-home-setup {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-  padding: var(--space-6);
+  inline-size: 100%;
+  max-inline-size: 26rem;
+}
+
+.orbit-home-setup__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-5);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-xl);
   background: var(--bg-surface);
   box-shadow: var(--shadow-md);
 }
 
-.orbit-welcome__alt {
+.orbit-home-setup__alt {
   align-self: center;
   font-size: var(--text-sm);
   color: var(--text-secondary);
 }
 
-.orbit-splash {
-  display: grid;
-  place-items: center;
-  min-block-size: 100dvh;
-  background-color: var(--bg-canvas);
+/* On an empty Home the form sits beside the headline and the other way in sits under it, so the
+   whole page fits the window. */
+@media (min-width: 961px) and (min-height: 600px) {
+  .orbit-home--minimal.orbit-home--setup .orbit-home__head--minimal {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 26rem);
+    grid-template-rows: auto auto 1fr;
+    column-gap: var(--space-8);
+    align-items: start;
+    max-inline-size: none;
+  }
+
+  .orbit-home--minimal.orbit-home--setup .orbit-home-setup {
+    display: contents;
+  }
+
+  .orbit-home--minimal.orbit-home--setup .orbit-home-setup__card {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+  }
+
+  .orbit-home--minimal.orbit-home--setup .orbit-home-setup__alt {
+    grid-column: 1;
+    grid-row: 3;
+    align-self: start;
+    justify-self: start;
+    margin-block-start: var(--space-4);
+  }
 }
 
 /* The smallest desktop window (1024 x 700) still shows the whole form without scrolling. */
-@media (max-height: 760px) {
-  .orbit-welcome {
+@media (min-width: 961px) and (min-height: 600px) and (max-height: 760px) {
+  .orbit-main-scroll:has(.orbit-home--setup) {
     padding-block: var(--space-4);
   }
 
-  .orbit-welcome__panel {
-    padding: var(--space-5);
-  }
-}
-
-@media (max-width: 760px) {
-  .orbit-welcome {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-6);
-    padding: var(--space-5);
-  }
-
-  .orbit-welcome__intro {
-    gap: var(--space-4);
-  }
-
-  .orbit-welcome__headline {
-    max-inline-size: none;
+  .orbit-home--minimal.orbit-home--setup .orbit-home-setup__card {
+    padding: var(--space-4);
+    gap: var(--space-2);
   }
 }
 

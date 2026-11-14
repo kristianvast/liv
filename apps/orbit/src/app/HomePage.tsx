@@ -8,15 +8,18 @@ import {
   HeartPulse,
   Sparkles,
 } from "lucide-react";
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, type ReactNode, useMemo, useState } from "react";
 import { useNavigate } from "react-router";
 import { Badge, Button, EmptyState, Skeleton } from "../design";
 import { PageCards, useCustomPages } from "../features/pages";
 import { HomeVoiceWidget } from "../features/voice";
+import { HomeSetup, Tour } from "../features/welcome";
 import { type MessageKey, type TranslateFn, useI18n } from "../i18n";
 import { type ModuleId, useModules } from "../lib/modules";
 import { useOrion, useOrionQuery } from "../lib/orion";
+import { useSetupState } from "../lib/setup";
 import { formatPrimaryAnimalCount, useFarmSpecies } from "../lib/species";
+import { useFirstRun } from "../lib/tour";
 import { useTheme } from "./providers";
 import "./home.css";
 
@@ -148,6 +151,8 @@ export function HomePage() {
 
   const isMinimalHome = !isLoading && !anyEnabled && totalAnimals === 0;
   const orionOnline = useOrion().state === "open";
+  const setup = useSetupState();
+  const firstRun = useFirstRun();
   const isHorse = species === "horse";
 
   const suggestedQuestions: readonly MessageKey[] = isHorse
@@ -213,11 +218,28 @@ export function HomePage() {
     openOrionWithQuestion(question);
   };
 
+  // Orion's place on Home: the ask box and the call button, or, on an install where Orion cannot
+  // answer yet, the account form. Nothing until Orion has said which.
+  const orionBox = (placeholder: string, starters: ReactNode) =>
+    setup === "setup" ? (
+      <HomeSetup />
+    ) : setup === "ready" ? (
+      <HomeVoiceWidget
+        ask={{ value: question, onChange: setQuestion, onSubmit: submitQuestion, placeholder }}
+      >
+        {starters}
+      </HomeVoiceWidget>
+    ) : null;
+  const tour = firstRun === "pending" && setup === "ready" ? <Tour /> : null;
+
   if (isMinimalHome) {
     return (
-      <div className="orbit-container orbit-home orbit-home--minimal" data-testid="home-minimal">
+      <div
+        className={`orbit-container orbit-home orbit-home--minimal${setup === "setup" ? " orbit-home--setup" : ""}`}
+        data-testid="home-minimal"
+      >
         <header className="orbit-home__head orbit-home__head--minimal">
-          {orionOnline && (
+          {orionOnline && setup === "ready" && (
             <div className="orbit-home__meta">
               <Badge variant="ok" icon={<CheckCircle2 size={13} />} data-testid="home-alerts">
                 {t("home.minimal.badge")}
@@ -233,14 +255,8 @@ export function HomePage() {
             {t(isHorse ? "home.minimal.lede.horse" : "home.minimal.lede.cattle")}
           </p>
 
-          <HomeVoiceWidget
-            ask={{
-              value: question,
-              onChange: setQuestion,
-              onSubmit: submitQuestion,
-              placeholder: t("home.ask.placeholder"),
-            }}
-          >
+          {orionBox(
+            t("home.ask.placeholder"),
             <ul
               className="orbit-starter-grid"
               aria-label={t("home.minimal.startersLabel")}
@@ -259,11 +275,12 @@ export function HomePage() {
                   </button>
                 </li>
               ))}
-            </ul>
-          </HomeVoiceWidget>
+            </ul>,
+          )}
         </header>
 
         <PageCards pages={customPages} theme={theme} />
+        {tour}
       </div>
     );
   }
@@ -384,14 +401,8 @@ export function HomePage() {
       </header>
 
       <div className="orbit-home__grid">
-        <HomeVoiceWidget
-          ask={{
-            value: question,
-            onChange: setQuestion,
-            onSubmit: submitQuestion,
-            placeholder: t("home.ask.placeholder"),
-          }}
-        >
+        {orionBox(
+          t("home.ask.placeholder"),
           <ul className="orbit-ask__suggestions" aria-label={t("home.ask.suggestions")}>
             {suggestedQuestions.map((key) => (
               <li key={key}>
@@ -404,8 +415,8 @@ export function HomePage() {
                 </button>
               </li>
             ))}
-          </ul>
-        </HomeVoiceWidget>
+          </ul>,
+        )}
         <section className="orbit-card orbit-home__panel" aria-labelledby="home-alerts-title">
           <div className="orbit-home__panel-head">
             <h2 id="home-alerts-title" className="orbit-home__panel-title">
@@ -488,6 +499,7 @@ export function HomePage() {
       </div>
 
       <PageCards pages={customPages} theme={theme} />
+      {tour}
     </div>
   );
 }

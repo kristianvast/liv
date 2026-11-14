@@ -1,7 +1,7 @@
 import { useSyncExternalStore } from "react";
 
-// Where a new farmer is on the way in: "pending" from the welcome screen until the tour of Home
-// has been seen, "done" once this install has been set up. Kept in localStorage so it survives
+// Where a new farmer is on the way in: "pending" from the first time Home asks them to sign in
+// until the tour of Home has been seen, "done" once this install has been set up. Kept in localStorage so it survives
 // the restart after sign-in.
 const KEY = "orbit.firstRun";
 type FirstRun = "pending" | "done" | null;

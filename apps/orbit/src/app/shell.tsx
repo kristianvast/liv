@@ -25,6 +25,7 @@ import { type MessageKey, useT } from "../i18n";
 import { useLocalUiLifecycle, useLocalUiReady, useLocalUiStatus } from "../lib/local-ui";
 import { MODULE_IDS, type ModuleId, useModules } from "../lib/modules";
 import { resolveSyncNotice, useOrion, useOrionQuery } from "../lib/orion";
+import { useSetupState } from "../lib/setup";
 import { useFarmSpecies } from "../lib/species";
 import { updateAction, useAppUpdate } from "../lib/updater";
 import { type ThemePreference, useTheme } from "./providers";
@@ -129,6 +130,7 @@ export function AppShell() {
   const { state: connState, endpoint, reconnect, stopped, restart } = useOrion();
   const { data: summary } = useOrionQuery("farm.summary");
   const { isEnabled } = useModules();
+  const orionReady = useSetupState() === "ready";
   const { preference, cycleTheme } = useTheme();
   const ThemeIcon = THEME_ICON[preference];
   const { species } = useFarmSpecies();
@@ -171,7 +173,8 @@ export function AppShell() {
 
   const topAndModuleNavItems: NavItem[] = [
     HOME_NAV_ITEM,
-    CHAT_NAV_ITEM,
+    // Chat appears once Orion can answer: after sign-in, or with the farmer's own AI subscription.
+    ...(orionReady ? [CHAT_NAV_ITEM] : []),
     ...MODULE_IDS.filter((id) => isEnabled(id)).map((id) => MODULE_NAV_ITEMS[id]),
   ];
 

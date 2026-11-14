@@ -262,12 +262,13 @@ the sender's base back into the cloud.
   (site `https://barnstar.dev`, `ORBIT_SITE_URL` overrides) in the system browser. The site's Google
   button sends the credential back in the URL fragment; Orion's page posts it to itself (same-origin
   only, state single-use, 10 minutes) and Orion signs in with it at `POST /v1/auth/google`.
-- **First-run setup (`useNeedsSetup`):** when `account.status` is `"signed_out"` and
-  `settings.get` reports no `availableModels`, the first-run gate in `apps/orbit/src/app/routes.tsx`
-  shows the welcome screen (`welcome-screen`) instead of the app: the account form, opened on
-  "Create account", and a link to bring your own AI provider key in Settings (Settings itself stays
-  reachable). After that first sign-in Home is shown once with a three-step tour (write, talk,
-  build); `orbit.firstRun` in localStorage (`lib/tour.ts`) remembers that it was seen.
+- **First-run setup (`useSetupState`, `apps/orbit/src/lib/setup.ts`):** when `account.status` is
+  `"signed_out"` and `settings.get` reports no `availableModels`, Orion cannot answer yet. Home then
+  shows the account form (`home-setup`), opened on "Create account", in place of the ask box and the
+  call button, with a link to bring your own AI provider key in Settings; the Ask Orion menu item is
+  hidden and `/chat` leads to Home. After that first sign-in Home is shown once with a three-step
+  tour (write, talk, build); `orbit.firstRun` in localStorage (`lib/tour.ts`) remembers that it was
+  seen.
 
 ## Feedback and sharing
 

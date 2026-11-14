@@ -258,7 +258,8 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
 
     const nav = screen.getByRole("navigation", { name: "Main" });
     expect(within(nav).getByText("Home")).toBeInTheDocument();
-    expect(within(nav).getByText("Ask Orion")).toBeInTheDocument();
+    // Ask Orion joins the menu once Orion has said it can answer.
+    expect(await within(nav).findByText("Ask Orion")).toBeInTheDocument();
     expect(within(nav).getByText("Settings")).toBeInTheDocument();
     expect(within(nav).queryByText("Cattle")).not.toBeInTheDocument();
     expect(within(nav).queryByText("Horses")).not.toBeInTheDocument();
@@ -330,29 +331,32 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
     expect(requestMock.mock.calls.filter(([type]) => type === "chat.prompt")).toHaveLength(1);
   });
 
-  it("shows only the welcome screen with the account form on an install where Orion cannot answer yet", async () => {
+  it("puts the account form on Home in place of Orion, and holds Chat back, on an install where Orion cannot answer yet", async () => {
     const { client } = createMinimalTestClient({ needsSetup: true });
 
     render(
-      <MemoryRouter initialEntries={["/"]}>
+      <MemoryRouter initialEntries={["/chat"]}>
         <AppProviders initialClient={client}>
           <AppRoutes />
         </AppProviders>
       </MemoryRouter>,
     );
 
-    const welcome = await screen.findByTestId("welcome-screen");
-    expect(within(welcome).getByTestId("account-mode-register")).toHaveAttribute(
+    // Chat sends the farmer to Home, which is the real Home: menu, headline, and the form.
+    const setup = await screen.findByTestId("home-setup");
+    expect(screen.getByTestId("home-minimal")).toContainElement(setup);
+    expect(within(setup).getByTestId("account-mode-register")).toHaveAttribute(
       "aria-pressed",
       "true",
     );
-    expect(screen.queryByTestId("nav-home")).not.toBeInTheDocument();
+    expect(screen.getByTestId("nav-home")).toBeInTheDocument();
+    expect(screen.queryByTestId("nav-chat")).not.toBeInTheDocument();
     expect(screen.queryByTestId("home-ask-input")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("home-voice-start")).not.toBeInTheDocument();
 
-    // Bringing your own AI key is still possible: Settings opens with the whole app around it.
-    fireEvent.click(within(welcome).getByTestId("welcome-own-key"));
-    expect(await screen.findByTestId("nav-home")).toBeInTheDocument();
-    expect(screen.queryByTestId("welcome-screen")).not.toBeInTheDocument();
+    // Bringing your own AI subscription is the other way in.
+    fireEvent.click(within(setup).getByTestId("home-setup-own-key"));
+    expect(await screen.findByTestId("settings-page-orion")).toBeInTheDocument();
   });
 
   it("walks a newly signed-in farmer through writing, talking and building, once", async () => {
