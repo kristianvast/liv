@@ -6,6 +6,40 @@ export type { OrbVariant } from "./orion-orb-draw";
 
 const MAX_CHIPS = 6;
 
+// One clock, one spin and one set of tool chips for every orb on screen and after it. An orb
+// that is drawn again (the farmer comes back to Home, or the call moves between Home, Chat and
+// the dock) carries on where the last one was, instead of launching every tool once more.
+const nowSec = () => (typeof performance !== "undefined" ? performance.now() : 0) / 1000;
+const tracked = new Map<string, TrackedChip>();
+let spin = 0;
+let spinAtSec = 0;
+
+/** The chips for these tools, oldest first; a tool seen before keeps its place in time. */
+export function trackChips(activities: readonly ActivityRowView[], t: number): TrackedChip[] {
+  const chips = activities.slice(-MAX_CHIPS).map((act): TrackedChip => {
+    const prev = tracked.get(act.id);
+    if (!prev) {
+      return {
+        id: act.id,
+        label: act.chipLabel,
+        status: act.status,
+        startedAtSec: t,
+        endedAtSec: act.status === "running" ? Number.POSITIVE_INFINITY : t,
+        dock: 0,
+      };
+    }
+    return {
+      ...prev,
+      label: act.chipLabel,
+      status: act.status,
+      endedAtSec: prev.status === "running" && act.status !== "running" ? t : prev.endedAtSec,
+    };
+  });
+  tracked.clear();
+  for (const chip of chips) tracked.set(chip.id, chip);
+  return chips;
+}
+
 export interface OrionOrbController {
   update(input: {
     readonly state: VoiceCallState;
@@ -49,15 +83,11 @@ export function createOrionOrb(
   let reducedMotion = false;
   let currentCol: Rgb = stateColor("idle", palette);
   let chips: TrackedChip[] = [];
-  let spin = 0;
   let w = 0;
   let h = 0;
   let dpr = 1;
   let visible = true;
   let raf = 0;
-  let lastSec = 0;
-  const t0 = typeof performance !== "undefined" ? performance.now() : 0;
-  const nowSec = () => ((typeof performance !== "undefined" ? performance.now() : 0) - t0) / 1000;
 
   const paint = (t: number) =>
     drawOrbScene({
@@ -84,12 +114,12 @@ export function createOrionOrb(
   function tick(): void {
     raf = 0;
     const t = nowSec();
-    const dt = Math.min(0.05, lastSec ? t - lastSec : 0.016);
-    lastSec = t;
     smoothLevel += (targetLevel - smoothLevel) * (targetLevel > smoothLevel ? 0.35 : 0.09);
     currentCol = mix(currentCol, stateColor(currentState, palette), 0.14);
     const busy = currentState === "working" || chips.some((c) => c.status === "running");
-    spin += dt * (busy ? 0.42 : 0.2);
+    // Shared by every orb, so two on screen at once do not turn the chips twice as fast.
+    spin += Math.min(0.05, Math.max(0, t - spinAtSec)) * (busy ? 0.42 : 0.2);
+    spinAtSec = t;
     paint(t);
     if (
       !reducedMotion &&
@@ -113,7 +143,6 @@ export function createOrionOrb(
       return;
     }
     if (!raf && visible && !canvas.ownerDocument.hidden) {
-      lastSec = 0;
       raf = window.requestAnimationFrame(tick);
     }
   }
@@ -159,26 +188,7 @@ export function createOrionOrb(
       hudActions = next.hudActions;
       reducedMotion = next.reducedMotion;
       targetLevel = next.reducedMotion ? 0 : Math.max(0, Math.min(1, next.level));
-      const t = nowSec();
-      chips = next.activities.slice(-MAX_CHIPS).map((act) => {
-        const prev = chips.find((c) => c.id === act.id);
-        if (!prev) {
-          return {
-            id: act.id,
-            label: act.chipLabel,
-            status: act.status,
-            startedAtSec: t,
-            endedAtSec: act.status === "running" ? Number.POSITIVE_INFINITY : t,
-            dock: 0,
-          };
-        }
-        return {
-          ...prev,
-          label: act.chipLabel,
-          status: act.status,
-          endedAtSec: prev.status === "running" && act.status !== "running" ? t : prev.endedAtSec,
-        };
-      });
+      chips = trackChips(next.activities, nowSec());
       kick();
     },
     refreshTheme: refreshPalette,
