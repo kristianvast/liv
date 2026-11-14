@@ -337,7 +337,10 @@ without Actions, run `ENV=staging core/deploy/deploy.sh` (Cloud Build, then depl
 `orbit-core-production`; the website and every installed Orbit use that address, so the service
 behind it can change without a new release. Production uses the live Stripe key with Stripe Tax on
 (`STRIPE_AUTOMATIC_TAX=true`, the default for production in `provision.sh`); Stripe adds tax only
-for the places the account is registered in. Staging keeps its own test-mode Stripe key. To ship a
+for the places the account is registered in (Stripe dashboard, Tax > Registrations), and it picks
+the rate from the buyer's billing country. Every price is the amount before tax:
+`stripe-setup.ts` gives prices `tax_behavior=exclusive`, plans the business-software tax code and
+the box and cameras the physical-goods one, so tax is always added on top of the listed price. Staging keeps its own test-mode Stripe key. To ship a
 commit to production, run the workflow by hand with `environment=production`, or re-converge
 with the image built for that commit:
 
