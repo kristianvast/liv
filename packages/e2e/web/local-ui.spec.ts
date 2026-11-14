@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { E2E_ORION_PORT, E2E_TOKEN, E2E_VITE_PORT, SEED } from "../src/index";
-import { setToolAccess, startChat, toolCard } from "./helpers";
+import { expectTool, setToolAccess, startChat } from "./helpers";
 
 const LOCAL_BASE = `http://127.0.0.1:${E2E_ORION_PORT}/app/${E2E_TOKEN}/`;
 const SHIPPED_ORIGIN = `http://127.0.0.1:${E2E_VITE_PORT}`;
@@ -15,9 +15,7 @@ test("Orion builds your own Orbit, the app opens it, safe mode skips it, and you
   // Building runs the checkout's scripts, so it needs the yes to running commands.
   await setToolAccess(page, "shell", true);
   await startChat(page, "build my orbit");
-  await expect(toolCard(page, "local_ui_build")).toHaveAttribute("data-tool-status", "done", {
-    timeout: 240_000,
-  });
+  await expectTool(page, "local_ui_build", "done", 240_000);
 
   await page.goto("/");
   await expect(page).toHaveURL(new RegExp(`^${LOCAL_BASE}`));

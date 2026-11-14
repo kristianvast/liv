@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
-import { startChat, toolCard } from "./helpers";
+import { expectTool, startChat } from "./helpers";
 
 test("a page Orion builds shows up in the menu and reads farm data", async ({ page }) => {
   await startChat(page, "make a page");
-  await expect(toolCard(page, "write")).toHaveAttribute("data-tool-status", "done");
+  await expectTool(page, "write", "done");
 
   const link = page.getByTestId("nav-custom-page-herd-count");
   await expect(link).toBeVisible();

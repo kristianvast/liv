@@ -35,8 +35,22 @@ export async function setToolAccess(
   await expect(toggle).toBeChecked({ checked: allowed });
 }
 
-export function toolCard(page: Page, toolName: string): Locator {
-  return page.locator(`[data-testid^="tool-card-"][data-tool-name="${toolName}"]`);
+/**
+ * Chat folds a turn's commands into one line, so this opens the latest turn's list and then waits
+ * for that command's card to reach the status.
+ */
+export async function expectTool(
+  page: Page,
+  toolName: string,
+  status: "done" | "error",
+  timeout?: number,
+): Promise<void> {
+  const toggle = page.getByTestId("tool-group-toggle").last();
+  await expect(toggle).toBeVisible({ timeout });
+  if ((await toggle.getAttribute("aria-expanded")) !== "true") await toggle.click();
+  await expect(
+    page.locator(`[data-testid^="tool-card-"][data-tool-name="${toolName}"]`).last(),
+  ).toHaveAttribute("data-tool-status", status, { timeout });
 }
 
 export function assistantMessages(page: Page): Locator {

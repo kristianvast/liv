@@ -1,7 +1,7 @@
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { expect, type Page, test } from "@playwright/test";
-import { assistantMessages, startChat, toolCard } from "./helpers";
+import { assistantMessages, expectTool, startChat } from "./helpers";
 
 // Runs in the "fresh" project: an unseeded Orion with an empty data dir (see playwright.config.ts).
 const PROOF_DIR = resolve(import.meta.dirname, "../../../.omo/proof/minimal-first");
@@ -39,7 +39,7 @@ test("Orbit starts minimal and Orion adds the herd module", async ({ page }) => 
 
   // (c) Ask Orion; the mock model calls orbit_modules { action: "enable", id: "herd" }.
   await startChat(page, "Track my herd please");
-  await expect(toolCard(page, "orbit_modules")).toHaveAttribute("data-tool-status", "done");
+  await expectTool(page, "orbit_modules", "done");
   await expect(assistantMessages(page).last()).toContainText("Here is what I found:");
   await expect(page.getByTestId("chat-send-button")).toBeVisible();
   await proof(page, "03-orion-adds-herd.png");
