@@ -186,22 +186,24 @@ const inlineHtml = (parts: Inline[]) =>
     )
     .join("");
 
+function blockText(block: Block): string {
+  switch (block.kind) {
+    case "p":
+    case "note":
+      return inlineText(block.parts);
+    case "button":
+      return `${block.label}:\n${block.href}`;
+    case "code":
+      return `${block.label}:\n\n    ${block.value}`;
+    case "steps":
+      return block.items.map((item, i) => `${i + 1}. ${inlineText(item)}`).join("\n");
+    case "facts":
+      return block.rows.map(([label, value]) => `${label}: ${value}`).join("\n");
+  }
+}
+
 function renderText(content: Content, links: EmailLinks): string {
-  const body = content.blocks.map((block) => {
-    switch (block.kind) {
-      case "p":
-      case "note":
-        return inlineText(block.parts);
-      case "button":
-        return `${block.label}:\n${block.href}`;
-      case "code":
-        return `${block.label}:\n\n    ${block.value}`;
-      case "steps":
-        return block.items.map((item, i) => `${i + 1}. ${inlineText(item)}`).join("\n");
-      case "facts":
-        return block.rows.map(([label, value]) => `${label}: ${value}`).join("\n");
-    }
-  });
+  const body = content.blocks.map(blockText);
   return [content.heading, ...body, `--\nBarnstar · ${siteRoot(links)} · ${SUPPORT}`].join("\n\n");
 }
 
