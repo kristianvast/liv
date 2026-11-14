@@ -12,7 +12,7 @@
     },
     "apps/orbit": {
       "name": "@orbit/app",
-      "version": "0.1.8",
+      "version": "0.1.9",
       "dependencies": {
         "@elevenlabs/client": "^1.36.0",
         "@orbit/protocol": "workspace:*",
@@ -77,7 +77,7 @@
     },
     "packages/orion": {
       "name": "@orion/agent",
-      "version": "0.1.8",
+      "version": "0.1.9",
       "bin": {
         "orion": "./src/main.ts",
       },
