@@ -97,13 +97,16 @@ test("Orion points at Settings, opens it, and the call follows to that page", as
 });
 
 test("Orion shows the page it opened in its browser and marks where to start", async ({ page }) => {
+  // Orion's browser gets 45 s to open a page and 15 s to take its picture (browser.ts); a cold
+  // browser on a CI runner uses much of that, so this wait covers the same budget.
+  test.setTimeout(120_000);
   await setToolAccess(page, "browser", false);
   const stage = await startCallInChat(page);
 
   await sayInChat(page, `open ${HERD_PAGE}`);
   await expect(page.getByTestId("access-dialog")).toHaveAttribute("data-tool", "browser");
   await page.getByTestId("access-allow").click();
-  await expect(page.getByTestId("browser-view")).toBeVisible();
+  await expect(page.getByTestId("browser-view")).toBeVisible({ timeout: 60_000 });
   await expect(page.getByTestId("browser-view-frame")).toBeVisible();
   await expect(page.getByTestId("browser-highlight")).toBeVisible();
   await expect(page.getByTestId("chat-transcript")).toContainText(
