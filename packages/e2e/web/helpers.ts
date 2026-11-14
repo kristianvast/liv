@@ -35,6 +35,9 @@ export async function setToolAccess(
   await expect(toggle).toBeChecked({ checked: allowed });
 }
 
+/** Orion's command tool: bash, or PowerShell on a Windows PC that has no bash beside Orion. */
+export const SHELL_TOOL = ["bash", "powershell"] as const;
+
 /**
  * Chat folds a turn's commands into one line, and the list closes again when the turn's items are
  * replaced as it settles. So this opens the latest turn's list and reads that command's card as
@@ -42,12 +45,19 @@ export async function setToolAccess(
  */
 export async function expectTool(
   page: Page,
-  toolName: string,
+  toolName: string | readonly string[],
   status: "done" | "error",
   timeout = 15_000,
 ): Promise<void> {
   const toggle = page.getByTestId("tool-group-toggle").last();
-  const card = page.locator(`[data-testid^="tool-card-"][data-tool-name="${toolName}"]`).last();
+  const card = page
+    .locator(
+      [toolName]
+        .flat()
+        .map((name) => `[data-testid^="tool-card-"][data-tool-name="${name}"]`)
+        .join(", "),
+    )
+    .last();
   await expect(async () => {
     if ((await toggle.getAttribute("aria-expanded")) !== "true") await toggle.click();
     await expect(card).toHaveAttribute("data-tool-status", status, { timeout: 1_000 });

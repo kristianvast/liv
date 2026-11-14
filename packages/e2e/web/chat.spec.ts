@@ -1,5 +1,12 @@
 import { expect, test } from "@playwright/test";
-import { activeSession, assistantMessages, expectTool, setToolAccess, startChat } from "./helpers";
+import {
+  activeSession,
+  assistantMessages,
+  expectTool,
+  SHELL_TOOL,
+  setToolAccess,
+  startChat,
+} from "./helpers";
 
 test("list cows streams an answer with a completed herd_query tool card", async ({ page }) => {
   await startChat(page, "list cows");
@@ -23,10 +30,10 @@ test("the first command asks about commands only, and Allow lets them run from t
   await expect(dialog).toHaveAttribute("data-tool", "shell");
   await page.getByTestId("access-allow").click();
   await expect(dialog).toHaveCount(0);
-  await expectTool(page, "bash", "done");
+  await expectTool(page, SHELL_TOOL, "done");
 
   await startChat(page, "check git again");
-  await expectTool(page, "bash", "done");
+  await expectTool(page, SHELL_TOOL, "done");
   await expect(dialog).toHaveCount(0);
   await page.goto("/settings/orion");
   await expect(page.getByTestId("settings-access-shell")).toBeChecked();
@@ -39,7 +46,7 @@ test("Not now keeps the shell closed for that request", async ({ page }) => {
   await startChat(page, "check git");
   await page.getByTestId("access-decline").click();
   await expect(page.getByTestId("access-dialog")).toHaveCount(0);
-  await expectTool(page, "bash", "error");
+  await expectTool(page, SHELL_TOOL, "error");
   await page.goto("/settings/orion");
   await expect(page.getByTestId("settings-access-shell")).not.toBeChecked();
 });
