@@ -248,7 +248,10 @@ export function agentBody(toolIds: readonly string[]): Record<string, unknown> {
       // Orion starts on its answer while the farmer's last pause is still being judged, and says a
       // short filler in the farmer's language when the answer has not started after two seconds.
       // Eagerness stays normal: an eager agent cuts in on a farmer who stops to think.
+      // Orion never speaks into a silence: without this ElevenLabs has the agent "re-engage" a
+      // farmer who has been quiet for seven seconds, and a farmer at work is often quiet.
       turn: {
+        turn_timeout: -1,
         turn_model: "turn_v3",
         speculative_turn: true,
         soft_timeout_config: {
