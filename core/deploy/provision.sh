@@ -27,18 +27,23 @@ staging)
   SQL_FLAGS=cloudsql.logical_decoding=on,max_connections=50
   SQL_EXTRA=(--no-backup)
   SUBNET_RANGE=10.80.0.0/24
-  API_MIN=0 API_MAX=2
+  API_MIN=0 API_MAX=2 API_MEMORY=512Mi
   # db-f1-micro allows ~22 user connections: API 4 x (2 instances + 1 during rollout) + Electric.
   API_DB_POOL=4 ELECTRIC_DB_POOL=4
   ;;
 production)
   SQL_TIER=db-custom-1-3840
-  SQL_FLAGS=cloudsql.logical_decoding=on
+  # 10 API instances x 5 connections, twice over while a rollout overlaps old and new revisions,
+  # plus Electric: more than the tier's default of 100.
+  SQL_FLAGS=cloudsql.logical_decoding=on,max_connections=200
   SQL_EXTRA=(--backup-start-time=02:00 --enable-point-in-time-recovery
     --retained-backups-count=14 --retained-transaction-log-days=7 --deletion-protection)
   SUBNET_RANGE=10.81.0.0/24
-  API_MIN=1 API_MAX=10
+  # 1 GiB leaves room for three password hashes at once (about 64 MiB each) beside the requests.
+  API_MIN=1 API_MAX=10 API_MEMORY=1Gi
   API_DB_POOL=5 ELECTRIC_DB_POOL=10
+  # Checkout adds VAT through Stripe Tax; re-converging must not switch it off by accident.
+  STRIPE_AUTOMATIC_TAX="${STRIPE_AUTOMATIC_TAX:-true}"
   : "${PUBLIC_SITE_URL:?production needs PUBLIC_SITE_URL}"
   : "${CORE_CORS_ORIGINS:?production needs CORE_CORS_ORIGINS}"
   : "${BILLING_SUCCESS_URL:?production needs BILLING_SUCCESS_URL}"
@@ -320,6 +325,8 @@ CURRENT_IMAGE="$(g run services describe "$API_SERVICE" --region="$REGION" \
   --format='value(spec.template.spec.containers[0].image)' 2>/dev/null || true)"
 CORE_VERSION="$(g run services describe "$API_SERVICE" --region="$REGION" --format=json 2>/dev/null |
   bun -e 'const s=JSON.parse(await Bun.stdin.text()||"{}");const e=s?.spec?.template?.spec?.containers?.[0]?.env??[];console.log(e.find(v=>v.name==="CORE_VERSION")?.value??"")' || true)"
+# An image passed in is named after the commit it was built from.
+if [[ -n "${IMAGE:-}" ]]; then CORE_VERSION="${IMAGE##*:}"; fi
 IMAGE="${IMAGE:-$CURRENT_IMAGE}"
 if [[ -z "$IMAGE" ]]; then
   TAG="$("$DEPLOY_DIR/build.sh")"
@@ -357,7 +364,7 @@ g run deploy "$API_SERVICE" --region="$REGION" --image="$IMAGE" \
   --add-cloudsql-instances="$SQL_CONN" \
   --network="$NETWORK" --subnet="$NETWORK" --vpc-egress=private-ranges-only \
   --set-env-vars="^|^$ENV_VARS" --set-secrets="$SECRETS" \
-  --cpu=1 --memory=512Mi --concurrency=80 --timeout=3600 --cpu-boost \
+  --cpu=1 --memory="$API_MEMORY" --concurrency=80 --timeout=3600 --cpu-boost \
   --min-instances="$API_MIN" --max-instances="$API_MAX" \
   --execution-environment=gen2 --labels="$LABELS" >/dev/null
 API_URL="$(g run services describe "$API_SERVICE" --region="$REGION" --format='value(status.url)')"
