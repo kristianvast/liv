@@ -87,7 +87,15 @@ export function HomeVoiceWidget({ ask, children }: HomeVoiceWidgetProps) {
       )}
 
       {voice.isLive ? (
-        <form className="orbit-ask" onSubmit={sendIntoCall} data-testid="voice-text-form">
+        // The two forms carry keys so React builds each from scratch. Reusing the nodes turns the
+        // pressed End button into the ask box's Send button mid-click, which submits that box
+        // and sends the farmer to Chat.
+        <form
+          key="call"
+          className="orbit-ask"
+          onSubmit={sendIntoCall}
+          data-testid="voice-text-form"
+        >
           <input
             className="orbit-ask__input"
             placeholder={t("voice.input.placeholder")}
@@ -134,6 +142,7 @@ export function HomeVoiceWidget({ ask, children }: HomeVoiceWidgetProps) {
         </form>
       ) : (
         <form
+          key="ask"
           className="orbit-ask"
           onSubmit={ask ? ask.onSubmit : (e) => e.preventDefault()}
           data-testid="home-ask-form"
