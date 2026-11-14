@@ -332,6 +332,8 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
   });
 
   it("puts the account form on Home in place of Orion, and holds Chat back, on an install where Orion cannot answer yet", async () => {
+    // This computer was set up before and someone signed out since.
+    window.localStorage.setItem("orbit.firstRun", "done");
     const { client } = createMinimalTestClient({ needsSetup: true });
 
     render(
@@ -353,6 +355,8 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
     expect(screen.queryByTestId("nav-chat")).not.toBeInTheDocument();
     expect(screen.queryByTestId("home-ask-input")).not.toBeInTheDocument();
     expect(screen.queryByTestId("home-voice-start")).not.toBeInTheDocument();
+    // Whoever signs in from this form gets the tour, also on a computer that had it before.
+    expect(window.localStorage.getItem("orbit.firstRun")).toBe("pending");
 
     // Bringing your own AI subscription is the other way in.
     fireEvent.click(within(setup).getByTestId("home-setup-own-key"));

@@ -266,7 +266,7 @@ the sender's base back into the cloud.
   `"signed_out"` and `settings.get` reports no `availableModels`, Orion cannot answer yet. Home then
   shows the account form (`home-setup`), opened on "Create account", in place of the ask box and the
   call button, with a link to bring your own AI provider key in Settings; the Ask Orion menu item is
-  hidden and `/chat` leads to Home. After that first sign-in Home is shown once with a three-step
+  hidden and `/chat` leads to Home. After a sign-in from that form Home is shown once with a three-step
   tour (write, talk, build); `orbit.firstRun` in localStorage (`lib/tour.ts`) remembers that it was
   seen.
 

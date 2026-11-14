@@ -38,8 +38,9 @@ export function useSetupState(): SetupState {
   const firstRun = useFirstRun();
 
   useEffect(() => {
-    if (needsSetup === null || firstRun !== null) return;
-    setFirstRun(needsSetup ? "pending" : "done");
+    // Every time Home has to ask for a sign-in, the tour is due once Orion can answer.
+    if (needsSetup) setFirstRun("pending");
+    else if (needsSetup === false && firstRun === null) setFirstRun("done");
   }, [needsSetup, firstRun]);
 
   if (needsSetup === null) return firstRun === "done" ? "ready" : "unknown";
