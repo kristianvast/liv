@@ -6,6 +6,7 @@ import {
   ChevronRight,
   Flame,
   HeartPulse,
+  LogIn,
   Sparkles,
 } from "lucide-react";
 import { type FormEvent, type ReactNode, useMemo, useState } from "react";
@@ -13,7 +14,7 @@ import { useNavigate } from "react-router";
 import { Badge, Button, EmptyState, Skeleton } from "../design";
 import { PageCards, useCustomPages } from "../features/pages";
 import { HomeVoiceWidget } from "../features/voice";
-import { HomeSetup, Tour } from "../features/welcome";
+import { Tour } from "../features/welcome";
 import { type MessageKey, type TranslateFn, useI18n } from "../i18n";
 import { type ModuleId, useModules } from "../lib/modules";
 import { useOrion, useOrionQuery } from "../lib/orion";
@@ -219,10 +220,18 @@ export function HomePage() {
   };
 
   // Orion's place on Home: the ask box and the call button, or, on an install where Orion cannot
-  // answer yet, the account form. Nothing until Orion has said which.
+  // answer yet, one button to sign in. Nothing until Orion has said which.
   const orionBox = (placeholder: string, starters: ReactNode) =>
     setup === "setup" ? (
-      <HomeSetup />
+      <Button
+        variant="primary"
+        icon={<LogIn size={16} />}
+        className="orbit-home__sign-in"
+        onClick={() => void navigate("/settings/account")}
+        data-testid="home-sign-in"
+      >
+        {t("home.setup.signIn")}
+      </Button>
     ) : setup === "ready" ? (
       <HomeVoiceWidget
         ask={{ value: question, onChange: setQuestion, onSubmit: submitQuestion, placeholder }}
@@ -235,10 +244,7 @@ export function HomePage() {
 
   if (isMinimalHome) {
     return (
-      <div
-        className={`orbit-container orbit-home orbit-home--minimal${setup === "setup" ? " orbit-home--setup" : ""}`}
-        data-testid="home-minimal"
-      >
+      <div className="orbit-container orbit-home orbit-home--minimal" data-testid="home-minimal">
         <header className="orbit-home__head orbit-home__head--minimal">
           {orionOnline && setup === "ready" && (
             <div className="orbit-home__meta">

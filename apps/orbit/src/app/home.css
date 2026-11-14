@@ -58,6 +58,10 @@
   line-height: var(--leading-body);
 }
 
+.orbit-home__sign-in {
+  align-self: flex-start;
+}
+
 .orbit-home--minimal {
   justify-content: space-between;
   min-block-size: calc(100dvh - var(--topbar-height) - var(--space-16));

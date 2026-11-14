@@ -17,7 +17,7 @@ export const home = {
   "suggest.calving": "Check calving pen camera and recent milk yield drops",
   "suggest.calving.horse": "Check foaling stall camera and recent notes",
   "minimal.badge": "Orion ready",
-  "setup.ownKey": "Use my own AI key instead",
+  "setup.signIn": "Sign in",
   "tour.text.title": "Write to Orion",
   "tour.text.body": "Ask in your own words. Orion answers and does the work.",
   "tour.talk.title": "Talk to Orion",

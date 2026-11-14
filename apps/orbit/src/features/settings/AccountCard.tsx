@@ -32,7 +32,7 @@ const row = {
 } as const;
 const muted = { margin: 0, color: "var(--text-secondary)" } as const;
 
-export function useAccountRun() {
+function useRun() {
   const t = useT();
   const { pushToast } = useToast();
   const [busy, setBusy] = useState(false);
@@ -85,7 +85,7 @@ export interface AccountCardProps {
 export function AccountCard({ status, onStatus }: AccountCardProps) {
   const t = useT();
   const { client, syncStatus } = useOrion();
-  const { busy, run } = useAccountRun();
+  const { busy, run } = useRun();
   const [code, setCode] = useState("");
   const [cloudFarmName, setCloudFarmName] = useState(status.localFarm?.name ?? "");
   const { pushToast } = useToast();

@@ -18,7 +18,7 @@ export const home: Catalog<typeof en> = {
   "suggest.calving": "Sjekk kameraet i kalvingsbingen og nylige fall i melkemengde",
   "suggest.calving.horse": "Sjekk kameraet i føllingsboksen og nylige notater",
   "minimal.badge": "Orion er klar",
-  "setup.ownKey": "Bruk min egen KI-nøkkel i stedet",
+  "setup.signIn": "Logg inn",
   "tour.text.title": "Skriv til Orion",
   "tour.text.body": "Spør med egne ord. Orion svarer og gjør jobben.",
   "tour.talk.title": "Snakk med Orion",

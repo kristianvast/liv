@@ -264,8 +264,9 @@ the sender's base back into the cloud.
   only, state single-use, 10 minutes) and Orion signs in with it at `POST /v1/auth/google`.
 - **First-run setup (`useSetupState`, `apps/orbit/src/lib/setup.ts`):** when `account.status` is
   `"signed_out"` and `settings.get` reports no `availableModels`, Orion cannot answer yet. Home then
-  shows the account form (`home-setup`), opened on "Create account", in place of the ask box and the
-  call button, with a link to bring your own AI provider key in Settings; the Ask Orion menu item is
+  shows one Sign in button (`home-sign-in`) in place of the ask box and the call button; it opens
+  Settings, Account, where the farmer signs in or creates an account (their own AI provider key
+  goes in Settings, Orion); the Ask Orion menu item is
   hidden and `/chat` leads to Home. The first time Home has an Orion that can answer, it plays a
   three-step tour (write, talk, build) once; `orbit.tour` in localStorage (`lib/tour.ts`) remembers
   that it was seen.

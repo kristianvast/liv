@@ -329,7 +329,7 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
     expect(requestMock.mock.calls.filter(([type]) => type === "chat.prompt")).toHaveLength(1);
   });
 
-  it("puts the account form on Home in place of Orion, and holds Chat back, on an install where Orion cannot answer yet", async () => {
+  it("shows one Sign in button on Home in place of Orion, and holds Chat back, on an install where Orion cannot answer yet", async () => {
     const { client } = createMinimalTestClient({ needsSetup: true });
 
     render(
@@ -340,21 +340,19 @@ describe("Minimal-first Orbit UI: navigation, routes, Home, and Settings modules
       </MemoryRouter>,
     );
 
-    // Chat sends the farmer to Home, which is the real Home: menu, headline, and the form.
-    const setup = await screen.findByTestId("home-setup");
-    expect(screen.getByTestId("home-minimal")).toContainElement(setup);
-    expect(within(setup).getByTestId("account-mode-register")).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
+    // Chat sends the farmer to Home, which stays simple: menu, headline, and one button.
+    const signIn = await screen.findByTestId("home-sign-in");
+    expect(screen.getByTestId("home-minimal")).toContainElement(signIn);
     expect(screen.getByTestId("nav-home")).toBeInTheDocument();
     expect(screen.queryByTestId("nav-chat")).not.toBeInTheDocument();
     expect(screen.queryByTestId("home-ask-input")).not.toBeInTheDocument();
     expect(screen.queryByTestId("home-voice-start")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("account-form")).not.toBeInTheDocument();
 
-    // Bringing your own AI subscription is the other way in.
-    fireEvent.click(within(setup).getByTestId("home-setup-own-key"));
-    expect(await screen.findByTestId("settings-page-orion")).toBeInTheDocument();
+    // The button opens Settings, Account, where the farmer signs in or creates an account.
+    fireEvent.click(signIn);
+    const account = await screen.findByTestId("settings-page-account");
+    expect(await within(account).findByTestId("account-form")).toBeInTheDocument();
   });
 
   it("walks a farmer who has not seen it through writing, talking and building, once", async () => {
