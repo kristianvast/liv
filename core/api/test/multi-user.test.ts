@@ -170,8 +170,8 @@ test("choosing own source routes farm requests to personal billing and reports b
     farmPlanAllowed: true,
     member: { tokensUsed: 0, tokenLimit: null },
     usage: { tokensUsed: 7 },
-    personal: { plan: "free", tokensUsed: 7, tokenAllowance: 2_000_000 },
-    farm: { plan: "orion", tokensUsed: 0, tokenAllowance: 2_000_000 },
+    personal: { plan: "free", tokensUsed: 7, tokenAllowance: 10_000_000 },
+    farm: { plan: "orion", tokensUsed: 0, tokenAllowance: 10_000_000 },
   });
 });
 

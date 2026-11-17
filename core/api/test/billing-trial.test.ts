@@ -26,7 +26,7 @@ test("the free month grants Orion allowances and reports its end while plan stay
   expect(await response.json()).toMatchObject({
     plan: "free",
     trialEndsAt: END,
-    usage: { tokenAllowance: 2_000_000, voiceSecondsAllowance: 1800 },
+    usage: { tokenAllowance: 10_000_000, voiceSecondsAllowance: 1800 },
   });
 });
 
@@ -61,7 +61,7 @@ test("an unconfirmed owner gets no free month until the address is confirmed", a
   expect(await confirmed.json()).toMatchObject({
     plan: "free",
     trialEndsAt: END,
-    usage: { tokenAllowance: 2_000_000, voiceSecondsAllowance: 1800 },
+    usage: { tokenAllowance: 10_000_000, voiceSecondsAllowance: 1800 },
   });
 });
 
@@ -157,7 +157,7 @@ test("the gateway refuses an exhausted free pool from the previous calendar mont
     accountId: FARM,
     path: "/x",
     status: 200,
-    totalTokens: 2_000_000,
+    totalTokens: 10_000_000,
     createdAt: START,
   });
   const response = await app({
@@ -171,7 +171,7 @@ test("the gateway refuses an exhausted free pool from the previous calendar mont
   });
   expect(response.status).toBe(429);
   expect(await response.json()).toMatchObject({
-    error: { code: "budget_exceeded", used: 2_000_000, budget: 2_000_000 },
+    error: { code: "budget_exceeded", used: 10_000_000, budget: 10_000_000 },
   });
 });
 
@@ -216,7 +216,7 @@ test.each(["active", "trialing"])("a paid %s plan supersedes the free month", as
   expect(await response.json()).toMatchObject({
     plan: "cam6",
     trialEndsAt: null,
-    usage: { tokenAllowance: 8_000_000, voiceSecondsAllowance: 9000 },
+    usage: { tokenAllowance: 40_000_000, voiceSecondsAllowance: 9000 },
   });
 });
 

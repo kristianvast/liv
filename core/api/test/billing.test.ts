@@ -17,7 +17,7 @@ test("a signed subscription update changes billing status and allowances", async
     cancelAtPeriodEnd: true,
     currentPeriodEnd: new Date(subscription.current_period_end * 1000).toISOString(),
     usage: {
-      tokenAllowance: 3_000_000,
+      tokenAllowance: 15_000_000,
       voiceSecondsAllowance: 3600,
       tokensUsed: 0,
       voiceSecondsUsed: 0,

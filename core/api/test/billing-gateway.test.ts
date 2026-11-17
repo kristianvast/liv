@@ -28,7 +28,7 @@ test("a paid farm at its allowance gets budget_exceeded", async () => {
     accountId: FARM,
     path: "/v1/chat/completions",
     status: 200,
-    totalTokens: 3_000_000,
+    totalTokens: 15_000_000,
     createdAt: NOW.toISOString(),
   });
   const response = await app().request("/v1/llm/v1/chat/completions", {
@@ -38,7 +38,7 @@ test("a paid farm at its allowance gets budget_exceeded", async () => {
   });
   expect(response.status).toBe(429);
   expect(await response.json()).toMatchObject({
-    error: { code: "budget_exceeded", budget: 3_000_000 },
+    error: { code: "budget_exceeded", budget: 15_000_000 },
   });
 });
 test("a farm budget override wins over its paid plan allowance", async () => {

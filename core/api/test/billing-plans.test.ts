@@ -10,7 +10,7 @@ const catalog = [
     cameras: 0,
     monthly: 20,
     yearly: 200,
-    orionTokens: 2_000_000,
+    orionTokens: 10_000_000,
     voiceMinutes: 30,
   },
   {
@@ -19,7 +19,7 @@ const catalog = [
     cameras: 2,
     monthly: 47,
     yearly: 470,
-    orionTokens: 3_000_000,
+    orionTokens: 15_000_000,
     voiceMinutes: 60,
   },
   {
@@ -28,7 +28,7 @@ const catalog = [
     cameras: 4,
     monthly: 75,
     yearly: 750,
-    orionTokens: 5_000_000,
+    orionTokens: 25_000_000,
     voiceMinutes: 100,
   },
   {
@@ -37,7 +37,7 @@ const catalog = [
     cameras: 6,
     monthly: 95,
     yearly: 950,
-    orionTokens: 8_000_000,
+    orionTokens: 40_000_000,
     voiceMinutes: 150,
   },
   {
@@ -46,7 +46,7 @@ const catalog = [
     cameras: 8,
     monthly: 111,
     yearly: 1110,
-    orionTokens: 10_000_000,
+    orionTokens: 50_000_000,
     voiceMinutes: 200,
   },
   {
@@ -55,7 +55,7 @@ const catalog = [
     cameras: 12,
     monthly: 137,
     yearly: 1370,
-    orionTokens: 14_000_000,
+    orionTokens: 70_000_000,
     voiceMinutes: 280,
   },
   {
@@ -64,7 +64,7 @@ const catalog = [
     cameras: 16,
     monthly: 155,
     yearly: 1550,
-    orionTokens: 18_000_000,
+    orionTokens: 90_000_000,
     voiceMinutes: 350,
   },
 ] as const;

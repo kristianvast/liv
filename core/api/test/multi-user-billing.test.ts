@@ -20,7 +20,7 @@ test("personal billing status works without a farm header", async () => {
     personal: {
       plan: "free",
       tokensUsed: 0,
-      tokenAllowance: 2_000_000,
+      tokenAllowance: 10_000_000,
       trialEndsAt: new Date(NOW.getTime() + 30 * 86400000).toISOString(),
     },
   });

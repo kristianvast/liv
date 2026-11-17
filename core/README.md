@@ -193,7 +193,7 @@ the provisioning placeholder never enables the admin routes.
 
 The Barnstar box is EUR 920 and a Tested camera is EUR 150 once. API prices are euros;
 Stripe amounts are cents. Paid allowances reset at the UTC calendar month start.
-Each farm gets one free Orion pool (2 million tokens and 30 voice minutes) for 30 days from
+Each farm gets one free Orion pool (10 million tokens and 30 voice minutes) for 30 days from
 the earliest account creation date among its owners. During this month its plan remains `free`
 and usage counts from that date, across calendar month boundaries. The month is granted only once
 that owner's email address is confirmed; until then the gateway answers 402 `plan_required` with
