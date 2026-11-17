@@ -3,12 +3,15 @@ import { createTokenResolver } from "./auth";
 import type { CoreDb } from "./db";
 import { createGoogleTokenProvider } from "./google-auth";
 import { createMailer } from "./mailer";
+import { createPosthog } from "./posthog";
 import { createPhoneRelay, isRelaySocket, type RelayConnection } from "./relay";
 import { createVoiceGateway, type VoiceConnection } from "./voice";
 import { createVoiceAgentGateway } from "./voice-agent";
 import { VOICE_DEMO_DEFAULTS } from "./voice-demo";
 
 export function serveCore(db: CoreDb, defaultPort: number) {
+  const posthog = { key: process.env.POSTHOG_KEY, host: process.env.POSTHOG_HOST };
+  const capture = createPosthog(posthog);
   const google = process.env.LLM_UPSTREAM_AUTH === "google";
   const accessToken = createGoogleTokenProvider();
   const project = process.env.GCP_PROJECT;
@@ -18,6 +21,7 @@ export function serveCore(db: CoreDb, defaultPort: number) {
       ? `https://aiplatform.googleapis.com/v1/projects/${project}/locations/global/endpoints/openapi`
       : undefined);
   const app = createApp({
+    posthog,
     db,
     resolveToken: createTokenResolver(db, process.env.CORE_STATIC_TOKENS),
     electricUrl: process.env.ELECTRIC_URL ?? "http://127.0.0.1:3001",
@@ -83,12 +87,14 @@ export function serveCore(db: CoreDb, defaultPort: number) {
     },
   });
   const voice = createVoiceGateway(db, {
+    capture,
     project,
     model: process.env.VOICE_MODEL ?? "gemini-3.8-live",
     location: process.env.VOICE_LOCATION ?? "us-central1",
     accessToken,
   });
   const voiceAgent = createVoiceAgentGateway(db, {
+    capture,
     apiKey: process.env.ELEVENLABS_API_KEY || undefined,
     agentId: process.env.VOICE_AGENT_ID || undefined,
   });

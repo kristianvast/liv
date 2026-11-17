@@ -1,9 +1,11 @@
 import type { CoreDb } from "./db";
+import type { Capture } from "./posthog";
 import type { FetchLike } from "./shape";
 import { object } from "./stripe";
 import { createVoiceRelay } from "./voice";
 
 export interface VoiceAgentOptions {
+  readonly capture?: Capture;
   readonly apiKey?: string;
   readonly agentId?: string;
   readonly apiBase?: string;
@@ -14,6 +16,7 @@ export interface VoiceAgentOptions {
 export function createVoiceAgentGateway(db: CoreDb, options: VoiceAgentOptions) {
   const doFetch = options.fetch ?? fetch;
   return createVoiceRelay(db, {
+    capture: options.capture,
     now: options.now,
     async prepare(request) {
       const { apiKey, agentId } = options;

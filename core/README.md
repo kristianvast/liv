@@ -61,6 +61,41 @@ or POST `{"token":"<code>"}` to `http://localhost:8787/v1/auth/verify-email`.
 
 ## Accounts and email
 
+### Product funnel analytics
+
+Set `POSTHOG_KEY` to the public PostHog project ingestion key; `POSTHOG_HOST` defaults to
+`https://eu.i.posthog.com`. Empty keys disable capture. Core sends best-effort JSON batches
+with a two-second timeout, never awaits them on the request path, and logs its first delivery
+failure per capture instance. There is no durable queue or retry; an instance stopped before
+delivery can lose an event.
+
+Events use `users.id` as `distinct_id`, matching the website's signed-in identity:
+`account_created`, `checkout_started`, `checkout_completed`, `orion_request`, and `voice_used`.
+No email, name, IP or conversation content is sent, and GeoIP enrichment is disabled.
+Account source is `app` only when the request's trimmed `deviceName` begins `Orbit on `
+followed by a non-space character (Orion's existing hostname label); other labels, `Website`
+and absent labels are `web`. This is attribution, not a security claim.
+
+Checkout completion comes from existing `checkout.session.completed` with `payment_status=paid`
+or `checkout.session.async_payment_succeeded`, after the webhook transaction commits.
+Replayed Stripe event IDs emit nothing. Hardware-only checkouts have null plan and interval.
+Free/no-payment checkouts are not counted as paid. Existing sessions without user metadata
+and legacy farm API tokens without a user identity are not attributed to invented users.
+Orion usage follows each `llm_usage` insert; voice reports final metered seconds on socket close,
+not each periodic cumulative update.
+
+`POST /v1/app/first-launch` accepts `{install_id, os, app_version}` anonymously and forwards
+only these fields, at most 20 requests per hashed network address per day. Native webview
+origins are allowed on this endpoint. See [desktop privacy](../apps/orbit/PRIVACY.md).
+
+Provisioning passes `POSTHOG_KEY` and `POSTHOG_HOST` as plain environment variables. Build
+the new image with `core/deploy/build.sh` (it prints the image tag), then reconverge using the
+usual production configuration:
+`ENV=production IMAGE=<full-image-reference> POSTHOG_KEY=<public-key> POSTHOG_HOST=https://eu.i.posthog.com core/deploy/provision.sh`.
+Also supply the required `PUBLIC_SITE_URL`, `CORE_CORS_ORIGINS`, `BILLING_SUCCESS_URL` and
+`BILLING_CANCEL_URL` values for that environment. Provisioning without `IMAGE` preserves the
+running image, so it does not install new code by itself.
+
 Sign-up (`POST /v1/auth/register`) requires `acceptTerms: true` and records the terms version
 (`TERMS_VERSION`) and the optional `dataConsent` choice. Core emails a verify link to
 `PUBLIC_SITE_URL/account/?verify=<code>`; plan checkout and invite acceptance need a confirmed

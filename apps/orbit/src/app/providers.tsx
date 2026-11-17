@@ -13,7 +13,8 @@ import { ToastProvider } from "../design";
 import { VoiceProvider, type VoiceStartSessionFn } from "../features/voice";
 import { I18nProvider, type Locale } from "../i18n";
 import { AccountProvider } from "../lib/account";
-import { type OrionEndpoint, OrionProvider } from "../lib/orion";
+import { FirstLaunch } from "../lib/first-launch";
+import { isTauriRuntime, type OrionEndpoint, OrionProvider } from "../lib/orion";
 import { FarmSpeciesProvider } from "../lib/species";
 
 export type ThemeMode = "light" | "dark";
@@ -153,6 +154,7 @@ export function AppProviders({
         <ToastProvider>
           <OrionProvider initialClient={initialClient} initialEndpoint={initialEndpoint}>
             <AccountProvider>
+              {isTauriRuntime() && <FirstLaunch />}
               <FarmSpeciesProvider initialSpecies={initialSpecies}>
                 <VoiceProvider
                   {...(voiceStartSession !== undefined ? { startSession: voiceStartSession } : {})}

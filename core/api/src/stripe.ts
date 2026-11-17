@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import type { EmailLinks, Mailer } from "./mailer";
+import type { Capture } from "./posthog";
 import type { FetchLike } from "./shape";
 
 export class BillingError extends Error {
@@ -26,6 +27,7 @@ export function string(value: unknown, field: string): string {
 }
 
 export interface StripeOptions {
+  readonly capture?: Capture;
   readonly secretKey?: string;
   readonly webhookSecret?: string;
   readonly successUrl?: string;

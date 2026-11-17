@@ -3,6 +3,7 @@ import { completedHardware, hardwarePayment } from "./billing-orders";
 import { type BillingTx, subscriptionUpdate } from "./billing-subscription";
 import { billingCustomers, type CoreDb, farmSubscriptions, stripeEvents } from "./db";
 import { type EmailMessage, emails } from "./mailer";
+import type { ProductEvent } from "./posthog";
 import {
   BillingError,
   object,
@@ -36,6 +37,7 @@ export async function billingWebhook(db: CoreDb, request: Request, options: Stri
   ).toISOString();
   const stripe = stripeClient(options);
   const outgoing: EmailMessage[] = [];
+  let completed: ProductEvent | undefined;
   await db.transaction(async (tx) => {
     // The event claim and all effects commit together; failed handling can be retried.
     const claim = await tx
@@ -45,7 +47,31 @@ export async function billingWebhook(db: CoreDb, request: Request, options: Stri
       .returning();
     if (claim.length === 0) return;
     await applyEvent({ tx, stripe, now, eventAt, options, outgoing }, type, value);
+    if (
+      (type === "checkout.session.completed" && value.payment_status === "paid") ||
+      type === "checkout.session.async_payment_succeeded"
+    ) {
+      const metadata = object(value.metadata ?? {});
+      // Older sessions without an initiating user cannot be attributed to a person.
+      if (typeof metadata.user_id === "string" && metadata.user_id) {
+        const subscription = value.mode === "subscription";
+        const hardware = Number(metadata.box ?? 0) + Number(metadata.cameras ?? 0) > 0;
+        completed = {
+          event: "checkout_completed",
+          distinct_id: metadata.user_id,
+          properties: {
+            plan: subscription && typeof metadata.plan === "string" ? metadata.plan : null,
+            interval:
+              subscription && (metadata.interval === "month" || metadata.interval === "year")
+                ? metadata.interval
+                : null,
+            kind: subscription ? (hardware ? "both" : "plan") : "hardware",
+          },
+        };
+      }
+    }
   });
+  if (completed) options.capture?.(completed);
   // Mail only after commit, so a retried event never emails twice.
   for (const message of outgoing) {
     try {

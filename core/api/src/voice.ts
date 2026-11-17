@@ -4,9 +4,11 @@ import { memberRole, resolveSession } from "./auth";
 import { MEMBER_LIMIT, memberFarmTokens, resolveBillingAccount } from "./billing-account";
 import { type CoreDb, voiceUsage } from "./db";
 import { entitlements, planRequired, usageThisMonth } from "./entitlements";
+import type { Capture } from "./posthog";
 import { object } from "./stripe";
 
 export interface VoiceOptions {
+  readonly capture?: Capture;
   readonly now?: () => Date;
   readonly project?: string;
   readonly model?: string;
@@ -15,6 +17,7 @@ export interface VoiceOptions {
 }
 
 export interface VoiceConnection {
+  readonly userId: string;
   readonly id: string;
   readonly farmId: string | null;
   readonly accountId: string;
@@ -37,12 +40,14 @@ interface VoiceUpstream {
 }
 
 interface RelayOptions {
+  readonly capture?: Capture;
   readonly now?: () => Date;
   readonly prepare: (request: Request) => Promise<VoiceUpstream | Response>;
 }
 
 export function createVoiceGateway(db: CoreDb, options: VoiceOptions) {
   return createVoiceRelay(db, {
+    capture: options.capture,
     now: options.now,
     async prepare() {
       if (!options.project || !options.model)
@@ -69,11 +74,11 @@ export function createVoiceGateway(db: CoreDb, options: VoiceOptions) {
 
 export function createVoiceRelay(db: CoreDb, options: RelayOptions) {
   const now = options.now ?? (() => new Date());
-  const persist = (data: VoiceConnection) =>
-    db
-      .update(voiceUsage)
-      .set({ seconds: Math.ceil((now().getTime() - data.startedAt) / 1000) })
-      .where(eq(voiceUsage.id, data.id));
+  const persist = async (data: VoiceConnection) => {
+    const seconds = Math.ceil((now().getTime() - data.startedAt) / 1000);
+    await db.update(voiceUsage).set({ seconds }).where(eq(voiceUsage.id, data.id));
+    return seconds;
+  };
   return {
     async upgrade(
       request: Request,
@@ -126,6 +131,7 @@ export function createVoiceRelay(db: CoreDb, options: RelayOptions) {
       const upstream = prepared.connect();
       upstream.binaryType = "arraybuffer";
       const data: VoiceConnection = {
+        userId: user.id,
         id,
         farmId,
         accountId: account.id,
@@ -204,11 +210,20 @@ export function createVoiceRelay(db: CoreDb, options: RelayOptions) {
         }
       },
       async close(ws: ServerWebSocket<VoiceConnection>) {
+        if (ws.data.closed) return;
         ws.data.closed = true;
         clearInterval(ws.data.timer);
         ws.data.pending.length = 0;
         ws.data.upstream.close();
-        await persist(ws.data);
+        const seconds = await persist(ws.data);
+        options.capture?.({
+          event: "voice_used",
+          distinct_id: ws.data.userId,
+          properties: {
+            seconds,
+            model: ws.data.model,
+          },
+        });
       },
     },
   };

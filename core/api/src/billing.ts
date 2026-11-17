@@ -121,6 +121,16 @@ export function registerBillingRoutes(app: Hono<FarmEnv>, db: CoreDb, options: S
       form.set(`subscription_data[metadata][${key}]`, value);
     }
     const session = await stripe("checkout/sessions", form);
+    options.capture?.({
+      event: "checkout_started",
+      distinct_id: userId,
+      properties: {
+        plan,
+        interval,
+        kind: selection.box + selection.cameras > 0 ? "both" : "plan",
+        account: account.kind,
+      },
+    });
     return c.json({ url: string(session.url, "checkout URL") });
   });
   routes.post("/portal", async (c) => {

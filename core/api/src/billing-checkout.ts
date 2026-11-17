@@ -195,5 +195,10 @@ export async function hardwareCheckout(db: CoreDb, request: Request, options: St
   const stripe = stripeClient(options);
   await addHardware(form, selection, stripe);
   const session = await stripe("checkout/sessions", form);
+  options.capture?.({
+    event: "checkout_started",
+    distinct_id: buyer.id,
+    properties: { plan: null, interval: null, kind: "hardware", account: "personal" },
+  });
   return Response.json({ url: string(session.url, "checkout URL") });
 }

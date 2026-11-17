@@ -107,6 +107,7 @@ export function createAccountRuntime(db: CoreDb, options: AccountOptions) {
     };
 
   return {
+    capture: options.capture,
     now,
     mailer,
     links,

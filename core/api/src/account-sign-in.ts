@@ -17,6 +17,7 @@ import { createSession, hashToken } from "./auth";
 import { type CoreDb, loginFailures, userSessions, users } from "./db";
 import type { GoogleIdentity } from "./google-sign-in";
 import { emails } from "./mailer";
+import { accountSource } from "./posthog";
 import { addressIdentity, withinRate } from "./rate-limit";
 export function registerSignInRoutes(
   routes: Hono<AccountEnv>,
@@ -72,6 +73,11 @@ export function registerSignInRoutes(
         .onConflictDoNothing({ target: users.email })
         .returning({ id: users.id, email: users.email, name: users.name });
       if (!created) throw new ApiError(409, "email_taken", "an account with this email exists");
+      runtime.capture?.({
+        event: "account_created",
+        distinct_id: created.id,
+        properties: { source: accountSource(deviceName), method: "password" },
+      });
       const session = await createSession(db, created.id, deviceName, now());
       await deliver(
         emails.verify(links, address, await issueEmailToken(created.id, address, "verify")),
@@ -199,6 +205,12 @@ export function registerSignInRoutes(
           created,
         };
       });
+      if (result.created)
+        runtime.capture?.({
+          event: "account_created",
+          distinct_id: result.user.id,
+          properties: { source: accountSource(deviceName), method: "google" },
+        });
       return c.json(result, result.created ? 201 : 200);
     }),
   );

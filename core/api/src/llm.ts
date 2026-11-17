@@ -5,9 +5,11 @@ import { and, eq, gte, sql } from "drizzle-orm";
 import { MEMBER_LIMIT, memberFarmTokens, resolveBillingAccount } from "./billing-account";
 import { type CoreDb, farmBudgets, llmUsage } from "./db";
 import { planRequired } from "./entitlements";
+import type { Capture } from "./posthog";
 import type { FetchLike } from "./shape";
 
 export interface LlmGatewayOptions {
+  readonly capture?: Capture;
   /** e.g. https://api.openai.com or https://api.anthropic.com (no trailing slash needed). */
   upstreamUrl?: string;
   upstreamApiKey?: string;
@@ -210,6 +212,19 @@ export async function handleLlm(
       totalTokens: usage.input + usage.output,
       createdAt: options.now().toISOString(),
     });
+    // Legacy farm API tokens have no person identity; never merge their usage into a user.
+    if (options.userId)
+      options.capture?.({
+        event: "orion_request",
+        distinct_id: options.userId,
+        properties: {
+          model,
+          input_tokens: usage.input,
+          output_tokens: usage.output,
+          status,
+          plan: account.entitlement.plan.id,
+        },
+      });
   };
 
   let upstream: Response;

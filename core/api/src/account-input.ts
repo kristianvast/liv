@@ -2,6 +2,7 @@ import { type FarmRole, isFarmRole } from "@orbit/schema";
 import type { Context } from "hono";
 import type { SessionUser } from "./auth";
 import type { EmailLinks, Mailer } from "./mailer";
+import type { Capture } from "./posthog";
 import type { FetchLike } from "./shape";
 export const INVITE_PREFIX = "orb_i_";
 export const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000;
@@ -22,6 +23,7 @@ export const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{1
 export const iso = (pgTimestamp: string) => new Date(Date.parse(pgTimestamp)).toISOString();
 
 export interface AccountOptions {
+  readonly capture?: Capture;
   now: () => Date;
   /** Failed logins allowed per email inside `windowMs` before login answers 429. */
   loginThrottle?: { maxFailures: number; windowMs: number };

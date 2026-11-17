@@ -4,6 +4,7 @@ import { type Context, Hono, type Next } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
 import { registerAccountRoutes } from "./accounts";
+import { createAppLaunchRoutes } from "./app-launch";
 import { memberRole, type Principal, resolveSession, type TokenResolver } from "./auth";
 import { registerBillingRoutes } from "./billing";
 import {
@@ -18,6 +19,7 @@ import { createFarmCodeRoutes } from "./farm-code";
 import { createFeedbackRoutes } from "./feedback";
 import { handleLlm, type LlmGatewayOptions } from "./llm";
 import { createLogMailer, type EmailLinks, type Mailer } from "./mailer";
+import { createPosthog, type PosthogOptions } from "./posthog";
 import { afterResponse, createPush, type PushOptions } from "./push";
 import { createPushRoutes } from "./push-routes";
 import { type FetchLike, proxyShape } from "./shape";
@@ -25,6 +27,7 @@ import type { StripeOptions } from "./stripe";
 import { registerVoiceDemoRoutes, VOICE_DEMO_DEFAULTS, type VoiceDemoOptions } from "./voice-demo";
 
 export interface AppOptions {
+  readonly posthog?: Pick<PosthogOptions, "key" | "host">;
   db: CoreDb;
   resolveToken: TokenResolver;
   electricUrl: string;
@@ -63,12 +66,15 @@ export function createApp(options: AppOptions) {
   const app = new Hono<Env>();
   const doFetch: FetchLike = options.fetch ?? ((input, init) => fetch(input, init));
   const now = options.now ?? (() => new Date());
+  const capture = createPosthog({ ...options.posthog, fetch: doFetch, now });
+  app.route("/", createAppLaunchRoutes(options.db, capture, now));
   const clock = options.apply?.clock ?? createHlc("cloud", { maxDriftMs: 86_400_000 });
   const push = createPush(options.db, options.push);
   app.route("/v1/push", createPushRoutes(options.db, push, now));
   const mailer = options.mailer ?? createLogMailer();
   const links: EmailLinks = { ...DEFAULT_LINKS, ...options.links };
   const llmOptions: LlmGatewayOptions = {
+    capture,
     upstreamUrl: options.llm?.upstreamUrl,
     upstreamApiKey: options.llm?.upstreamApiKey,
     authHeader: options.llm?.authHeader ?? "authorization",
@@ -126,6 +132,7 @@ export function createApp(options: AppOptions) {
   );
 
   registerAccountRoutes(app as unknown as Hono, options.db, {
+    capture,
     now,
     loginThrottle: options.loginThrottle,
     mailer,
@@ -191,6 +198,7 @@ export function createApp(options: AppOptions) {
   app.route("/", createFarmCodeRoutes(options.db));
   registerBillingRoutes(app, options.db, {
     ...options.billing,
+    capture,
     redirectOrigins: websiteOrigins,
     mailer,
     links,
