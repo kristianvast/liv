@@ -15,7 +15,9 @@ It runs on your own computer, and its built-in AI assistant, Orion, shapes it in
 
 [**Download**](#download) · [Website](https://barnstar.dev) · [Architecture](docs/ARCHITECTURE.md) · [Roadmap](docs/ROADMAP.md) · [Contributing](CONTRIBUTING.md)
 
-https://github.com/user-attachments/assets/0e28a575-258c-496b-9b7b-52a7813858ce
+<a href="https://barnstar.dev/assets/video/v11-orbit-motion/v11-orbit-motion-light_audio.mp4"><img src="docs/media/orbit-film.webp" width="100%" alt="A farmer asks Orion for a calving watch, and Orion builds the page, the camera view and the text alert"></a>
+
+<sub>▶ <a href="https://barnstar.dev/assets/video/v11-orbit-motion/v11-orbit-motion-light_audio.mp4">Watch the full film with sound</a> (55 seconds)</sub>
 
 </div>
 
