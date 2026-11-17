@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-If you find a security vulnerability in Orbit, Orion, or Core, please report it privately by emailing **[kristian@agrointel.no](mailto:kristian@agrointel.no)**.
+If you find a security vulnerability in Orbit, Orion, or Core, please report it privately by emailing **[kristian@barnstar.dev](mailto:kristian@barnstar.dev)**.
 
 Please do not open a public GitHub issue for undisclosed security vulnerabilities. Include the affected package or file path, steps to reproduce the issue, and its potential impact on a farm PC or cloud deployment. We will acknowledge receipt and work with you on a fix before public disclosure.
 

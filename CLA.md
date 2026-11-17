@@ -1,7 +1,7 @@
 # Individual Contributor License Agreement (CLA)
 
 > **STATUS: DRAFT (Pending formal legal review)**
-> For questions about this agreement, contact [kristian@agrointel.no](mailto:kristian@agrointel.no).
+> For questions about this agreement, contact [kristian@barnstar.dev](mailto:kristian@barnstar.dev).
 
 Thank you for your interest in contributing to **Orbit**, maintained by **AgroIntel** ("We" or "Us").
 

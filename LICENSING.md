@@ -28,4 +28,4 @@ To make dual licensing possible, contributors sign our [Contributor License Agre
 
 ## Contact
 
-For licensing questions or commercial inquiries, email [kristian@agrointel.no](mailto:kristian@agrointel.no).
+For licensing questions or commercial inquiries, email [kristian@barnstar.dev](mailto:kristian@barnstar.dev).

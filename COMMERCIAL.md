@@ -23,6 +23,6 @@ A commercial software license covers the code in this repository. AgroIntel also
 
 ## Get in touch
 
-To discuss commercial licensing, OEM partnerships, or access to Barnstar model weights and hosted APIs, contact Kristian Vastveit at [kristian@agrointel.no](mailto:kristian@agrointel.no).
+To discuss commercial licensing, OEM partnerships, or access to Barnstar model weights and hosted APIs, contact Kristian Vastveit at [kristian@barnstar.dev](mailto:kristian@barnstar.dev).
 
 See [LICENSING.md](LICENSING.md) for how the open-source and commercial licenses fit together.

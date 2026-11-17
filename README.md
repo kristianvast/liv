@@ -99,4 +99,4 @@ bun run lint && bun run typecheck && bun run test
 
 ## License
 
-Orbit is dual-licensed: open source under [AGPL-3.0-only](LICENSE), with a paid [commercial license](COMMERCIAL.md) from AgroIntel for closed-source use. See [LICENSING.md](LICENSING.md) or write to [kristian@agrointel.no](mailto:kristian@agrointel.no).
+Orbit is dual-licensed: open source under [AGPL-3.0-only](LICENSE), with a paid [commercial license](COMMERCIAL.md) from AgroIntel for closed-source use. See [LICENSING.md](LICENSING.md) or write to [kristian@barnstar.dev](mailto:kristian@barnstar.dev).
