@@ -36,8 +36,8 @@ Liv. Wait for a yes. After that first time you do not need to ask again for each
 3. Edit. What you may change:
    - `apps/liv/src`: the app's screens (React + TypeScript).
    - `packages/liv/src` and `packages/liv/resources`: Liv itself. Your instructions are in
-     `packages/liv/src/agent/hub.ts`, your tools in `packages/liv/src/agent/`, your skills in
-     `packages/liv/resources/skills/`.
+     `packages/liv/resources/prompt/` and `packages/liv/resources/AGENTS.md`, your tools in
+     `packages/liv/src/agent/`, your skills in `packages/liv/resources/skills/`.
    - `packages/protocol` only together with both sides that use it (the app and Liv), in the
      same build.
    - Never `packages/schema` or `packages/sync`: a changed database would stop this farm syncing

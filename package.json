@@ -17,7 +17,8 @@
     "e2e:web": "bun run --filter '@liv/e2e' test:web",
     "e2e:desktop": "bun run --filter '@liv/e2e' test:desktop",
     "check:workflows": "bun run --filter '@liv/e2e' check:workflows",
-    "skills:index": "bun scripts/build-skills-index.ts"
+    "skills:index": "bun scripts/build-skills-index.ts",
+    "liv:context": "bun packages/liv/src/show-context.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.0",

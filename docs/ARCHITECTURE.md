@@ -323,9 +323,14 @@ the sender's base back into the cloud.
   named query and mutation layer as `db.query` and `db.mutate`. Pi's coding tools (read/write/edit/bash)
   start in the workspace and can reach the rest of the machine. On Windows Liv also switches on
   Pi's `powershell` tool, and drops `bash` when no bundled MinGit shell sits next to the sidecar, so
-  a shell always exists. Because a custom system prompt replaces Pi's own tool rules, the prompt in
-  `agent/hub.ts` carries Liv's working rules plus a "This computer" block (`computerPrompt`:
-  system, shell, Liv version, workspace, data folder, checkout) so Liv never has to probe for them.
+  a shell always exists. Because a custom system prompt replaces Pi's own tool rules, the prompt
+  carries Liv's working rules plus a "This computer" block (`computerPrompt`: system, shell, Liv
+  version, workspace, data folder, checkout) so Liv never has to probe for them.
+- **What Liv is told:** the words are markdown files in `packages/liv/resources/prompt/`, put
+  together in order by `agent/prompt.ts`; `packages/liv/resources/README.md` maps every source.
+  Each new conversation writes `<data-dir>/liv-context.md`: every part with its size, the tool
+  descriptions and the whole prompt the model got. `bun run liv:context` prints the same for a
+  fresh install without starting the app.
 - **Conversation titles:** a new conversation is listed under its opening line. The moment its first
   message is sent, beside the run, `SessionHub.nameSession` asks a small model for a short title
   (`agent/title.ts`) and emits `session.updated`: on the subscription that is the gateway's

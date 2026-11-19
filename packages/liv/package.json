@@ -13,6 +13,7 @@
   "scripts": {
     "dev": "bun --watch src/main.ts --port 7717 --token dev --mock-model --seed --data-dir ./.dev-data --app-source ../..",
     "start": "bun src/main.ts",
+    "context": "bun src/show-context.ts",
     "typecheck": "tsc -p . --noEmit",
     "test": "bun test"
   },
