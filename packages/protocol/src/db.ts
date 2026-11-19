@@ -9,8 +9,8 @@ import type {
   Farm,
   Observation,
   WearableKind,
-} from "@orbit/schema";
-import { DEVICE_KINDS, SPECIES } from "@orbit/schema/enums";
+} from "@liv/schema";
+import { DEVICE_KINDS, SPECIES } from "@liv/schema/enums";
 import { type Static, Type } from "typebox";
 import {
   AnimalInput,
@@ -104,7 +104,7 @@ export type DbMutateRequest = {
   [M in DbMutationName]: { mutation: M; params: DbMutationParams<M> };
 }[DbMutationName];
 
-// ------------------------------------------------------------------ result shapes (row types from @orbit/schema)
+// ------------------------------------------------------------------ result shapes (row types from @liv/schema)
 
 export interface ActiveWearable {
   deviceId: string;
@@ -152,7 +152,7 @@ export interface DbQueryResults {
 }
 
 /**
- * Live video relay state. Streams are served by Orion at
+ * Live video relay state. Streams are served by Liv at
  * /camera/<token>/<cameraId>/ws (go2rtc MSE WebSocket) and /camera/<token>/<cameraId>/frame.jpeg.
  */
 export interface CameraRelayStatus {

@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { expectTool, startChat } from "./helpers";
 
-test("a page Orion builds shows up in the menu and reads farm data", async ({ page }) => {
+test("a page Liv builds shows up in the menu and reads farm data", async ({ page }) => {
   await startChat(page, "make a page");
   await expectTool(page, "write", "done");
 

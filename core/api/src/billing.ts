@@ -60,11 +60,7 @@ export function registerBillingRoutes(app: Hono<FarmEnv>, db: CoreDb, options: S
     const body = object(await c.req.json());
     const { plan, interval } = body;
     if (!isPaidPlan(plan) || (interval !== "month" && interval !== "year"))
-      throw new BillingError(
-        400,
-        "bad_request",
-        "Choose an Orion or camera plan and month or year",
-      );
+      throw new BillingError(400, "bad_request", "Choose a Liv or camera plan and month or year");
     const selection = hardwareSelection(body);
     const principal = c.get("principal");
     const account = checkoutAccount(principal, body.account);

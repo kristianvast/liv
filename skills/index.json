@@ -4,7 +4,7 @@
     {
       "name": "delaval-delpro",
       "version": "1.0.0",
-      "description": "Import animals, milkings and daily weights from a DeLaval DelPro herd management server (SQL Server on the farm network). Use when the farmer has DeLaval milking equipment or DelPro and wants its data in Orbit.",
+      "description": "Import animals, milkings and daily weights from a DeLaval DelPro herd management server (SQL Server on the farm network). Use when the farmer has DeLaval milking equipment or DelPro and wants its data in Liv.",
       "keywords": [
         "delaval",
         "delpro",
@@ -16,11 +16,11 @@
       "files": [
         {
           "path": "SKILL.md",
-          "sha256": "87b3f4a055b5372cce5213d83f4e44a72c6da4264f52f256517e5ca5448cab81"
+          "sha256": "9d5a44df856469419aa2dab5c3037a6949b599c3a6476edbcc0ae988b7c8b85f"
         },
         {
           "path": "connector/README.md",
-          "sha256": "29a18783e7b94e1a3d7b736f3f1c4147503a697b63565b45eab671a2e6ed50f6"
+          "sha256": "90607e8ed98f30690a94ac032fbcd8ca887fa9a2cca93bb2dddfadd03f9c5f08"
         },
         {
           "path": "connector/connector.ts",
@@ -32,7 +32,7 @@
         },
         {
           "path": "connector/package.json",
-          "sha256": "48f9ce685d7eb3cf4117a99b97a8f2eec26a12a2b4ee49123e4e617b5dc2afbd"
+          "sha256": "5fda7f3ae4e03f29c4b993186d7992769342169dafced49ef28bdce555d737a5"
         },
         {
           "path": "connector/source.ts",
@@ -66,15 +66,15 @@
       "files": [
         {
           "path": "SKILL.md",
-          "sha256": "a817773474ff893ed5fda255aafa52cea0b13c0b01e4c9911ad854180fbcb126"
+          "sha256": "5a379941257df2bb0f545fb0dd53a641a5c0d7dd57302bd6a8e92ad9d8161a5a"
         },
         {
           "path": "pages/calendar/calendar.js",
-          "sha256": "e744f0da72a97eac607c3b6723b7f4a0a5d51a8e265cd01773b34e500eeb10ee"
+          "sha256": "1d4999548f1b4a7a8834887480103071ddecd829bd550dd5c2a3918ccfd6b80d"
         },
         {
           "path": "pages/calendar/card.html",
-          "sha256": "4e6bf3975c6b434fb200e6bfbb4ae33a64823db2dee0bb66f05e16050fe3ba47"
+          "sha256": "e6a9d5008dbc800cf56abb8698c22f70225a3da84547a05597e6c2852df34629"
         },
         {
           "path": "pages/calendar/config.json",
@@ -82,7 +82,7 @@
         },
         {
           "path": "pages/calendar/index.html",
-          "sha256": "58f6d589cba460c453d593c4df7db46941e96b17de94902a20ae90360e7b5f79"
+          "sha256": "6066670b693658e74f80a4e49c8af43f6d9bc022f5aadd6bee4210f18d122fe4"
         },
         {
           "path": "pages/calendar/page.json",
@@ -94,11 +94,11 @@
         },
         {
           "path": "pages/cameras/cameras.js",
-          "sha256": "8d2c15ab529f850bee37898fb39f73737bdae7cffcb3c746260e5d779ba5c4e7"
+          "sha256": "e46446df41dcaaa2c74135876d3c3d9ff38ca572f86800abc3e65c6ed6835564"
         },
         {
           "path": "pages/cameras/card.html",
-          "sha256": "0996810e58d927ffd36f9d3e3bab2d41e7d3834f626d929543fdb80f26a842f4"
+          "sha256": "2172a3ed99a5d2608468e2976bf4fc378502c4d5ade6c2309b8df4d8cdfd9a9c"
         },
         {
           "path": "pages/cameras/config.json",
@@ -106,7 +106,7 @@
         },
         {
           "path": "pages/cameras/index.html",
-          "sha256": "d0b9ca95ab199d6f44bec821f77bf9db50ef673346c569f5ba0166fbdb43d173"
+          "sha256": "fefd0b650b833b0946f4ce83417a3964a809ee8cc7ed6060c09eaa55c846305b"
         },
         {
           "path": "pages/cameras/page.json",
@@ -114,7 +114,7 @@
         },
         {
           "path": "pages/herd/card.html",
-          "sha256": "35484c57cb2c36a6054e970f086d9a47d8665681f3efe7cab8f6d84452926c6c"
+          "sha256": "ca675efc3014986f62a4f813221a750f75e7f2428b8172d68d7ef81cc51874a1"
         },
         {
           "path": "pages/herd/config.json",
@@ -122,11 +122,11 @@
         },
         {
           "path": "pages/herd/herd.js",
-          "sha256": "2fbab4da552dafea498e2580886f8ec5e7bad927c083ee7bfdbc663adfb2a2a5"
+          "sha256": "0ce3a9fc020592f6f2cd6c04d65e4ba848178c4a547d22dcca90ee6cc4f07c2a"
         },
         {
           "path": "pages/herd/index.html",
-          "sha256": "98e40231eeec06574de2abb537a189141d4222b7bc73017ba98354a5cd9a5d8f"
+          "sha256": "d7e8843ce05a74ad51eb08b44844e5ba62e3b54d44ba17f233e63a47c845a176"
         },
         {
           "path": "pages/herd/page.json",

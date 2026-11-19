@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, test } from "bun:test";
-import { animals, deviceBindings, devices, outbox } from "@orbit/schema";
-import type { LocalDb } from "@orbit/schema/local";
+import { animals, deviceBindings, devices, outbox } from "@liv/schema";
+import type { LocalDb } from "@liv/schema/local";
 import { eq } from "drizzle-orm";
 import { createSyncEngine, type FetchLike, type SyncEngine, type SyncStatus } from "../src";
 import { FARM, FakeCore, freshDb, hlcAt, pgAnimal, TOKEN } from "./fake-core";
@@ -136,7 +136,7 @@ describe("pull", () => {
   test("sends the configured farm header on pushes and shape reads", async () => {
     localAnimal(A1, hlcAt("2026-11-03T00:00:00Z", 0, "local"));
     queue("insert", A1, hlcAt("2026-11-03T00:00:00Z", 0, "local"), getAnimal(A1) as object);
-    const e = engine({ headers: { "x-orbit-farm": FARM } });
+    const e = engine({ headers: { "x-liv-farm": FARM } });
     expect(await e.syncNow()).toMatchObject({ ok: true, pushed: 1 });
     expect(core.farmHeaders.length).toBeGreaterThan(1);
     expect(new Set(core.farmHeaders)).toEqual(new Set([FARM]));

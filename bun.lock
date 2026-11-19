@@ -3,20 +3,20 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "orbit-monorepo",
+      "name": "liv-monorepo",
       "devDependencies": {
         "@biomejs/biome": "^2.3.0",
         "@types/bun": "latest",
         "typescript": "^5.9.0",
       },
     },
-    "apps/orbit": {
-      "name": "@orbit/app",
-      "version": "0.1.10",
+    "apps/liv": {
+      "name": "@liv/app",
+      "version": "0.1.11",
       "dependencies": {
         "@elevenlabs/client": "^1.36.0",
-        "@orbit/protocol": "workspace:*",
-        "@orbit/schema": "workspace:*",
+        "@liv/protocol": "workspace:*",
+        "@liv/schema": "workspace:*",
         "@tauri-apps/api": "^2.3.0",
         "@tauri-apps/plugin-process": "^2.2.0",
         "@tauri-apps/plugin-shell": "^2.2.0",
@@ -42,8 +42,8 @@
       "name": "@core/api",
       "version": "0.1.0",
       "dependencies": {
-        "@orbit/protocol": "workspace:*",
-        "@orbit/schema": "workspace:*",
+        "@liv/protocol": "workspace:*",
+        "@liv/schema": "workspace:*",
         "drizzle-orm": "^0.45.4",
         "hono": "^4.13.16",
         "typebox": "^1.4.3",
@@ -53,15 +53,15 @@
       },
     },
     "packages/connectors": {
-      "name": "@orbit/connectors",
+      "name": "@liv/connectors",
       "version": "0.1.0",
       "dependencies": {
-        "@orbit/schema": "workspace:*",
+        "@liv/schema": "workspace:*",
         "typebox": "^1.4.3",
       },
     },
     "packages/e2e": {
-      "name": "@orbit/e2e",
+      "name": "@liv/e2e",
       "version": "0.1.0",
       "devDependencies": {
         "@playwright/test": "^1.64.1",
@@ -75,19 +75,19 @@
         "yaml": "^2.9.1",
       },
     },
-    "packages/orion": {
-      "name": "@orion/agent",
-      "version": "0.1.10",
+    "packages/liv": {
+      "name": "@liv/agent",
+      "version": "0.1.11",
       "bin": {
-        "orion": "./src/main.ts",
+        "liv": "./src/main.ts",
       },
       "dependencies": {
         "@earendil-works/pi-agent-core": "^1.5.0",
         "@earendil-works/pi-ai": "^1.5.0",
         "@earendil-works/pi-coding-agent": "^1.5.0",
-        "@orbit/protocol": "workspace:*",
-        "@orbit/schema": "workspace:*",
-        "@orbit/sync": "workspace:*",
+        "@liv/protocol": "workspace:*",
+        "@liv/schema": "workspace:*",
+        "@liv/sync": "workspace:*",
         "drizzle-orm": "^0.45.4",
         "isomorphic-git": "^1.44.12",
         "onvif": "^0.8.3",
@@ -99,15 +99,15 @@
       },
     },
     "packages/protocol": {
-      "name": "@orbit/protocol",
+      "name": "@liv/protocol",
       "version": "0.1.0",
       "dependencies": {
-        "@orbit/schema": "workspace:*",
+        "@liv/schema": "workspace:*",
         "typebox": "^1.4.3",
       },
     },
     "packages/schema": {
-      "name": "@orbit/schema",
+      "name": "@liv/schema",
       "version": "0.1.0",
       "dependencies": {
         "drizzle-orm": "^0.45.4",
@@ -119,10 +119,10 @@
       },
     },
     "packages/sync": {
-      "name": "@orbit/sync",
+      "name": "@liv/sync",
       "version": "0.1.0",
       "dependencies": {
-        "@orbit/schema": "workspace:*",
+        "@liv/schema": "workspace:*",
         "drizzle-orm": "^0.45.4",
       },
     },
@@ -393,25 +393,25 @@
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.31", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw=="],
 
+    "@liv/agent": ["@liv/agent@workspace:packages/liv"],
+
+    "@liv/app": ["@liv/app@workspace:apps/liv"],
+
+    "@liv/connectors": ["@liv/connectors@workspace:packages/connectors"],
+
+    "@liv/e2e": ["@liv/e2e@workspace:packages/e2e"],
+
+    "@liv/protocol": ["@liv/protocol@workspace:packages/protocol"],
+
+    "@liv/schema": ["@liv/schema@workspace:packages/schema"],
+
+    "@liv/sync": ["@liv/sync@workspace:packages/sync"],
+
     "@livekit/mutex": ["@livekit/mutex@1.1.1", "", {}, "sha512-EsshAucklmpuUAfkABPxJNhzj9v2sG7JuzFDL4ML1oJQSV14sqrpTYnsaOudMAw9yOaW53NU3QQTlUQoRs4czw=="],
 
     "@livekit/protocol": ["@livekit/protocol@1.52.1", "", { "dependencies": { "@bufbuild/protobuf": "^1.10.0" } }, "sha512-X8DxKlNbzk6Lh+v630+mjdFHSotdAFwIyzxSRSUql2DbTxCnlpa7JsvFGc6Na3mXiex2OFh0iiQtWwOBP0rIYA=="],
 
     "@napi-rs/lzma-linux-x64-gnu": ["@napi-rs/lzma-linux-x64-gnu@1.5.1", "", { "os": "linux", "cpu": "x64", "libc": "glibc" }, "sha512-oTXEIha4SsuXdTA4Iyskj0kpdx2yVXdhd75c2v3xGrHFfVMsbhTPZU/nMPL4sWKo4pBHm3aucLaqGlF696dTyQ=="],
-
-    "@orbit/app": ["@orbit/app@workspace:apps/orbit"],
-
-    "@orbit/connectors": ["@orbit/connectors@workspace:packages/connectors"],
-
-    "@orbit/e2e": ["@orbit/e2e@workspace:packages/e2e"],
-
-    "@orbit/protocol": ["@orbit/protocol@workspace:packages/protocol"],
-
-    "@orbit/schema": ["@orbit/schema@workspace:packages/schema"],
-
-    "@orbit/sync": ["@orbit/sync@workspace:packages/sync"],
-
-    "@orion/agent": ["@orion/agent@workspace:packages/orion"],
 
     "@playwright/test": ["@playwright/test@1.64.1", "", { "dependencies": { "playwright": "1.64.1" }, "bin": { "playwright": "cli.js" } }, "sha512-IaYGml/nSOiZWROfPtuIL7neuu9qDOZ3TNvNljUIrhDMxiGTgPjzj/g9p9RxpS2tSepPDRY+UwAaEeiKtUvIAg=="],
 

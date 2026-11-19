@@ -19,7 +19,7 @@ async function trialOwner() {
   await db.update(users).set({ createdAt: START }).where(eq(users.id, session.userId));
 }
 
-test("the free month grants Orion allowances and reports its end while plan stays free", async () => {
+test("the free month grants Liv allowances and reports its end while plan stays free", async () => {
   await trialOwner();
   const response = await app().request("/v1/billing/status", { headers: headers() });
   expect(response.status).toBe(200);
@@ -72,7 +72,7 @@ test("the free month permits the LLM gateway and records usage", async () => {
   }).request("/v1/llm/v1/chat/completions", {
     method: "POST",
     headers: headers(),
-    body: '{"model":"orbit-default"}',
+    body: '{"model":"liv-default"}',
   });
   expect(response.status).toBe(200);
   expect(await db.select({ tokens: llmUsage.totalTokens }).from(llmUsage)).toEqual([

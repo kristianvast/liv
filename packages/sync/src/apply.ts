@@ -9,7 +9,7 @@ import {
   isWearableKind,
   parseHlc,
   type SyncedTable,
-} from "@orbit/schema";
+} from "@liv/schema";
 import { TABLE_COLUMNS } from "./columns";
 import { type LocalRow, RowError, toLocalRow, toWireRow } from "./convert";
 

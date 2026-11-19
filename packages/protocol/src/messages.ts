@@ -42,16 +42,16 @@ export const ModuleEnabledBy = Type.Union([
   Type.Null(),
 ]);
 export type ModuleEnabledBy = Static<typeof ModuleEnabledBy>;
-export const OrbitModule = Type.Object({
+export const LivModule = Type.Object({
   id: ModuleId,
   enabled: Type.Boolean(),
   /** ISO time it was last switched on; null while off. */
   enabledAt: Type.Union([Type.String(), Type.Null()]),
   enabledBy: ModuleEnabledBy,
 });
-export type OrbitModule = Static<typeof OrbitModule>;
+export type LivModule = Static<typeof LivModule>;
 /** Always all of MODULE_IDS, in that order. */
-export const ModulesState = Type.Object({ modules: Type.Array(OrbitModule) });
+export const ModulesState = Type.Object({ modules: Type.Array(LivModule) });
 export type ModulesState = Static<typeof ModulesState>;
 // Not `id`: request frames are flat and `id` is the request id.
 const ModuleRef = Type.Object({ moduleId: ModuleId });
@@ -111,7 +111,7 @@ export const Requests = {
     result: Accepted,
   },
   "chat.abort": { params: SessionRef, result: Accepted },
-  /** Pages Orion built in the farm workspace. */
+  /** Pages Liv built in the farm workspace. */
   "pages.list": { params: Empty, result: Type.Object({ pages: Type.Array(CustomPage) }) },
   "pages.read": {
     params: Type.Object({ pageId: Type.String(), path: Type.String() }),
@@ -142,7 +142,7 @@ export const Requests = {
   },
   "settings.get": { params: Empty, result: Settings },
   "settings.update": { params: SettingsUpdate, result: Settings },
-  /** Model providers Orion can sign in to, with their current status (Pi's /login list). */
+  /** Model providers Liv can sign in to, with their current status (Pi's /login list). */
   "auth.providers": {
     params: Empty,
     result: Type.Object({ providers: Type.Array(AuthProviderInfo) }),
@@ -266,7 +266,7 @@ export const Events = {
     errorMessage: Type.Optional(Type.String()),
   }),
   /**
-   * Orion wants to use one of these tools for the first time and waits for the farmer's yes for
+   * Liv wants to use one of these tools for the first time and waits for the farmer's yes for
    * that tool (access.respond). Sent again to a client that connects while it is still open.
    */
   "access.request": Type.Object({
@@ -279,7 +279,7 @@ export const Events = {
   "db.changed": Type.Object({ table: Type.String(), ids: Type.Array(Type.String()) }),
   /** A new local UI build passed its checks; a running local UI reloads. */
   "localUi.updated": LocalUiStatus,
-  /** Module state changed (by Orion, the farmer, or data appearing). */
+  /** Module state changed (by Liv, the farmer, or data appearing). */
   "modules.updated": ModulesState,
   "auth.notice": Type.Object({ loginId: Type.String(), notice: AuthNotice }),
   "auth.prompt": Type.Object({

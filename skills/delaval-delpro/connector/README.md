@@ -6,7 +6,7 @@ Every query is SELECT-only; this connector never modifies DelPro.
 
 Required config: `host`, `user`.
 Optional connection config: `port` (1433), `database` (`DDM`).
-The SQL password comes from Orion's OS keychain as `ctx.secret`.
+The SQL password comes from Liv's OS keychain as `ctx.secret`.
 Set `timezone` to the database's IANA wall-clock zone; the default is `UTC`.
 Optional sync config: `dailyDays` (120), `milkingBatch` (1000), `maxBatches` (200).
 

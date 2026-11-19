@@ -1,4 +1,4 @@
-// Domain enums shared by the SQLite schema, the Postgres schema and @orbit/protocol.
+// Domain enums shared by the SQLite schema, the Postgres schema and @liv/protocol.
 // Pure constants: safe to import from the browser.
 
 export const SPECIES = ["cattle", "horse"] as const;

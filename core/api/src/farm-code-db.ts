@@ -1,4 +1,4 @@
-import type { FarmCodeManifest } from "@orbit/protocol";
+import type { FarmCodeManifest } from "@liv/protocol";
 import { jsonb, pgTable, primaryKey, text, uuid } from "drizzle-orm/pg-core";
 
 export const farmCodeBlobs = pgTable(

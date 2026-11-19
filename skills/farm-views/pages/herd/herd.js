@@ -1,5 +1,5 @@
 // Pure logic and option registry for the herd view.
-// No DOM or window.orbit calls here; index.html and card.html import this module.
+// No DOM or window.liv calls here; index.html and card.html import this module.
 
 import { DAY_MS, daysUntil, reproFacts, reproSettings } from "./repro.js";
 

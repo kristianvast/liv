@@ -32,9 +32,9 @@ export {
   users,
 } from "./db";
 export {
+  LIV_DEFAULT_MODEL,
   type LlmGatewayOptions,
   monthStart,
-  ORBIT_DEFAULT_MODEL,
   usageFrom,
   usedThisMonth,
 } from "./llm";

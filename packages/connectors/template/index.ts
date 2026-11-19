@@ -1,7 +1,7 @@
 // Minimal connector. Copy this folder, rename `id`, then change configSchema, test and sync.
-// A connector only READS from the source and writes into Orbit through ctx.writer.
+// A connector only READS from the source and writes into Liv through ctx.writer.
 import { readFile } from "node:fs/promises";
-import { defineConnector, parseCsv } from "@orbit/connectors";
+import { defineConnector, parseCsv } from "@liv/connectors";
 import { Type } from "typebox";
 
 const configSchema = Type.Object({

@@ -9,5 +9,5 @@ test("home loads with the seeded herd counts", async ({ page }) => {
   await expect(page.getByTestId("home-sensors-online")).toHaveCount(0);
   await expect(page.getByTestId("home-cameras-live")).toBeVisible();
   await expect(page.getByTestId("home-alerts")).toBeVisible();
-  await expect(page.getByRole("button", { name: "Ask Orion" }).first()).toBeVisible();
+  await expect(page.getByRole("button", { name: "Ask Liv" }).first()).toBeVisible();
 });

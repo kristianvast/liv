@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { pg } from "@orbit/schema";
+import { pg } from "@liv/schema";
 import { eq } from "drizzle-orm";
 import { billingCustomers, farmMembers, users } from "../src/db";
 import { billingFixture, FARM, SECRET } from "./billing-fixture";
@@ -149,7 +149,7 @@ test("without automatic tax the checkout carries no tax fields", async () => {
   expect(sessions[0]?.has("automatic_tax[enabled]")).toBe(false);
 });
 
-test("checkout without x-orbit-farm buys a personal plan without creating a farm", async () => {
+test("checkout without x-liv-farm buys a personal plan without creating a farm", async () => {
   await db.delete(farmMembers).where(eq(farmMembers.userId, session.userId));
   const sessions: URLSearchParams[] = [];
   const a = app({ fetch: stripeFake(sessions) });

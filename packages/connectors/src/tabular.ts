@@ -1,6 +1,6 @@
-// Table-to-Orbit mapping engine shared by generic_csv and every vendor file-export adapter.
-import type { AnimalSex, DeviceKind, Species } from "@orbit/schema/enums";
-import { isWearableKind, OBSERVATION_KINDS, SPECIES } from "@orbit/schema/enums";
+// Table-to-Liv mapping engine shared by generic_csv and every vendor file-export adapter.
+import type { AnimalSex, DeviceKind, Species } from "@liv/schema/enums";
+import { isWearableKind, OBSERVATION_KINDS, SPECIES } from "@liv/schema/enums";
 import { type Static, Type } from "typebox";
 import type { ParsedTable } from "./csv";
 import { ConnectorParseError } from "./errors";

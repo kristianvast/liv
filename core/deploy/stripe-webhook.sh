@@ -26,9 +26,9 @@ export STRIPE_API_KEY
   echo "orbit-core-$ENV-STRIPE_SECRET_KEY is not a Stripe secret key" >&2
   exit 1
 }
-# Production is served at api.barnstar.dev (Cloud Run domain mapping); staging uses its run.app
+# Production is served at api.agrointel.no (Cloud Run domain mapping); staging uses its run.app
 # address. Override with CORE_PUBLIC_URL.
-case "$ENV" in production) CORE_PUBLIC_URL="${CORE_PUBLIC_URL:-https://api.barnstar.dev}" ;; esac
+case "$ENV" in production) CORE_PUBLIC_URL="${CORE_PUBLIC_URL:-https://api.agrointel.no}" ;; esac
 URL="${CORE_PUBLIC_URL:-$(g run services describe "$SERVICE" --region="$REGION" --format='value(status.url)')}/v1/billing/webhook"
 
 endpoint_id="$(stripe webhook_endpoints list --limit 100 |
@@ -45,7 +45,7 @@ if [[ -n "$endpoint_id" ]]; then
     exit 1
   fi
 else
-  stripe webhook_endpoints create --url "$URL" --description "Orbit Core $ENV" "${event_args[@]}" |
+  stripe webhook_endpoints create --url "$URL" --description "Liv Core $ENV" "${event_args[@]}" |
     bun -e 'const j=await Bun.stdin.json();if(!j.secret?.startsWith("whsec_"))throw new Error(JSON.stringify(j.error??"no secret"));process.stdout.write(j.secret)' |
     g secrets versions add "orbit-core-$ENV-STRIPE_WEBHOOK_SECRET" --data-file=- >/dev/null
   echo "webhook created for $URL; signing secret stored" >&2

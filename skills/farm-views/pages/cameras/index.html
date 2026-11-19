@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Camera wall</title>
-  <link rel="stylesheet" href="../_orbit.css">
-  <script src="../_orbit.js"></script>
+  <link rel="stylesheet" href="../_liv.css">
+  <script src="../_liv.js"></script>
   <style>
     #show-all-btn[hidden] {
       display: none;
@@ -297,7 +297,7 @@
     <section class="camera-state-box" id="state-box" hidden>
       <p class="camera-state-box__title" id="state-box-title"></p>
       <p class="camera-state-box__text" id="state-box-text"></p>
-      <button type="button" class="orbit-btn orbit-btn--secondary orbit-btn--sm" id="show-all-btn" hidden>Show all</button>
+      <button type="button" class="liv-btn liv-btn--secondary liv-btn--sm" id="show-all-btn" hidden>Show all</button>
     </section>
 
     <div class="camera-grid" id="camera-grid" hidden></div>
@@ -309,10 +309,10 @@
         <h2 class="camera-dialog__title" id="dialog-camera-name">Camera</h2>
         <div class="camera-dialog__meta">
           <span id="dialog-camera-location"></span>
-          <span class="orbit-badge orbit-badge--neutral" id="dialog-camera-status"></span>
+          <span class="liv-badge liv-badge--neutral" id="dialog-camera-status"></span>
         </div>
       </div>
-      <button type="button" class="orbit-btn orbit-btn--secondary orbit-btn--sm" id="dialog-close-btn" data-testid="camera-view-dialog-close">
+      <button type="button" class="liv-btn liv-btn--secondary liv-btn--sm" id="dialog-close-btn" data-testid="camera-view-dialog-close">
         Close
       </button>
     </div>
@@ -324,7 +324,7 @@
           <rect width="360" height="202" fill="var(--bg-elevated)"></rect>
           <line x1="0" y1="101" x2="360" y2="101" stroke="var(--border-subtle)" stroke-width="1" stroke-dasharray="4 6"></line>
           <line x1="180" y1="0" x2="180" y2="202" stroke="var(--border-subtle)" stroke-width="1" stroke-dasharray="4 6"></line>
-          <circle cx="180" cy="101" r="48" fill="var(--orbit-core-bg)" stroke="var(--border-strong)" stroke-width="1.5"></circle>
+          <circle cx="180" cy="101" r="48" fill="var(--liv-core-bg)" stroke="var(--border-strong)" stroke-width="1.5"></circle>
           <path d="M 24 40 L 24 24 L 40 24 M 336 40 L 336 24 L 320 24 M 24 162 L 24 178 L 40 178 M 336 162 L 336 178 L 320 178" fill="none" stroke="var(--border-strong)" stroke-width="2"></path>
         </svg>
         <span class="camera-placeholder__caption" id="dialog-placeholder-text">Loading picture...</span>
@@ -440,10 +440,10 @@
       outerCircle.setAttribute("cx", "180");
       outerCircle.setAttribute("cy", "101");
       outerCircle.setAttribute("r", "48");
-      outerCircle.setAttribute("fill", "var(--orbit-core-bg)");
+      outerCircle.setAttribute("fill", "var(--liv-core-bg)");
       outerCircle.setAttribute(
         "stroke",
-        isOnline ? "var(--orbit-ring-strong)" : "var(--border-strong)",
+        isOnline ? "var(--liv-ring-strong)" : "var(--border-strong)",
       );
       outerCircle.setAttribute("stroke-width", "1.5");
       svg.appendChild(outerCircle);
@@ -521,7 +521,7 @@
       const statusInfo = getCameraStatus(camera.status);
       dialogNameEl.textContent = camera.name;
       dialogLocationEl.textContent = getCameraLocation(camera);
-      dialogStatusEl.className = `orbit-badge ${statusInfo.badgeClass}`;
+      dialogStatusEl.className = `liv-badge ${statusInfo.badgeClass}`;
       dialogStatusEl.textContent = statusInfo.label;
 
       if (frameState.frame === "showing" && frameState.pictureUrl) {
@@ -567,7 +567,7 @@
     async function refreshCameraFrame(camera) {
       if (document.hidden || !shouldRequestFrame(camera)) return;
       const current = frameStates.get(camera.id) ?? createFrameState(camera);
-      const url = `${window.orbit.cameraFrame(camera.id)}?t=${Date.now()}-${++frameSeq}`;
+      const url = `${window.liv.cameraFrame(camera.id)}?t=${Date.now()}-${++frameSeq}`;
 
       try {
         await preloadImage(url);
@@ -629,7 +629,7 @@
       }
       const token = ++dialogRequestToken;
       const current = frameStates.get(camera.id) ?? createFrameState(camera);
-      const url = `${window.orbit.cameraFrame(camera.id)}?t=${Date.now()}-${++frameSeq}`;
+      const url = `${window.liv.cameraFrame(camera.id)}?t=${Date.now()}-${++frameSeq}`;
 
       try {
         await preloadImage(url);
@@ -764,7 +764,7 @@
       identity.append(nameEl, locEl);
 
       const badge = document.createElement("span");
-      badge.className = `orbit-badge ${statusInfo.badgeClass}`;
+      badge.className = `liv-badge ${statusInfo.badgeClass}`;
       const dot = document.createElement("span");
       dot.className = "kit-dot";
       dot.dataset.tone = statusInfo.dotTone;
@@ -815,7 +815,7 @@
         stateBox.hidden = false;
         stateBoxTitle.textContent = "No cameras yet";
         stateBoxText.textContent =
-          "Orion can look for cameras on your farm network and add them for you.";
+          "Liv can look for cameras on your farm network and add them for you.";
         showAllBtn.hidden = true;
         return;
       }
@@ -907,8 +907,8 @@
       try {
         const [loadedConfig, camerasRes, relayRes] = await Promise.all([
           loadConfig(),
-          window.orbit.query("cameras.list", {}),
-          window.orbit.query("cameras.relay", {}),
+          window.liv.query("cameras.list", {}),
+          window.liv.query("cameras.relay", {}),
         ]);
         config = loadedConfig;
         allCameras = Array.isArray(camerasRes?.rows) ? camerasRes.rows : [];
@@ -921,7 +921,7 @@
         stateBox.hidden = false;
         stateBoxTitle.textContent = "Could not load cameras";
         stateBoxText.textContent =
-          err instanceof Error ? err.message : "Check that Orion is running on this computer.";
+          err instanceof Error ? err.message : "Check that Liv is running on this computer.";
         showAllBtn.hidden = true;
       }
     }
@@ -947,7 +947,7 @@
     });
 
     let debounceTimer = null;
-    window.orbit.on((event) => {
+    window.liv.on((event) => {
       if (
         event.type === "db.changed" &&
         (event.table === "cameras" || event.table === "workspace")

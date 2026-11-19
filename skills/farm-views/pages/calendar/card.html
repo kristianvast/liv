@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calendar card</title>
-  <link rel="stylesheet" href="../_orbit.css">
-  <script src="../_orbit.js"></script>
+  <link rel="stylesheet" href="../_liv.css">
+  <script src="../_liv.js"></script>
   <style>
     .calendar-card {
       block-size: 100%;
@@ -209,10 +209,10 @@
       const since60 = new Date(now.getTime() - 60 * DAY_MS).toISOString();
 
       const [animalsRes, alertsRes, ...kindResults] = await Promise.all([
-        window.orbit.query("animals.list", { limit: 1000 }),
-        window.orbit.query("observations.recent", { alertsOnly: true, since: since60, limit: 1000 }),
+        window.liv.query("animals.list", { limit: 1000 }),
+        window.liv.query("observations.recent", { alertsOnly: true, since: since60, limit: 1000 }),
         ...RECORDED_KINDS.map((kind) =>
-          window.orbit.query("observations.recent", { kind, since: since400, limit: 1000 }),
+          window.liv.query("observations.recent", { kind, since: since400, limit: 1000 }),
         ),
       ]);
 
@@ -276,8 +276,8 @@
     }
 
     let debounceTimer = null;
-    if (window.orbit?.on) {
-      window.orbit.on((event) => {
+    if (window.liv?.on) {
+      window.liv.on((event) => {
         if (
           event.type === "db.changed" &&
           (!event.table || event.table === "animals" || event.table === "observations")

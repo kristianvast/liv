@@ -7,7 +7,7 @@ import { sqliteSchema } from "./sqlite";
 
 export type LocalDb = BunSQLiteDatabase<typeof sqliteSchema> & { $client: Database };
 
-/** Opens (or creates) the local Orbit database. Use ":memory:" for tests. Does not migrate. */
+/** Opens (or creates) the local Liv database. Use ":memory:" for tests. Does not migrate. */
 export function openLocalDb(path = ":memory:"): LocalDb {
   const client = new Database(path, { create: true, strict: true });
   client.exec("PRAGMA journal_mode = WAL;");

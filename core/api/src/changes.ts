@@ -1,4 +1,4 @@
-// POST /v1/changes: validates pushed outbox rows against the @orbit/schema Postgres tables and
+// POST /v1/changes: validates pushed outbox rows against the @liv/schema Postgres tables and
 // applies them with per-row last-writer-wins by HLC. Device bindings additionally keep the
 // "one active wearable per animal / one active binding per device" rule: the newer binding stays
 // active and the older one is ended by Core (with a fresh cloud HLC so the end syncs back).
@@ -15,7 +15,7 @@ import {
   pg,
   SYNCED_TABLES,
   type SyncedTable,
-} from "@orbit/schema";
+} from "@liv/schema";
 import { and, eq, getTableColumns, isNull, ne, or, type SQL, sql } from "drizzle-orm";
 import type { PgColumn } from "drizzle-orm/pg-core";
 import type { CoreDb } from "./db";

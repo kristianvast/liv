@@ -1,4 +1,4 @@
-import { pg } from "@orbit/schema";
+import { pg } from "@liv/schema";
 import { asc, eq } from "drizzle-orm";
 import type { Hono } from "hono";
 import { type AccountEnv, PAID_STATUSES } from "./account-input";

@@ -17,7 +17,7 @@ export async function subscriptionUpdate(
 ) {
   const { tx, now, eventAt } = context;
   const metadata = object(value.metadata ?? {});
-  // Customer links survive adoption by an Orbit install; old Stripe metadata may not.
+  // Customer links survive adoption by a Liv install; old Stripe metadata may not.
   let farmId: string | null = null;
   if (typeof value.customer === "string") {
     const [customer] = await tx

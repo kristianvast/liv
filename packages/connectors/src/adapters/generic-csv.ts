@@ -1,4 +1,4 @@
-import { DEVICE_KINDS } from "@orbit/schema/enums";
+import { DEVICE_KINDS } from "@liv/schema/enums";
 import { defineFileExportConnector } from "../file-export";
 
 export const genericCsvConnector = defineFileExportConnector({

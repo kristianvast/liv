@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Herd card</title>
-    <link rel="stylesheet" href="../_orbit.css" />
-    <script src="../_orbit.js"></script>
+    <link rel="stylesheet" href="../_liv.css" />
+    <script src="../_liv.js"></script>
     <style>
       .herd-card {
         justify-content: space-between;
@@ -205,8 +205,8 @@
           const config = await loadConfig();
           const since7d = new Date(now - 7 * DAY_MS).toISOString();
           const [animalsRes, alertsRes] = await Promise.all([
-            window.orbit.query("animals.list", { status: "active", limit: 1000 }),
-            window.orbit.query("observations.recent", {
+            window.liv.query("animals.list", { status: "active", limit: 1000 }),
+            window.liv.query("observations.recent", {
               alertsOnly: true,
               since: since7d,
               limit: 1000,
@@ -226,7 +226,7 @@
       }
 
       let debounceTimer = null;
-      window.orbit.on((event) => {
+      window.liv.on((event) => {
         if (
           event.type === "db.changed" &&
           ["animals", "observations", "devices", "device_bindings"].includes(event.table)

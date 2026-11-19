@@ -10,13 +10,13 @@
   "scripts": {
     "dev": "bun src/dev.ts",
     "stripe:setup": "bun src/stripe-setup.ts",
-    "voice:setup": "bun src/orion-voice-agent-setup.ts",
+    "voice:setup": "bun src/liv-voice-agent-setup.ts",
     "typecheck": "tsc -p . --noEmit",
     "test": "bun test"
   },
   "dependencies": {
-    "@orbit/protocol": "workspace:*",
-    "@orbit/schema": "workspace:*",
+    "@liv/protocol": "workspace:*",
+    "@liv/schema": "workspace:*",
     "drizzle-orm": "^0.45.4",
     "hono": "^4.13.16",
     "typebox": "^1.4.3"

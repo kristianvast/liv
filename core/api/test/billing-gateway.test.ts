@@ -16,7 +16,7 @@ test("a free session farm gets plan_required before calling a model", async () =
   }).request("/v1/llm/v1/chat/completions", {
     method: "POST",
     headers: headers(),
-    body: JSON.stringify({ model: "orbit-default" }),
+    body: JSON.stringify({ model: "liv-default" }),
   });
   expect(response.status).toBe(402);
   expect(await response.json()).toMatchObject({ error: { code: "plan_required" } });

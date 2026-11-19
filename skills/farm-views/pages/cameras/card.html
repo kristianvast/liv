@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Camera wall card</title>
-  <link rel="stylesheet" href="../_orbit.css">
-  <script src="../_orbit.js"></script>
+  <link rel="stylesheet" href="../_liv.css">
+  <script src="../_liv.js"></script>
   <style>
     body.kit-cardview {
       padding: 0;
@@ -351,7 +351,7 @@
     async function refreshCardPicture() {
       if (document.hidden || !chosenCamera || !shouldRequestFrame(chosenCamera)) return;
       const targetId = chosenCamera.id;
-      const url = `${window.orbit.cameraFrame(targetId)}?t=${Date.now()}-${++seq}`;
+      const url = `${window.liv.cameraFrame(targetId)}?t=${Date.now()}-${++seq}`;
       try {
         await preloadImage(url);
         if (!chosenCamera || chosenCamera.id !== targetId) return;
@@ -377,7 +377,7 @@
       try {
         const [loadedConfig, camerasRes] = await Promise.all([
           loadConfig(),
-          window.orbit.query("cameras.list", {}),
+          window.liv.query("cameras.list", {}),
         ]);
         config = loadedConfig;
         allCameras = Array.isArray(camerasRes?.rows) ? camerasRes.rows : [];
@@ -411,7 +411,7 @@
     });
 
     let debounceTimer = null;
-    window.orbit.on((event) => {
+    window.liv.on((event) => {
       if (
         event.type === "db.changed" &&
         (event.table === "cameras" || event.table === "workspace")

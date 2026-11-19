@@ -1,4 +1,4 @@
-// Applies the @orbit/schema Postgres migrations (synced tables) and then core/api/migrations
+// Applies the @liv/schema Postgres migrations (synced tables) and then core/api/migrations
 // (Core-only tables). Idempotent; applied tags are tracked in __core_migrations.
 import { readdir } from "node:fs/promises";
 import { sql } from "drizzle-orm";
@@ -9,7 +9,7 @@ interface Migration {
   file: URL;
 }
 
-const SCHEMA_PG_DIR = new URL("../drizzle/pg/", import.meta.resolve("@orbit/schema/pg"));
+const SCHEMA_PG_DIR = new URL("../drizzle/pg/", import.meta.resolve("@liv/schema/pg"));
 const CORE_DIR = new URL("../migrations/", import.meta.url);
 
 async function listMigrations(): Promise<Migration[]> {
@@ -33,7 +33,7 @@ export async function migrate(db: CoreDb): Promise<{ applied: string[] }> {
   // lock makes them take turns, and each reads what is already applied only once it holds the
   // lock, so no migration runs twice.
   return db.transaction(async (tx) => {
-    await tx.execute(sql`select pg_advisory_xact_lock(hashtext('orbit-core-migrations'))`);
+    await tx.execute(sql`select pg_advisory_xact_lock(hashtext('liv-core-migrations'))`);
     await tx.execute(
       sql`CREATE TABLE IF NOT EXISTS "__core_migrations" ("tag" text PRIMARY KEY NOT NULL, "applied_at" timestamp with time zone DEFAULT now() NOT NULL)`,
     );

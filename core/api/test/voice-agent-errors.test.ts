@@ -25,7 +25,7 @@ test.each([
   },
   {
     name: "missing farm",
-    headers: { "x-orbit-farm": "" },
+    headers: { "x-liv-farm": "" },
     paid: false,
     used: 0,
     status: 400,
@@ -33,7 +33,7 @@ test.each([
   },
   {
     name: "nonmember farm",
-    headers: { "x-orbit-farm": "00000000-0000-4000-8000-000000000099" },
+    headers: { "x-liv-farm": "00000000-0000-4000-8000-000000000099" },
     paid: false,
     used: 0,
     status: 403,

@@ -1,5 +1,5 @@
-import type { SyncedTable } from "@orbit/schema";
-import { type LocalDb, migrate, openLocalDb } from "@orbit/schema/local";
+import type { SyncedTable } from "@liv/schema";
+import { type LocalDb, migrate, openLocalDb } from "@liv/schema/local";
 import type { PushResultItem } from "../src";
 
 export const FARM = "00000000-0000-4000-8000-000000000001";
@@ -51,7 +51,7 @@ export class FakeCore {
     if (req.headers.get("authorization") !== `Bearer ${TOKEN}`) {
       return new Response("unauthorized", { status: 401 });
     }
-    this.farmHeaders.push(req.headers.get("x-orbit-farm"));
+    this.farmHeaders.push(req.headers.get("x-liv-farm"));
     const url = new URL(req.url);
     if (url.pathname === "/v1/shape") {
       this.shapeRequests.push(url.searchParams);

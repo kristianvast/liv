@@ -15,7 +15,7 @@ export type AccountAllowance = Static<typeof AccountAllowance>;
 export const BillingAccount = Type.Enum(["farm", "personal"]);
 export type BillingAccount = Static<typeof BillingAccount>;
 
-/** The plan that pays for this person's Orion right now (`account`), plus both sides for the switch. */
+/** The plan that pays for this person's Liv right now (`account`), plus both sides for the switch. */
 export const BillingStatus = Type.Object({
   plan: PlanId,
   interval: Type.Union([Type.Enum(["month", "year"]), Type.Null()]),
@@ -60,7 +60,7 @@ export const BillingPlans = Type.Object({
       cameras: Type.Number({ minimum: 0 }),
       monthly: Type.Optional(Type.Number({ minimum: 0 })),
       yearly: Type.Optional(Type.Number({ minimum: 0 })),
-      orionTokens: Type.Number({ minimum: 0 }),
+      livTokens: Type.Number({ minimum: 0 }),
       voiceMinutes: Type.Number({ minimum: 0 }),
     }),
   ),

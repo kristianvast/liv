@@ -1,5 +1,5 @@
 {
-  "name": "orbit-monorepo",
+  "name": "liv-monorepo",
   "private": true,
   "license": "AGPL-3.0-only",
   "type": "module",
@@ -14,9 +14,9 @@
     "typecheck": "bun run --filter '*' typecheck",
     "test": "bun run --filter '*' test && bun test ./skills",
     "build": "bun run --filter '*' build",
-    "e2e:web": "bun run --filter '@orbit/e2e' test:web",
-    "e2e:desktop": "bun run --filter '@orbit/e2e' test:desktop",
-    "check:workflows": "bun run --filter '@orbit/e2e' check:workflows",
+    "e2e:web": "bun run --filter '@liv/e2e' test:web",
+    "e2e:desktop": "bun run --filter '@liv/e2e' test:desktop",
+    "check:workflows": "bun run --filter '@liv/e2e' check:workflows",
     "skills:index": "bun scripts/build-skills-index.ts"
   },
   "devDependencies": {

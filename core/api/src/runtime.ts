@@ -45,7 +45,7 @@ export function serveCore(db: CoreDb, defaultPort: number) {
     }),
     links: {
       ...(process.env.PUBLIC_SITE_URL ? { siteUrl: process.env.PUBLIC_SITE_URL } : {}),
-      ...(process.env.ORBIT_DOWNLOAD_URL ? { downloadUrl: process.env.ORBIT_DOWNLOAD_URL } : {}),
+      ...(process.env.LIV_DOWNLOAD_URL ? { downloadUrl: process.env.LIV_DOWNLOAD_URL } : {}),
     },
     termsVersion: process.env.TERMS_VERSION || undefined,
     adminToken: process.env.CORE_ADMIN_TOKEN || undefined,

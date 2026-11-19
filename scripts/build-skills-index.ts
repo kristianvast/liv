@@ -1,4 +1,4 @@
-// Builds skills/index.json, the catalog Orion's skill_search and skill_install read. Each skill
+// Builds skills/index.json, the catalog Liv's skill_search and skill_install read. Each skill
 // folder needs a SKILL.md with name and description front matter; skill.json may add version and
 // keywords. Tests, lockfiles and node_modules are not published.
 // Usage: bun scripts/build-skills-index.ts [--check]

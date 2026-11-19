@@ -11,24 +11,24 @@ val local = Properties().apply {
 }
 fun quoted(value: String) = "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 android {
-    namespace = "no.agrointel.orbit"
+    namespace = "no.agrointel.liv"
     compileSdk = 36
     defaultConfig {
-        applicationId = "no.agrointel.orbit"
+        applicationId = "no.agrointel.liv"
         minSdk = 28
         targetSdk = 36
-        versionCode = 108
-        versionName = "0.1.8"
+        versionCode = 111
+        versionName = "0.1.11"
         for (key in listOf("appId", "apiKey", "projectId", "senderId")) {
-            buildConfigField("String", "FIREBASE_" + key.uppercase(), quoted(local.getProperty("orbit.firebase.$key", "")))
+            buildConfigField("String", "FIREBASE_" + key.uppercase(), quoted(local.getProperty("liv.firebase.$key", "")))
         }
     }
     buildTypes {
         debug {
-            buildConfigField("String", "CORE_URL", quoted(providers.gradleProperty("orbit.coreUrl").getOrElse("http://10.0.2.2:8797")))
+            buildConfigField("String", "CORE_URL", quoted(providers.gradleProperty("liv.coreUrl").getOrElse("http://10.0.2.2:8797")))
         }
         release {
-            buildConfigField("String", "CORE_URL", quoted(providers.gradleProperty("orbit.coreUrl").getOrElse("https://orbit-core-staging-prakpg2ywa-lz.a.run.app")))
+            buildConfigField("String", "CORE_URL", quoted(providers.gradleProperty("liv.coreUrl").getOrElse("https://orbit-core-staging-prakpg2ywa-lz.a.run.app")))
             isMinifyEnabled = false
         }
     }

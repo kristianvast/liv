@@ -1,12 +1,12 @@
 import { and, asc, eq, gt, isNull, sql } from "drizzle-orm";
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";
-import { memberRole, resolveSession } from "./auth";
+import { farmHeader, memberRole, resolveSession } from "./auth";
 import { chatEntries, chatSessions } from "./chat-db";
 import { date, entry, record, title, UUID } from "./chat-input";
 import type { CoreDb } from "./db";
 
-/** Private REST history, usable by native clients without an Orion process. */
+/** Private REST history, usable by native clients without a Liv process. */
 export function createChatRoutes(db: CoreDb, now: () => Date) {
   const app = new Hono<{ Variables: { farmId: string; userId: string } }>();
   app.use("*", bodyLimit({ maxSize: 1024 * 1024 }));
@@ -15,7 +15,7 @@ export function createChatRoutes(db: CoreDb, now: () => Date) {
     const user = await resolveSession(db, token, now());
     if (!user)
       return c.json({ error: { code: "unauthorized", message: "user session required" } }, 401);
-    const farmId = c.req.header("x-orbit-farm") ?? "";
+    const farmId = farmHeader(c.req.raw.headers) ?? "";
     if (!UUID.test(farmId))
       return c.json({ error: { code: "bad_request", message: "farm header required" } }, 400);
     if (!(await memberRole(db, farmId, user.id)))

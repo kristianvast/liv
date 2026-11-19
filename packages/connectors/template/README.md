@@ -1,6 +1,6 @@
 # Template connector
 
-A connector copies data from a vendor system into Orbit. It never writes back to the vendor.
+A connector copies data from a vendor system into Liv. It never writes back to the vendor.
 
 1. Copy this folder and rename it after the source (for example `my_feed`).
 2. In `index.ts` change `id`, `vendor` (use `custom` if the vendor is not in the enum), `kind` and `configSchema`.

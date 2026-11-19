@@ -1,4 +1,4 @@
-import { canManageMembers } from "@orbit/schema";
+import { canManageMembers } from "@liv/schema";
 import type { Principal } from "./auth";
 import { memberFarmTokens, resolveBillingAccount } from "./billing-account";
 import type { CoreDb } from "./db";

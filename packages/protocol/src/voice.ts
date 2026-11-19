@@ -3,20 +3,20 @@ import { Type } from "typebox";
 const VoiceRef = { voiceId: Type.String() };
 const Accepted = Type.Object({ accepted: Type.Boolean() });
 
-/** The tools the voice agent may ask Orion to run beside the farm database. */
-export const VOICE_TOOL_NAMES = ["db_query", "db_mutate", "browser", "orion_task"] as const;
+/** The tools the voice agent may ask Liv to run beside the farm database. */
+export const VOICE_TOOL_NAMES = ["db_query", "db_mutate", "browser", "liv_task"] as const;
 export type VoiceToolName = (typeof VOICE_TOOL_NAMES)[number];
 
 export const VoiceRequests = {
   /**
    * Opens a voice call in a conversation. The app then connects the voice SDK to `path` on
-   * Orion's own origin; Orion relays that socket to the voice service. No key reaches the app.
+   * Liv's own origin; Liv relays that socket to the voice service. No key reaches the app.
    */
   "voice.start": {
     params: Type.Object({ sessionId: Type.String() }),
     result: Type.Object({
       ...VoiceRef,
-      /** WebSocket path on Orion's HTTP origin that speaks the voice agent protocol. Carries the session token. */
+      /** WebSocket path on Liv's HTTP origin that speaks the voice agent protocol. Carries the session token. */
       path: Type.String(),
       /** Values for the agent's prompt placeholders: farm_name and conversation_recap. */
       variables: Type.Record(Type.String(), Type.String()),
@@ -58,7 +58,7 @@ export const VoiceEvents = {
     ...VoiceRef,
     text: Type.String(),
   }),
-  /** The page Orion's browser shows, so the farmer can follow along. A null image means it closed. */
+  /** The page Liv's browser shows, so the farmer can follow along. A null image means it closed. */
   "browser.view": Type.Object({
     sessionId: Type.String(),
     url: Type.String(),
@@ -67,7 +67,7 @@ export const VoiceEvents = {
     image: Type.Union([Type.String(), Type.Null()]),
     width: Type.Integer(),
     height: Type.Integer(),
-    /** Where Orion is pointing, in page pixels of the picture. */
+    /** Where Liv is pointing, in page pixels of the picture. */
     highlight: Type.Union([
       Type.Object({
         x: Type.Number(),

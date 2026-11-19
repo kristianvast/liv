@@ -47,7 +47,7 @@ function setup(
     db,
     resolveToken: async () => null,
     electricUrl: "http://electric.internal:3000",
-    corsOrigins: ["https://barnstar.dev", "http://localhost:3000"],
+    corsOrigins: ["https://agrointel.no", "http://localhost:3000"],
     now: () => new Date(clock),
     fetch: async (input, init) => {
       const url = new URL(String(input));
@@ -186,18 +186,18 @@ describe("POST /v1/voice/demo/session", () => {
     expect((await post({ voice: "male" }, { "x-forwarded-for": "192.0.2.3" })).status).toBe(200);
   });
 
-  test("CORS preflight from https://barnstar.dev is allowed", async () => {
+  test("CORS preflight from https://agrointel.no is allowed", async () => {
     const { app } = setup();
     const res = await app.request("/v1/voice/demo/session", {
       method: "OPTIONS",
       headers: {
-        origin: "https://barnstar.dev",
+        origin: "https://agrointel.no",
         "access-control-request-method": "POST",
         "access-control-request-headers": "content-type",
       },
     });
     expect(res.status).toBe(204);
-    expect(res.headers.get("access-control-allow-origin")).toBe("https://barnstar.dev");
+    expect(res.headers.get("access-control-allow-origin")).toBe("https://agrointel.no");
     expect(res.headers.get("access-control-allow-methods")).toContain("POST");
     expect(res.headers.get("access-control-allow-headers")).toContain("content-type");
   });
@@ -222,7 +222,7 @@ describe("voice demo allowance (180 s per 25 h per visitor)", () => {
     await post({ voice: "male" });
     conversations.set("conv_1", { status: "done", call_duration_secs: 180 });
     advance(2 * H);
-    const blocked = await post({ voice: "male" }, { origin: "https://barnstar.dev" });
+    const blocked = await post({ voice: "male" }, { origin: "https://agrointel.no" });
     expect(blocked.status).toBe(429);
     // The website reads Retry-After cross-origin to say when to come back.
     expect(blocked.headers.get("access-control-expose-headers")).toContain("Retry-After");

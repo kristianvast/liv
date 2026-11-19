@@ -1,5 +1,5 @@
 {
-  "name": "@orbit/connectors",
+  "name": "@liv/connectors",
   "version": "0.1.0",
   "private": true,
   "license": "AGPL-3.0-only",
@@ -12,7 +12,7 @@
     "test": "bun test"
   },
   "dependencies": {
-    "@orbit/schema": "workspace:*",
+    "@liv/schema": "workspace:*",
     "typebox": "^1.4.3"
   }
 }

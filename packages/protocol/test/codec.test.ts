@@ -174,8 +174,8 @@ describe("modules contract", () => {
 });
 
 test("parseReadyLine", () => {
-  expect(parseReadyLine('ORION_READY {"port":53121}')).toEqual({ port: 53121 });
-  expect(parseReadyLine("ORION_READY nope")).toBeNull();
+  expect(parseReadyLine('LIV_READY {"port":53121}')).toEqual({ port: 53121 });
+  expect(parseReadyLine("LIV_READY nope")).toBeNull();
   expect(parseReadyLine('ready {"port":1}')).toBeNull();
-  expect(parseReadyLine('ORION_READY {"port":"1"}')).toBeNull();
+  expect(parseReadyLine('LIV_READY {"port":"1"}')).toBeNull();
 });

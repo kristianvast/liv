@@ -1,14 +1,14 @@
-// Orbit account (Core sign-in), farm members and invites. The UI never talks to Core directly:
-// Orion holds the session (encrypted in its data folder) and relays these requests.
-import { FARM_ROLES } from "@orbit/schema/roles";
+// Liv account (Core sign-in), farm members and invites. The UI never talks to Core directly:
+// Liv holds the session (encrypted in its data folder) and relays these requests.
+import { FARM_ROLES } from "@liv/schema/roles";
 import { type Static, Type } from "typebox";
 
 export const FarmRole = Type.Enum([...FARM_ROLES]);
 export type FarmRole = Static<typeof FarmRole>;
 
 /**
- * unavailable: this Orion has no Core address (fully local).
- * signed_out: Core is configured but nobody is signed in; Orbit works locally.
+ * unavailable: this Liv has no Core address (fully local).
+ * signed_out: Core is configured but nobody is signed in; Liv works locally.
  * signed_in: a session exists; `farm` is set once the local farm is linked to the account.
  */
 export const AccountState = Type.Enum(["unavailable", "signed_out", "signed_in"]);
@@ -81,7 +81,7 @@ export const FarmMember = Type.Object({
   name: Type.Union([Type.String(), Type.Null()]),
   role: FarmRole,
   createdAt: Type.String(),
-  /** May the member's Orion run on the farm's plan? Owners always may. */
+  /** May the member's Liv run on the farm's plan? Owners always may. */
   useFarmPlan: Type.Optional(Type.Boolean()),
   /** Farm-plan tokens the member may use per calendar month; null = no limit. */
   monthlyTokenLimit: Type.Optional(TokenLimit),
@@ -121,8 +121,8 @@ export const AccountRequests = {
   },
   "account.login": { params: Type.Object(Credentials), result: AccountStatus },
   /**
-   * Starts Google sign-in on the website in the system browser (`url`; `opened` false when Orion
-   * could not open it). The site hands the result back to Orion, which then emits account.updated.
+   * Starts Google sign-in on the website in the system browser (`url`; `opened` false when Liv
+   * could not open it). The site hands the result back to Liv, which then emits account.updated.
    */
   "account.googleStart": {
     params: Type.Object({}),
@@ -171,7 +171,7 @@ export const AccountRequests = {
   },
   /**
    * Opens another of the account's farms on this PC, or "local" for this PC's own farm. Each farm
-   * keeps its own data folder; Orion restarts onto it (`restarting`), and the app reconnects.
+   * keeps its own data folder; Liv restarts onto it (`restarting`), and the app reconnects.
    */
   "farms.open": {
     params: Type.Object({ farmId: Type.String({ minLength: 1, maxLength: 64 }) }),

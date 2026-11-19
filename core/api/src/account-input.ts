@@ -1,4 +1,4 @@
-import { type FarmRole, isFarmRole } from "@orbit/schema";
+import { type FarmRole, isFarmRole } from "@liv/schema";
 import type { Context } from "hono";
 import type { SessionUser } from "./auth";
 import type { EmailLinks, Mailer } from "./mailer";
@@ -130,7 +130,7 @@ export function farmIdParam(c: Ctx): string {
 
 // Verified against when the email is unknown so a missing account costs the same time as a wrong
 // password (no account enumeration through login timing).
-export const DUMMY_HASH = Bun.password.hash("orbit-dummy-password", { algorithm: "argon2id" });
+export const DUMMY_HASH = Bun.password.hash("liv-dummy-password", { algorithm: "argon2id" });
 
 // One argon2id hash takes about 64 MiB while it runs. An instance serves many requests at once,
 // so a burst of sign-ups or sign-ins would otherwise ask for more memory than the instance has.

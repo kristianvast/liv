@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { pg } from "@orbit/schema";
+import { pg } from "@liv/schema";
 import { eq } from "drizzle-orm";
 import { FARM, NOW } from "./billing-fixture";
 import { pushFixture } from "./push-fixture";

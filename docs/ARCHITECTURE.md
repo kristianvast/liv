@@ -1,7 +1,7 @@
-# Orbit architecture
+# Liv architecture
 
-Orbit is an open-source desktop app that a farmer installs on a PC he owns, for example the
-milking-robot management PC. Orion is the AI agent inside Orbit. Core is the cloud side. Orbit
+Liv is an open-source desktop app that a farmer installs on a PC he owns, for example the
+milking-robot management PC. Liv is the AI agent inside Liv. Core is the cloud side. Liv
 covers cattle (dairy and beef) and horses. The license is AGPL-3.0-only, with a paid commercial
 license also available.
 
@@ -10,70 +10,70 @@ license also available.
 ```
  Farm PC (Windows / macOS / Linux)                                   Cloud (Core)
 +---------------------------------------------------------------+   +---------------------------+
-|  Orbit desktop app (Tauri 2 shell, Rust)                      |   |  @core/api                |
+|  Liv desktop app (Tauri 2 shell, Rust)                      |   |  @core/api                |
 |   |  spawns sidecar, holds token, OS keychain bridge          |   |   - write API (POST ops)  |
 |   v                                                           |   |   - LLM gateway (metered  |
 |  +---------------------+   WebSocket 127.0.0.1:<port>/ws      |   |     subscription usage)   |
-|  | @orbit/app          |<----------------------------------+  |   |  Postgres  (@orbit/schema |
-|  | React + TS + Vite   |   @orbit/protocol (JSON frames)    |  |   |            /pg)           |
+|  | @liv/app          |<----------------------------------+  |   |  Postgres  (@liv/schema |
+|  | React + TS + Vite   |   @liv/protocol (JSON frames)    |  |   |            /pg)           |
 |  | (webview)           |                                    |  |   |  ElectricSQL (read path)  |
 |  +---------------------+                                    |  |   +-------------^-------------+
 |                                                             v  |                 |
 |  +-----------------------------------------------------------+ |   shapes (rows  | POST outbox
-|  | @orion/agent  (Bun sidecar)                               | |   per farm)     | ops (HLC)
-|  |  - protocol server (@orbit/protocol)                      | |                 |
+|  | @liv/agent  (Bun sidecar)                               | |   per farm)     | ops (HLC)
+|  |  - protocol server (@liv/protocol)                      | |                 |
 |  |  - Pi SDK sessions, tools, undo snapshots                 |-+-----------------+
-|  |  - single writer of local SQLite (@orbit/schema)          |   @orbit/sync
-|  |  - @orbit/connectors (generic CSV + custom connectors)    |
+|  |  - single writer of local SQLite (@liv/schema)          |   @liv/sync
+|  |  - @liv/connectors (generic CSV + custom connectors)    |
 |  |  - farm workspace dir (AGENTS.md, pages, skills,          |---> LAN devices, robots,
 |  |    connectors, memory)                                    |     ONVIF/RTSP cameras,
 |  +-----------------------------+-----------------------------+     vendor cloud APIs
 |                                |                                                   
-|                       orbit.sqlite (SQLite, bun:sqlite)                            
+|                       liv.sqlite (SQLite, bun:sqlite)                            
 +---------------------------------------------------------------+
 ```
 
 ## Package map
 
-| Package             | Path                | Role                                                      |
-| ------------------- | ------------------- | --------------------------------------------------------- |
-| `@orbit/protocol`   | packages/protocol   | Wire protocol types, typebox validators, codec, client    |
-| `@orbit/schema`     | packages/schema     | Drizzle schema (SQLite + Postgres), HLC, migrations, seed |
-| `@orion/agent`      | packages/orion      | Orion sidecar: Pi SDK agent + protocol server + DB writer |
-| `@orbit/connectors` | packages/connectors | Vendor/device connectors producing rows and observations  |
-| `@orbit/sync`       | packages/sync       | Electric shape consumer + outbox pusher                   |
-| `@orbit/app`        | apps/orbit          | Tauri 2 shell + React UI                                  |
-| `@core/api`         | core/api            | Cloud write API, LLM gateway, Postgres migrations         |
-| `@orbit/e2e`        | packages/e2e        | Playwright end-to-end tests against the web build + Orion |
-| Orbit Android       | apps/android        | Native Kotlin phone app: Orion by voice and text, alerts  |
+| Package           | Path                | Role                                                      |
+| ----------------- | ------------------- | --------------------------------------------------------- |
+| `@liv/protocol`   | packages/protocol   | Wire protocol types, typebox validators, codec, client    |
+| `@liv/schema`     | packages/schema     | Drizzle schema (SQLite + Postgres), HLC, migrations, seed |
+| `@liv/agent`      | packages/liv        | Liv sidecar: Pi SDK agent + protocol server + DB writer   |
+| `@liv/connectors` | packages/connectors | Vendor/device connectors producing rows and observations  |
+| `@liv/sync`       | packages/sync       | Electric shape consumer + outbox pusher                   |
+| `@liv/app`        | apps/liv            | Tauri 2 shell + React UI                                  |
+| `@core/api`       | core/api            | Cloud write API, LLM gateway, Postgres migrations         |
+| `@liv/e2e`        | packages/e2e        | Playwright end-to-end tests against the web build + Liv   |
+| Liv Android       | apps/android        | Native Kotlin phone app: Liv by voice and text, alerts    |
 
 All packages are `"type": "module"` and export TypeScript source (`"exports": {".": "./src/index.ts"}`),
 so workspace packages need no build step between them.
 
 ## Process model
 
-1. The Tauri shell generates a random token, spawns the Orion sidecar with
-   `orion --port 0 --token <token> --data-dir <app data>`, and reads its stdout.
-2. Orion binds `127.0.0.1` on an OS-assigned port and prints exactly one line:
-   `ORION_READY {"port":N}`. `parseReadyLine()` in `@orbit/protocol` parses it.
+1. The Tauri shell generates a random token, spawns the Liv sidecar with
+   `liv --port 0 --token <token> --data-dir <app data>`, and reads its stdout.
+2. Liv binds `127.0.0.1` on an OS-assigned port and prints exactly one line:
+   `LIV_READY {"port":N}`. `parseReadyLine()` in `@liv/protocol` parses it.
 3. The shell hands `{ port, token }` to the webview. The UI calls
-   `createOrionClient("ws://127.0.0.1:N/ws", token)`.
+   `createLivClient("ws://127.0.0.1:N/ws", token)`.
 4. The first frame on each connection must be `hello { token, protocolVersion }`. On a bad token
    the server replies with an `unauthorized` error and closes the socket with code 4401. The
    client does not reconnect after 4401. After any other close it reconnects with backoff and
    sends `hello` again.
-5. When the shell quits, it terminates the sidecar. Orion runs with `--parent-watch` and exits when
-   its stdin pipe closes, so a force-killed shell never leaves an orphaned Orion holding the database.
-6. If Orion exits on its own, the shell restarts it with backoff (up to 5 tries). A restarted Orion has
-   a new port and token; while its client is reconnecting, the UI re-reads `orion_endpoint` and switches.
-   After the last try, `orion_endpoint` answers `stopped: <reason + last stderr lines>`, the UI shows
-   "Orion has stopped" with that reason, and its Restart button calls `orion_restart`.
+5. When the shell quits, it terminates the sidecar. Liv runs with `--parent-watch` and exits when
+   its stdin pipe closes, so a force-killed shell never leaves an orphaned Liv holding the database.
+6. If Liv exits on its own, the shell restarts it with backoff (up to 5 tries). A restarted Liv has
+   a new port and token; while its client is reconnecting, the UI re-reads `liv_endpoint` and switches.
+   After the last try, `liv_endpoint` answers `stopped: <reason + last stderr lines>`, the UI shows
+   "Liv has stopped" with that reason, and its Restart button calls `liv_restart`.
 
-Browser dev mode: start Orion yourself (`orion --dev --seed`). It listens on
+Browser dev mode: start Liv yourself (`liv --dev --seed`). It listens on
 `ws://127.0.0.1:7717/ws` with token `dev` (`DEV_SERVER_URL`, `DEV_TOKEN`). The UI runs under
 `vite dev` and needs no Tauri.
 
-## Wire protocol (`@orbit/protocol`)
+## Wire protocol (`@liv/protocol`)
 
 The transport is one JSON object per WebSocket text frame. There are three frame types:
 
@@ -97,7 +97,7 @@ Events: `session.updated`, `message.start`, `message.delta {text|thinking}`,
 `tool.update {partial}`, `tool.end`, `agent.settled`, `modules.updated`,
 `db.changed {table, ids}`, `sync.status`, `error`.
 
-Orion also emits `session.updated` when private chat sync imports entries, changes a title, or
+Liv also emits `session.updated` when private chat sync imports entries, changes a title, or
 removes a remotely deleted conversation. `sessions.list` and `sessions.open` then read the merged
 local Pi history; Core chat REST does not change the WebSocket request contracts.
 
@@ -107,14 +107,14 @@ events, and by default also validates results.
 
 ## Data ownership
 
-- Orion is the **single writer** of the local SQLite database (`orbit.sqlite`). The UI never opens
+- Liv is the **single writer** of the local SQLite database (`liv.sqlite`). The UI never opens
   the database; it reads with `db.query` and writes with `db.mutate`, both over the protocol.
-  Connectors and the sync engine run inside the Orion process.
+  Connectors and the sync engine run inside the Liv process.
 - Every write made by the agent or the UI records a row in `snapshots` (the before and after state
   of each changed row), and every agent run that modifies files in `<data-dir>/workspace` commits a
   workspace snapshot using `isomorphic-git` (bundled pure-JS Git, so Git does not need to be
   installed on the farm PC) and records it in `snapshots` (`table: "workspace"`). `snapshots.undo`
-  can revert either kind of snapshot. After each database write commits, Orion emits `db.changed`.
+  can revert either kind of snapshot. After each database write commits, Liv emits `db.changed`.
 - Secrets never go into the database. Camera passwords, connector API keys and LLM keys are kept in
   the OS keychain; tables store only a reference key (`cameras.credential_ref`,
   `connectors.config.credentialRef`).
@@ -124,7 +124,7 @@ events, and by default also validates results.
   deleted_at IS NULL`), the `assertSingleWearable()` check that writers call before binding, and
   `findWearableConflict()` for Core. A violation is reported as `rule_violation`.
 
-## Schema (`@orbit/schema`)
+## Schema (`@liv/schema`)
 
 The same table and column names are defined twice: in `src/sqlite.ts` (drizzle sqlite-core, for
 bun:sqlite) and in `src/pg.ts` (drizzle pg-core).
@@ -140,7 +140,7 @@ Migrations are generated with `bun run generate`, which runs drizzle-kit and wri
 `src/migrations.gen.ts`, so `migrate(db)` works from a compiled sidecar binary with no migration
 files on disk. Applied migrations are tracked in `__orbit_migrations`.
 
-`seedDemoFarm(db)` writes a deterministic demo farm used by `orion --seed`, the UI and e2e tests.
+`seedDemoFarm(db)` writes a deterministic demo farm used by `liv --seed`, the UI and e2e tests.
 
 ### ICAR ADE
 
@@ -152,14 +152,14 @@ exchange standard. `animals` stores the ADE identity and state fields: `national
 death, plus milking, weight, heat and diagnosis). For those kinds `value_json` stores the ADE event
 properties under their ADE names.
 
-`@orbit/schema/ade` converts in both directions: `animalToAde` and `observationToAde` export rows,
+`@liv/schema/ade` converts in both directions: `animalToAde` and `observationToAde` export rows,
 and `adeToAnimal` and `adeToObservation` import ADE JSON into columns, throwing `AdeMappingError`
 before anything is returned. Animals without an official identifier are exported under the
-`orbit.animal` scheme with their Orbit UUID, and farms map to the ADE location (`orbit.farm`). The
+`orbit.animal` scheme with their Liv UUID, and farms map to the ADE location (`orbit.farm`). The
 official schemas are vendored in `vendor/icar-ade-1.5.1`, and `test/ade.test.ts` validates every
 mapped resource against them.
 
-## Sync design (`@orbit/sync`)
+## Sync design (`@liv/sync`)
 
 - **Read path:** ElectricSQL shapes stream the Postgres rows of each synced table, filtered by
   `farm_id`, into local SQLite. When an incoming row is applied, it replaces the local row only if
@@ -174,7 +174,7 @@ mapped resource against them.
 - **Deletes** are soft (`deleted_at`). Rows are never hard-deleted from synced tables.
 - **HLC format:** `<15-digit wall ms>:<6-digit counter>:<node id>`. It sorts lexicographically, and
   the node id breaks ties deterministically (`createHlc`, `tick`, `receive`, `compare`).
-- Sync is optional. When Core is not configured, or nobody is signed in, Orbit is fully local and
+- Sync is optional. When Core is not configured, or nobody is signed in, Liv is fully local and
   `sync.status` reports `disabled`. Writes made while signed out stay in the outbox and are pushed
   after sign-in.
 
@@ -182,7 +182,7 @@ mapped resource against them.
 
 Workspace files and the farm's own app changes sync separately from database rows. Core keeps
 SHA-256 content-addressed blobs, manifests and parent-linked commits in Postgres
-(`0010_farm_code.sql`). JSON REST uses a user session and `x-orbit-farm`:
+(`0010_farm_code.sql`). JSON REST uses a user session and `x-liv-farm`:
 `GET /v1/farm-code/head`, `POST /v1/farm-code/blobs/fetch {hashes}`, and
 `POST /v1/farm-code/commits {parent,manifest,blobs}`. Blob values are base64; manifests map workspace
 paths to hashes and hold an optional app delta. Any member reads; owners and managers write, using
@@ -190,7 +190,7 @@ the same role rule as connectors. The head advances atomically only when `parent
 (otherwise HTTP 409). Limits are 2,000 paths, 1 MiB per blob and 8 MiB of referenced bytes, including
 app base versions; JSON requests are bounded to 16 MiB. Blob reads cannot cross farms.
 
-Orion reconciles on sign-in/link/refresh, after workspace commits and app builds, after agent
+Liv reconciles on sign-in/link/refresh, after workspace commits and app builds, after agent
 settlement, and every 30 seconds while signed in. It defers file application while an agent runs.
 The last cloud manifest is the three-way workspace base: independent file edits merge, identical
 content does nothing, and conflicting edits keep the local file plus all versions in
@@ -205,7 +205,7 @@ An app delta contains the sender's base release commit and changed paths, each r
 base bytes and changed bytes (null denotes absence/deletion). The receiver writes these as a
 synthetic change commit without checking out the sender's release. `LocalUiService.update()` then
 carries that change through its existing cherry-pick/conflict path onto the receiver's installed
-release. The normal typecheck, Orion smoke check when needed, and `build:local` gate activation.
+release. The normal typecheck, Liv smoke check when needed, and `build:local` gate activation.
 A conflict or build failure leaves the shipped app active and saves the received delta and base
 bytes in `<data-dir>/farm-code/app`; `localUi.status` includes `syncError` and `recoveryPath`, and the
 agent receives a notice. The startup rule retiring builds older than the installed release is
@@ -228,8 +228,8 @@ the sender's base back into the cloud.
   Postgres so the limit holds across instances), and only three password hashes run at once per
   instance.
 - **Farms and roles:** `farm_members` gives each user one role per farm: `owner`, `manager`,
-  `worker` or `viewer`. The matrix is shared in `@orbit/schema/roles` (`canWriteTable`,
-  `assignableRoles`, `canManageMember`) so Core and Orion enforce the same rule. Workers change
+  `worker` or `viewer`. The matrix is shared in `@liv/schema/roles` (`canWriteTable`,
+  `assignableRoles`, `canManageMember`) so Core and Liv enforce the same rule. Workers change
   animals, devices, device bindings and observations; farm settings, connectors and cameras are for
   owners and managers; viewers only read. Only owners make owners, and a farm always keeps one owner.
   `POST /v1/farms` creates a farm, or with `id` claims a local farm the cloud has never seen.
@@ -237,12 +237,12 @@ the sender's base back into the cloud.
   shown once, works once, only for that email address, and expires after 7 days
   (`POST /v1/invites/accept`). Sending the code is up to the inviter; Core sends no email yet.
 - **Farm-scoped routes** (`/v1/changes`, `/v1/shape`, `/v1/llm/*`) take a user session plus the
-  `x-orbit-farm` header (membership required; `/v1/changes` rejects rows the role may not change),
+  `x-liv-farm` header (membership required; `/v1/changes` rejects rows the role may not change),
   or a legacy per-farm api token, which keeps owner rights.
-- **Private chats:** `/v1/chat/*` requires a user session and `x-orbit-farm` membership; legacy
+- **Private chats:** `/v1/chat/*` requires a user session and `x-liv-farm` membership; legacy
   farm tokens are refused. Every Postgres chat key includes both farm ID and author user ID,
   so owners and managers cannot read another member's chats. Native clients can use the same
-  JSON REST API without Orion: `GET /v1/chat/sessions` lists metadata (including deletion
+  JSON REST API without Liv: `GET /v1/chat/sessions` lists metadata (including deletion
   tombstones), `GET /v1/chat/sessions/:id/entries` reads the Pi header and entries,
   `POST /v1/chat/sessions/:id/entries` appends `{session, header, entries}` idempotently by entry
   ID, `PATCH /v1/chat/sessions/:id` renames with `{title, updatedAt}`, and
@@ -252,43 +252,43 @@ the sender's base back into the cloud.
   Append batches must put parents before children. Metadata uses ISO timestamps and
   last-writer-wins `updatedAt`; immutable entries form a union
   by ID, preserving `parentId` branches. Deleted sessions cannot be resurrected by offline writes.
-- **Orion** (`--core-url` / `ORBIT_CORE_URL`) relays `account.*`, `members.*` and `invites.*` for the
+- **Liv** (`--core-url` / `LIV_CORE_URL`) relays `account.*`, `members.*` and `invites.*` for the
   UI, keeps the session encrypted in the data dir (`account-session.enc.json`, so it lasts as long as the farm's data; Windows drops keychain entries when an admin resets the user's password), links the local farm (member: use the
   role; unknown to the cloud: claim it as owner; someone else's: stay local with `linkError` until an
-  invite is accepted), runs `@orbit/sync` with the session, and applies the same role matrix to
+  invite is accepted), runs `@liv/sync` with the session, and applies the same role matrix to
   `db.mutate` and the agent's farm tools (`forbidden`).
 - **Google sign-in in the app:** Google refuses its sign-in inside app windows, so
   `account.googleStart` opens `<site>/account/app/?callback=http://127.0.0.1:<port>/account/google/<state>`
-  (site `https://barnstar.dev`, `ORBIT_SITE_URL` overrides) in the system browser. The site's Google
-  button sends the credential back in the URL fragment; Orion's page posts it to itself (same-origin
-  only, state single-use, 10 minutes) and Orion signs in with it at `POST /v1/auth/google`.
-- **First-run setup (`useSetupState`, `apps/orbit/src/lib/setup.ts`):** when `account.status` is
-  `"signed_out"` and `settings.get` reports no `availableModels`, Orion cannot answer yet. Home then
+  (site `https://agrointel.no`, `LIV_SITE_URL` overrides) in the system browser. The site's Google
+  button sends the credential back in the URL fragment; Liv's page posts it to itself (same-origin
+  only, state single-use, 10 minutes) and Liv signs in with it at `POST /v1/auth/google`.
+- **First-run setup (`useSetupState`, `apps/liv/src/lib/setup.ts`):** when `account.status` is
+  `"signed_out"` and `settings.get` reports no `availableModels`, Liv cannot answer yet. Home then
   shows one Sign in button (`home-sign-in`) in place of the ask box and the call button; it opens
   Settings, Account, where the farmer signs in or creates an account (their own AI provider key
-  goes in Settings, Orion); the Ask Orion menu item is
-  hidden and `/chat` leads to Home. The first time Home has an Orion that can answer, it plays a
-  three-step tour (write, talk, build) once; `orbit.tour` in localStorage (`lib/tour.ts`) remembers
+  goes in Settings, Liv); the Ask Liv menu item is
+  hidden and `/chat` leads to Home. The first time Home has a Liv that can answer, it plays a
+  three-step tour (write, talk, build) once; `liv.tour` in localStorage (`lib/tour.ts`) remembers
   that it was seen.
 
 ## Feedback and sharing
 
 - **Feedback (`feedback.send` / `feedback_send`):** farmers can send feedback (`issue`, `idea`, or
-  `other`) from Settings > Feedback or by asking Orion (which shows the exact text and waits for a
-  yes before calling `feedback_send`). Orion attaches `appVersion` and `os` and posts to Core's
+  `other`) from Settings > Feedback or by asking Liv (which shows the exact text and waits for a
+  yes before calling `feedback_send`). Liv attaches `appVersion` and `os` and posts to Core's
   `POST /v1/feedback` (`session: "optional"`, so signed-out installs can send feedback too, with an
   optional `contactEmail`). Core rate-limits `POST /v1/feedback` to 20 messages per 24 hours per
   user or hashed client IP (`feedback_rate_events`) and stores rows in `feedback`.
 - **Sharing farm builds (`share_build` / `share_status` / `shared.list`):** when a farm builds a
-  custom page (`pages/<name>`), connector (`connectors/<name>`), or skill (`skills/<name>`), Orion
+  custom page (`pages/<name>`), connector (`connectors/<name>`), or skill (`skills/<name>`), Liv
   can submit it for review with `share_build` after the farmer says yes. `collectBuild()` walks the
   folder, skips hidden/generated directories and binary files, enforces limits (at most 60 text
   files and 512 KB total), and scans every line against `SECRET_PATTERNS`, refusing with
   `rule_violation` if any line looks like a password, secret, or API key. Passing builds are posted
   to `POST /v1/submissions` (requires a signed-in user session) and stored in `submissions` with
-  status `pending`. Farmers and Orion check review status (`pending`, `approved`, `rejected`, plus
+  status `pending`. Farmers and Liv check review status (`pending`, `approved`, `rejected`, plus
   any `reviewNote`) via `GET /v1/submissions` (`shared.list` in the UI and `share_status` for
-  Orion). Approved builds reach other farms only after the Orbit team reviews them and adds them to
+  Liv). Approved builds reach other farms only after the Liv team reviews them and adds them to
   the `skills/` catalog in git.
   Other workspace software is packaged and tested as a self-contained `skills/<name>/` folder
   with `SKILL.md`, source and run instructions; arbitrary folders and binaries cannot be shared.
@@ -296,7 +296,7 @@ the sender's base back into the cloud.
   `/v1/admin/submissions` (list, inspect files, and `PATCH` status/review notes) plus a browser
   review page at `/admin`, all gated by `CORE_ADMIN_TOKEN` (returned as 404 when unset).
 
-## Agent design (`@orion/agent`)
+## Agent design (`@liv/agent`)
 
 - **One Pi session per conversation.** Sessions are created with `createAgentSession` and stored
   as JSONL under `<data-dir>/sessions`. Session rename and switch are handled with
@@ -316,20 +316,20 @@ the sender's base back into the cloud.
   context: herd, devices, routines), skills (for example connector setup and camera discovery),
   imports and scripts. These are loaded through `DefaultResourceLoader`.
 - **Memory:** `memory/farm.md` (facts about the farm) and `memory/user.md` (facts about the
-  person using Orbit) live in the workspace and are loaded as context files for every new session.
-  Orion edits them with `memory_remember` and `memory_forget` without asking. Workspace snapshots
+  person using Liv) live in the workspace and are loaded as context files for every new session.
+  Liv edits them with `memory_remember` and `memory_forget` without asking. Workspace snapshots
   keep them undoable.
 - **Tools:** farm tools are registered as Pi custom tools (typebox parameters). They call the same
   named query and mutation layer as `db.query` and `db.mutate`. Pi's coding tools (read/write/edit/bash)
-  start in the workspace and can reach the rest of the machine. On Windows Orion also switches on
+  start in the workspace and can reach the rest of the machine. On Windows Liv also switches on
   Pi's `powershell` tool, and drops `bash` when no bundled MinGit shell sits next to the sidecar, so
   a shell always exists. Because a custom system prompt replaces Pi's own tool rules, the prompt in
-  `agent/hub.ts` carries Orion's working rules plus a "This computer" block (`computerPrompt`:
-  system, shell, Orbit version, workspace, data folder, checkout) so Orion never has to probe for them.
+  `agent/hub.ts` carries Liv's working rules plus a "This computer" block (`computerPrompt`:
+  system, shell, Liv version, workspace, data folder, checkout) so Liv never has to probe for them.
 - **Conversation titles:** a new conversation is listed under its opening line. The moment its first
   message is sent, beside the run, `SessionHub.nameSession` asks a small model for a short title
   (`agent/title.ts`) and emits `session.updated`: on the subscription that is the gateway's
-  `orbit-small` (Core maps it to `LLM_SMALL_MODEL`), with the farmer's own key the cheapest paid text
+  `liv-small` (Core maps it to `LLM_SMALL_MODEL`), with the farmer's own key the cheapest paid text
   model of the same provider, and the conversation's own model only if the small one is refused. A
   title the farmer set is never replaced.
 - **Web access:** `web_search` and `web_fetch` (`agent/web.ts`) run on the farm PC with no
@@ -337,46 +337,46 @@ the sender's base back into the cloud.
   `HTMLRewriter`. The `browser` tool (`agent/browser.ts`) drives a headless browser through
   `Bun.WebView` (system WebKit on macOS, an installed Edge or Chrome elsewhere) with a persistent
   profile in `<data-dir>/browser-profile`; every action returns the page as text plus numbered
-  items to act on. All three label their output as untrusted, and the system prompt tells Orion
+  items to act on. All three label their output as untrusted, and the system prompt tells Liv
   never to follow instructions found on the web.
 - **Computer use:** the `computer` tool (`agent/computer.ts`) takes screenshots of the main screen
-  and sends mouse and keyboard input, so Orion can work in programs that have no connector. It uses
+  and sends mouse and keyboard input, so Liv can work in programs that have no connector. It uses
   the operating system's own tools and adds no native dependency: macOS `screencapture`/`sips`/
-  `osascript` (needs Screen Recording and Accessibility for Orbit), Windows PowerShell with user32
+  `osascript` (needs Screen Recording and Accessibility for Liv), Windows PowerShell with user32
   and `SendKeys`, Linux X11 `xdotool` plus ImageMagick `import` (Wayland is refused). Each call is
   one atomic action, so nothing is held between calls and `chat.abort` stops it. `type` and `key`
-  are refused while the focused window belongs to Orbit itself (Orion's parent process), because
+  are refused while the focused window belongs to Liv itself (Liv's parent process), because
   those keys would land in the chat box and be sent as the farmer's messages. Missing
-  permissions or tools come back as `Refused (<code>)` results that tell Orion to stop and ask the
+  permissions or tools come back as `Refused (<code>)` results that tell Liv to stop and ask the
   farmer instead of retrying.
-- **No approval gate:** Orion trusts the model, like the Pi agent itself. Tool calls run
-  directly; the system prompt and `resources/AGENTS.md` tell Orion to explain risky or hard-to-undo
+- **No approval gate:** Liv trusts the model, like the Pi agent itself. Tool calls run
+  directly; the system prompt and `resources/AGENTS.md` tell Liv to explain risky or hard-to-undo
   steps and wait for the farmer's yes in the chat. Undo snapshots are the safety net.
 ### Minimal-first modules
 
-Orbit starts minimal. **Home**, **Chat** (Ask Orion), **Settings**, and **Your pages** (custom pages) are always present and are not modules. Built-in domain screens are optional modules that start disabled on a fresh install:
+Liv starts minimal. **Home**, **Chat** (Ask Liv), **Settings**, and **Your pages** (custom pages) are always present and are not modules. Built-in domain screens are optional modules that start disabled on a fresh install:
 
-The `devices` module is called **Connections** and lists only existing connectors. Orbit ships no
-ready sensor connection: Orion builds unvalidated connections with the farmer and tests them
+The `devices` module is called **Connections** and lists only existing connectors. Liv ships no
+ready sensor connection: Liv builds unvalidated connections with the farmer and tests them
 against the real device before showing their data or controls; validated catalog skills supply their own setup.
 
-- **Protocol contract (`@orbit/protocol`):** `MODULE_IDS = ["herd", "devices", "cameras"] as const` (`ModuleId` is the union of those three literals). Each `OrbitModule` has `{ id: ModuleId, enabled: boolean, enabledAt: string | null, enabledBy: "orion" | "user" | "auto" | null }` (`enabledAt` is an ISO timestamp). `ModulesState` is `{ modules: OrbitModule[] }`, always containing all three IDs in `MODULE_IDS` order.
-- **Wire messages:** `modules.list` (empty params) returns `ModulesState`; `modules.enable` and `modules.disable` take `{ id: ModuleId }` and return `ModulesState`. Orion emits `modules.updated` with body `ModulesState` on every change from any cause.
-- **Agent tool:** `orbit_modules` with `{ action: "list" | "enable" | "disable", id?: ModuleId }`.
-- **Persistence and auto-enable:** Orion persists state in `<data-dir>/modules.json`. A module is enabled by Orion (`enabledBy: "orion"`), by the farmer in Settings (`"user"`), or automatically (`"auto"`) when live data for that area first appears (any non-deleted row in `animals` enables `herd`, `devices` enables `devices`, and `cameras` enables `cameras`). Existing farms that already have data auto-enable their matching modules on first load.
+- **Protocol contract (`@liv/protocol`):** `MODULE_IDS = ["herd", "devices", "cameras"] as const` (`ModuleId` is the union of those three literals). Each `LivModule` has `{ id: ModuleId, enabled: boolean, enabledAt: string | null, enabledBy: "orion" | "user" | "auto" | null }` (`enabledAt` is an ISO timestamp). `ModulesState` is `{ modules: LivModule[] }`, always containing all three IDs in `MODULE_IDS` order.
+- **Wire messages:** `modules.list` (empty params) returns `ModulesState`; `modules.enable` and `modules.disable` take `{ id: ModuleId }` and return `ModulesState`. Liv emits `modules.updated` with body `ModulesState` on every change from any cause.
+- **Agent tool:** `liv_modules` with `{ action: "list" | "enable" | "disable", id?: ModuleId }`.
+- **Persistence and auto-enable:** Liv persists state in `<data-dir>/modules.json`. A module is enabled by Liv (`enabledBy: "orion"`), by the farmer in Settings (`"user"`), or automatically (`"auto"`) when live data for that area first appears (any non-deleted row in `animals` enables `herd`, `devices` enables `devices`, and `cameras` enables `cameras`). Existing farms that already have data auto-enable their matching modules on first load.
 
-- **Custom pages (runtime UI):** Orion adds screens by writing `pages/<id>/index.html` (plus an
+- **Custom pages (runtime UI):** Liv adds screens by writing `pages/<id>/index.html` (plus an
   optional `page.json` with `title`/`description`) in the workspace. `pages.list` returns them and the
-  app shows them under "Your pages" in a sandboxed iframe (`allow-scripts allow-forms`). Orion serves
+  app shows them under "Your pages" in a sandboxed iframe (`allow-scripts allow-forms`). Liv serves
   the files at `/pages/<token>/<id>/...` on its localhost port, so only token holders can load them,
-  and `/pages/<token>/_orbit.js` gives pages `orbit.query`, `orbit.mutate`, `orbit.request` and
-  `orbit.on` over the normal protocol. The `custom-pages` skill describes the contract.
+  and `/pages/<token>/_liv.js` gives pages `liv.query`, `liv.mutate`, `liv.request` and
+  `liv.on` over the normal protocol. The `custom-pages` skill describes the contract.
 - **Page cards and the page kit:** a `page.json` with `"card": "card.html"` (a file directly in the
   page folder) makes `pages.list` return `card.path`, and Home shows that file as a card: a
   non-interactive sandboxed frame inside a tile that links to `/pages/<id>`. The app passes its
-  theme and language to every page and card frame as `?theme=&lang=`, and `_orbit.js` applies them.
-  `/pages/<token>/_orbit.css` is the app's own `design/tokens.css` followed by
-  `packages/orion/resources/pages/kit.css`, and `/fonts/<name>` serves the app's fonts, so pages
+  theme and language to every page and card frame as `?theme=&lang=`, and `_liv.js` applies them.
+  `/pages/<token>/_liv.css` is the app's own `design/tokens.css` followed by
+  `packages/liv/resources/pages/kit.css`, and `/fonts/<name>` serves the app's fonts, so pages
   look like the app without copying it. A sandboxed frame has an opaque origin, so everything under
   `/pages/<token>/` and `/fonts/` is sent with `Access-Control-Allow-Origin: *`; the token in the
   path remains the access check. That is what lets a page use module scripts and
@@ -386,45 +386,45 @@ against the real device before showing their data or controls; validated catalog
   `pages/<id>/` and never replaces an existing page. Each view keeps what the farmer sees in its
   `config.json` and its rules in one tested module (`herd.js`, `calendar.js`, `cameras.js`;
   `repro.js` is shared by copy and pinned identical by `skills/farm-views/views.test.ts`).
-  `orion --seed` installs all of them into the demo farm when the catalog is a local folder.
-- **Source editing (dev):** with `--app-source <checkout>` (or `ORBIT_APP_SOURCE`) Orion's system
-  prompt names the Orbit checkout and loads its `AGENTS.md`, so Orion can change the app and itself
-  (`apps/orbit/src` hot-reloads, `packages/orion` restarts under `bun --watch`). The Orion dev script
+  `liv --seed` installs all of them into the demo farm when the catalog is a local folder.
+- **Source editing (dev):** with `--app-source <checkout>` (or `LIV_APP_SOURCE`) Liv's system
+  prompt names the Liv checkout and loads its `AGENTS.md`, so Liv can change the app and itself
+  (`apps/liv/src` hot-reloads, `packages/liv` restarts under `bun --watch`). The Liv dev script
   passes `--app-source ../..`. Installed builds have no checkout and use custom pages instead.
-- **Your Orbit (local build):** to change Orbit itself, Orion runs `orbit_source` (clones the
+- **Your Liv (local build):** to change Liv itself, Liv runs `liv_source` (clones the
   installed version's tag into `<data-dir>/app` on a `farm` branch and installs dependencies; a
   no-op once it is there; `--app-source` replaces it in dev), edits, and runs `local_ui_build`:
   commit the edits (`summary`), `bun run typecheck`, `bun run build:local` (`vite build --base ./`).
-- **Orion's own build (`services/local-orion.ts`):** when the checkout's Orion packages differ from
-  the release tag, the same build also typechecks `packages/orion` and starts it once on a throwaway
-  data folder; only then is `<data-dir>/local-orion.json` switched on. Orion is not recompiled: the
+- **Liv's own build (`services/local-liv.ts`):** when the checkout's Liv packages differ from
+  the release tag, the same build also typechecks `packages/liv` and starts it once on a throwaway
+  data folder; only then is `<data-dir>/local-liv.json` switched on. Liv is not recompiled: the
   shipped binary is also a Bun runtime, so at startup `main.ts` runs the checkout's
-  `packages/orion/src/main.ts` in its own place (`LocalOrion.supervise`), passing stdio straight
+  `packages/liv/src/main.ts` in its own place (`LocalLiv.supervise`), passing stdio straight
   through. A build that never reports ready, or exits non-zero, switches the marker off, and the
-  shipped Orion runs instead (its prompt then tells Orion why). After such a build Orion restarts
+  shipped Liv runs instead (its prompt then tells Liv why). After such a build Liv restarts
   itself once no conversation is running: it shuts down cleanly and the desktop shell, which
-  restarts Orion whenever it exits, starts the new one. Continuing with the app's part: Only a passing build turns on `<data-dir>/local-ui.json` and emits
+  restarts Liv whenever it exits, starts the new one. Continuing with the app's part: Only a passing build turns on `<data-dir>/local-ui.json` and emits
   `localUi.updated` (a running local UI reloads; the shipped UI shows an "Open new version" bar, and
-  the tool result's `reloads` flag tells Orion which of the two to tell the farmer). Orion serves `<checkout>/apps/orbit/dist` at
+  the tool result's `reloads` flag tells Liv which of the two to tell the farmer). Liv serves `<checkout>/apps/liv/dist` at
   `/app/<token>/` with an injected `<base href>` and SPA fallback. At startup the shipped UI (Tauri, or
   web with `VITE_LOCAL_UI_HANDOFF=1`) asks `localUi.status`; on `ready` it calls `localUi.launched` and
   navigates there with `#return=<shipped url>`. The local build derives its endpoint from its own
-  origin and path token, calls `localUi.booted` once connected, and Settings > Your Orbit can send the
+  origin and path token, calls `localUi.booted` once connected, and Settings > Your Liv can send the
   farmer back (`localUi.disable`). A launch that never boots reads as `broken`, so the next start stays
-  on the shipped UI; `?safe` skips the hand-off. Schema, protocol, sync and Orion are never rebuilt.
+  on the shipped UI; `?safe` skips the hand-off. Schema, protocol, sync and Liv are never rebuilt.
 - **Models:** the farmer picks a provider and model with `settings.update`. Usage runs either on
   the farmer's own API key (stored in the keychain) or on the Core LLM gateway, which meters
-  subscription usage. Signing in to an Orbit account makes the cloud model the default when no
-  model was chosen: provider `orbit-gateway`, model `orbit-default`, sent to
-  `<core>/v1/llm/v1` with the session and `x-orbit-farm`; Core maps `orbit-default` to
+  subscription usage. Signing in to a Liv account makes the cloud model the default when no
+  model was chosen: provider `liv-gateway`, model `liv-default`, sent to
+  `<core>/v1/llm/v1` with the session and `x-liv-farm`; Core maps `liv-default` to
   `LLM_DEFAULT_MODEL` and calls the provider with its own key. Signing out clears that default.
   Plans are `free`, `orion`, `cam2`, `cam4`, `cam6`, `cam8`, `cam12` and `cam16`; Core supplies their names, prices
-  and allowances through `billing.plans`. A free Orion month keeps the `free` plan with
+  and allowances through `billing.plans`. A free Liv month keeps the `free` plan with
   `trialEndsAt` and cloud allowances. Calls without an allowance return 402 `plan_required`, while BYO
   providers remain available. `farm_budgets` overrides the token allowance; legacy farm API
   tokens retain their previous default/override budget behavior.
   `LLM_UPSTREAM_AUTH=google` uses cached ADC OAuth tokens and the global Vertex OpenAI endpoint,
-  mapping `orbit-default` to `google/gemini-3.8-flash` and stripping Orion's `/v1` prefix.
+  mapping `liv-default` to `google/gemini-3.8-flash` and stripping Liv's `/v1` prefix.
   Core's `/v1/voice/live` and `/v1/voice/agent` require a session and farm membership and share
   voice entitlement checks, connected-second metering in `voice_usage`, and close code 4402
   when the allowance is consumed. Without a paid plan or free month they return HTTP 402
@@ -437,60 +437,60 @@ against the real device before showing their data or controls; validated catalog
 ## Camera relay
 
 `camera_layouts` stores the version 2 barn-map layout as JSON, with one live row per farm.
-`cameraLayout.get` and `cameraLayout.save` use Orion's normal snapshot, HLC and outbox write path.
+`cameraLayout.get` and `cameraLayout.save` use Liv's normal snapshot, HLC and outbox write path.
 The layout row uses the farm UUID so independent devices converge through row-level LWW.
 
 `camera_discover` finds ONVIF cameras with WS-Discovery and returns each one's device address.
 Saving a camera with that address and no stream address (`cameras.upsert`, from `camera_add` or
-the camera form) makes Orion ask the camera for the RTSP address of its first video profile
+the camera form) makes Liv ask the camera for the RTSP address of its first video profile
 (`resolveStreamUrl` in `services/cameras.ts`), with the login given or the one already kept, and
 store it without credentials. A camera that does not answer is still saved; it has no live picture
 until it is saved again with a login that works or an RTSP address.
 
-Orion owns an optional go2rtc v1.9.15 child process. It resolves `ORION_GO2RTC_BIN`, a binary
-beside Orion, `<data-dir>/bin/go2rtc`, then `go2rtc` on PATH. Packaged desktop builds include it.
-The API binds to a free loopback port; RTSP, WebRTC and SRTP listeners are disabled. Orion
+Liv owns an optional go2rtc v1.9.15 child process. It resolves `LIV_GO2RTC_BIN`, a binary
+beside Liv, `<data-dir>/bin/go2rtc`, then `go2rtc` on PATH. Packaged desktop builds include it.
+The API binds to a free loopback port; RTSP, WebRTC and SRTP listeners are disabled. Liv
 proxies snapshots and MSE text/binary WebSockets at `/camera/<token>/<cameraId>/frame.jpeg`
 and `/camera/<token>/<cameraId>/ws`, using the same token authentication as local UI routes.
-`cameras.relay` reports availability; missing binaries and child exits leave Orion running
+`cameras.relay` reports availability; missing binaries and child exits leave Liv running
 and camera routes return 503.
 
 The child receives only inline configuration, without streams. Camera URLs and credentials
 from the secret store are registered through the runtime stream API at startup and after
 camera changes; removed streams are deleted. No plaintext credentials are written to a go2rtc
 config file or process arguments. The pinned go2rtc API applies runtime changes before
-returning `400 config file disabled` when persistence is disabled; Orion accepts only that
+returning `400 config file disabled` when persistence is disabled; Liv accepts only that
 specific persistence error. Child output is captured in bounded memory and the child is
-terminated when Orion stops.
+terminated when Liv stops.
 
 ## Voice agent
 
 The app runs the official ElevenLabs client SDK in WebSocket mode. `voice.start` checks
 the conversation and the account's plan and voice allowance, then returns a local
 `/voice/<token>/<voiceId>` path and the `farm_name` and `conversation_recap` dynamic variables.
-Orion relays JSON text frames verbatim to Core's `/v1/voice/agent`, using the stored account
-session and `x-orbit-farm`; Core connects to ElevenLabs and meters usage. No key reaches the app.
+Liv relays JSON text frames verbatim to Core's `/v1/voice/agent`, using the stored account
+session and `x-liv-farm`; Core connects to ElevenLabs and meters usage. No key reaches the app.
 Frames sent before Core connects are delivered in order. A budget close (4402) also emits
 `error` with `budget_exceeded`. Each call accepts one SDK socket and belongs to one protocol socket.
 
-The SDK reports finished user and assistant turns through `voice.turn`. Orion appends real Pi
+The SDK reports finished user and assistant turns through `voice.turn`. Liv appends real Pi
 messages with a persistent `voice: true` marker, so the text agent reads spoken conversation.
-During a chat run those writes wait until settlement, before `agent.settled`; afterward Orion
+During a chat run those writes wait until settlement, before `agent.settled`; afterward Liv
 rebuilds the agent from the updated file. Finished voice tools are custom history entries,
 rendered in the transcript but excluded from model context.
 
-Four client tools run through `voice.tool`: `db_query`, `db_mutate`, `browser`, and `orion_task`.
+Four client tools run through `voice.tool`: `db_query`, `db_mutate`, `browser`, and `liv_task`.
 Database operations share farm role checks, the one-wearable rule and undo snapshots; `params`
 may be an object or JSON object text. Browser actions use the text agent's browser session and
 emit JPEG `browser.view` pictures with an optional highlight box. The app itself owns the fifth
-tool, `app`, which operates its screen. `orion_task` starts the normal chat agent and answers
+tool, `app`, which operates its screen. `liv_task` starts the normal chat agent and answers
 immediately; completion follows as `tool.end` and `voice.note`. Other tools exceeding twelve
 seconds also answer immediately and deliver their result later. The app forwards notes as
 contextual user updates without saving another turn.
 
 `--mock-model` uses a deterministic ElevenLabs protocol peer with a greeting, client-tool
 calls and text responses, without audio. Herd answers use the real database result. Stopping,
-signing out, the owner protocol socket disconnecting or Orion shutting down ends the call.
+signing out, the owner protocol socket disconnecting or Liv shutting down ends the call.
 Closing only the SDK socket closes its upstream, while final turn and tool reports remain
 accepted until the call ends.
 
@@ -504,17 +504,17 @@ starting a chat run. `features/guide` runs the `app` tool on the app's own scree
 listing of what is visible, highlight, pointer, click and navigation; buttons that destroy or
 sign out are highlight-only) and renders the `browser.view` pictures.
 
-## Orbit on the phone
+## Liv on the phone
 
-The Android app (`apps/android`, native Kotlin and Compose, application id `no.agrointel.orbit`) is
-a small client for Orion: one screen to talk or type, plus chats, alerts, farm pages and
-notifications. It holds no farm data and runs no agent. Orion stays on the farm PC, and the phone
+The Android app (`apps/android`, native Kotlin and Compose, application id `no.agrointel.liv`) is
+a small client for Liv: one screen to talk or type, plus chats, alerts, farm pages and
+notifications. It holds no farm data and runs no agent. Liv stays on the farm PC, and the phone
 reaches it through a relay in Core.
 
 ### Relay
 
-- **Orion dials out** (`packages/orion/src/services/phone-relay.ts`) to `GET /v1/relay/host` with
-  the account session and `x-orbit-farm`, only while it is signed in, a cloud farm is open and
+- **Liv dials out** (`packages/liv/src/services/phone-relay.ts`) to `GET /v1/relay/host` with
+  the account session and `x-liv-farm`, only while it is signed in, a cloud farm is open and
   phone access is on (`Settings.phoneAccess`, off by default, switched at the PC). It reconnects
   with backoff from 1 to 30 seconds. Core ends every relay socket after 60 minutes, which is a
   normal reconnect.
@@ -526,7 +526,7 @@ reaches it through a relay in Core.
   `{t:"open",ch,channel,voiceId?}`, `{t:"data",ch,d}` and `{t:"close",ch,code?,reason?}`. A host
   carries at most 8 phone sockets, a frame over 8 MiB closes its channel with 4413, a replaced host
   is closed with 4409 and a lost host closes its phones with 4410.
-- **Loopback:** for each `open` Orion connects to its own server: channel `protocol` to `/ws`,
+- **Loopback:** for each `open` Liv connects to its own server: channel `protocol` to `/ws`,
   marked remote by a secret made at start that never leaves the process, and channel `voice` to
   `/voice/<token>/<voiceId>`. A remote socket still starts with `hello`; its token is ignored and
   the protocol version is checked.
@@ -535,9 +535,9 @@ reaches it through a relay in Core.
   `snapshots.undo` and `account.status` (`remoteRequestAllowed`). Everything else answers
   `forbidden`: settings, provider keys, access grants, members, invites, billing and farm switching
   stay at the PC. A new request type is local-only until it is added to that list.
-- **Pages:** `pages.read { pageId, path }` returns a page file as base64 (`_orbit.css` and `_fonts`
+- **Pages:** `pages.read { pageId, path }` returns a page file as base64 (`_liv.css` and `_fonts`
   are reserved page ids; the limit is 4 MiB). The app's web view loads pages through it and
-  supplies its own `window.orbit` over the relay socket.
+  supplies its own `window.liv` over the relay socket.
 - **One instance:** the registry is in memory, so host and phone must reach the same Core
   instance. Running several instances needs a shared bus first.
 
@@ -545,8 +545,8 @@ reaches it through a relay in Core.
 
 The app calls `voice.start` on the relayed protocol socket and opens a second relay socket with
 `channel=voice&voiceId=<id>`. It speaks the same ElevenLabs agent frames as the desktop SDK in
-WebSocket mode, so Orion's voice session, turn saving, client tools and Core's metering are reused
-unchanged. The audio path is phone, Core relay, Orion, Core `/v1/voice/agent`, ElevenLabs: one hop
+WebSocket mode, so Liv's voice session, turn saving, client tools and Core's metering are reused
+unchanged. The audio path is phone, Core relay, Liv, Core `/v1/voice/agent`, ElevenLabs: one hop
 more than on the PC. The `app` client tool has no meaning on the phone and answers that.
 
 ### Push
@@ -557,21 +557,21 @@ more than on the PC. The `app` client tool has no meaning on the phone and answe
   provider (`core/api/src/push.ts`). Without it, device routes work and nothing is sent. A token FCM
   reports as unregistered is deleted.
 - Messages carry Android `title_loc_key` / `body_loc_key` so the phone shows them in its own
-  language, on channel `alerts` or `orion`, plus string-only `data` (`kind`, `farmId`, and the
+  language, on channel `alerts` or `liv`, plus string-only `data` (`kind`, `farmId`, and the
   observation or conversation id).
 - **Herd alerts:** when `/v1/changes` inserts an observation of an alert kind (`ALERT_KINDS`) that is
   not deleted and no older than 24 hours, Core pushes to every device of every member of that farm,
   after the response.
-- **Orion:** when a chat run started from the phone settles or asks for access while no phone is
-  connected, Orion posts `POST /v1/push/notify` (session + `x-orbit-farm`) and Core pushes
-  `orion_done` or `orion_needs_you` to that person's own devices, at most once per conversation per
+- **Liv:** when a chat run started from the phone settles or asks for access while no phone is
+  connected, Liv posts `POST /v1/push/notify` (session + `x-liv-farm`) and Core pushes
+  `liv_done` or `liv_needs_you` to that person's own devices, at most once per conversation per
   30 seconds.
 
 ### Getting in quickly, and the lock screen
 
 The home and lock screen widget (`widgetCategory="home_screen|keyguard"`), the assistant gesture
 (`android.intent.action.ASSIST`) and an optional ongoing notification all start a call through one
-action, `no.agrointel.orbit.action.TALK`. Nothing in the app shows over the lock screen: on a
+action, `no.agrointel.liv.action.TALK`. Nothing in the app shows over the lock screen: on a
 locked phone that action asks the system to dismiss the keyguard and the call starts only after
 the unlock. Lock screen widgets exist on phones from Android 16 QPR1 and the person adds them in
 the phone's settings.
@@ -580,14 +580,14 @@ the phone's settings.
 
 - Sign-in is email and password; Google sign-in is desktop and website only.
 - Without the PC the app shows "PC is off"; it does not read past chats from Core on its own.
-- `orbit.cameraFrame()` returns an empty address in phone pages, because the relay carries no
+- `liv.cameraFrame()` returns an empty address in phone pages, because the relay carries no
   camera pictures.
-- The app keeps its relay socket only while it is on screen or in a call, so Orion's own
+- The app keeps its relay socket only while it is on screen or in a call, so Liv's own
   notifications reach a phone that is in the pocket through push.
 
 ## Building the desktop app
 
-`scripts/build-desktop.sh` builds the native app for the current machine (Orion sidecar via
+`scripts/build-desktop.sh` builds the native app for the current machine (Liv sidecar via
 `bun build --compile`, pinned go2rtc, debug `tauri build`); it needs Rust and the Tauri
 prerequisites. CI builds and smoke-tests the same app on Windows, macOS and Linux, and the release
 workflow produces the signed installers.

@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { join } from "node:path";
-import { createMemoryWriter, runSync, runTest } from "@orbit/connectors";
+import { createMemoryWriter, runSync, runTest } from "@liv/connectors";
 import connector from "./index";
 
 const path = join(import.meta.dir, "fixture.csv");

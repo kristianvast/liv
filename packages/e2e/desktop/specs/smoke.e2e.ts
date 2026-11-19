@@ -1,7 +1,7 @@
 import { $, browser } from "@wdio/globals";
 
-// Fresh install = minimal Orbit: Home, Chat, Settings. Herd, Devices and Cameras are
-// modules that stay hidden until Orion, the farmer or their first data enables them.
+// Fresh install = minimal Liv: Home, Chat, Settings. Herd, Devices and Cameras are
+// modules that stay hidden until Liv, the farmer or their first data enables them.
 const MINIMAL_NAV = ["/", "/chat", "/settings"];
 const MODULE_ROUTES = ["/herd", "/devices", "/cameras"];
 
@@ -10,13 +10,13 @@ async function builtInNavRoutes(): Promise<string[]> {
   return browser.execute(() =>
     Array.from(
       document.querySelectorAll<HTMLAnchorElement>(
-        'nav a.orbit-nav-link:not([data-testid^="nav-custom-page-"])',
+        'nav a.liv-nav-link:not([data-testid^="nav-custom-page-"])',
       ),
     ).map((a) => a.getAttribute("href") ?? ""),
   );
 }
 
-/** The connection banner's text: on a dead sidecar it carries the shell's reason and Orion's stderr. */
+/** The connection banner's text: on a dead sidecar it carries the shell's reason and Liv's stderr. */
 async function connectionBanner(): Promise<string> {
   return browser.execute(() =>
     Array.from(document.querySelectorAll('[role="status"]'))
@@ -47,14 +47,14 @@ async function expectMinimalNav(timeout: number) {
   }
 }
 
-describe("Orbit desktop smoke", () => {
+describe("Liv desktop smoke", () => {
   it("opens minimal on a fresh data dir: Home, Chat, Settings only", async () => {
     // First launch spawns the sidecar and migrates an empty SQLite database. The minimal nav also
-    // shows while modules are loading, so first require a live Orion connection.
+    // shows while modules are loading, so first require a live Liv connection.
     await waitWithBanner(
-      async () => (await $(".orbit-status-dot--ok").isExisting()) === true,
+      async () => (await $(".liv-status-dot--ok").isExisting()) === true,
       60_000,
-      "Orion never connected",
+      "Liv never connected",
     );
     await expectMinimalNav(10_000);
   });
@@ -66,7 +66,7 @@ describe("Orbit desktop smoke", () => {
   });
 
   it("opens Chat and gets a mock reply", async () => {
-    await $('nav a.orbit-nav-link[href="/chat"]').click();
+    await $('nav a.liv-nav-link[href="/chat"]').click();
     await $('[data-testid="sessions-sidebar"]').waitForDisplayed();
     await $('[data-testid="session-new-button"]').click();
     await $('[data-testid="chat-empty-state"]').waitForDisplayed();
@@ -85,7 +85,7 @@ describe("Orbit desktop smoke", () => {
     );
   });
 
-  it("stays minimal after talking to Orion (no module enabled without data)", async () => {
+  it("stays minimal after talking to Liv (no module enabled without data)", async () => {
     await expectMinimalNav(5_000);
   });
 });

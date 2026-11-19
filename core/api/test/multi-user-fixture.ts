@@ -15,7 +15,7 @@ export function multiUserFixture() {
   const memberHeaders = (farm = true) => ({
     authorization: `Bearer ${person.token}`,
     "content-type": "application/json",
-    ...(farm ? { "x-orbit-farm": FARM } : {}),
+    ...(farm ? { "x-liv-farm": FARM } : {}),
   });
   beforeEach(async () => {
     await db.insert(farmSubscriptions).values({ farmId: FARM, plan: "orion", status: "active" });

@@ -1,5 +1,5 @@
 import { expect, test } from "bun:test";
-import { cameraLayouts, outbox } from "@orbit/schema";
+import { cameraLayouts, outbox } from "@liv/schema";
 import { createSyncEngine } from "../src";
 import { FARM, FakeCore, freshDb, hlcAt, TOKEN } from "./fake-core";
 

@@ -129,14 +129,14 @@ test.each([
   { name: "missing session", headers: {}, path: "host", status: 401, code: "unauthorized" },
   {
     name: "nonmember",
-    headers: { "x-orbit-farm": "00000000-0000-4000-8000-000000000099" },
+    headers: { "x-liv-farm": "00000000-0000-4000-8000-000000000099" },
     path: "client",
     status: 403,
     code: "forbidden",
   },
   {
     name: "bad farm",
-    headers: { "x-orbit-farm": "bad" },
+    headers: { "x-liv-farm": "bad" },
     path: "host",
     status: 400,
     code: "bad_request",

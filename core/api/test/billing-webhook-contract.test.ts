@@ -78,7 +78,7 @@ test("a paid subscription checkout records hardware and mails once alongside the
   const a = app({
     mailer,
     fetch: async () => Response.json(subscription),
-    billing: { secretKey: "sk_test", webhookSecret: SECRET, ordersEmail: "orders@barnstar.test" },
+    billing: { secretKey: "sk_test", webhookSecret: SECRET, ordersEmail: "orders@agrointel.test" },
   });
   const value = {
     id: "cs_combined",
@@ -128,7 +128,7 @@ test("delayed subscription hardware payment mails once even with distinct succes
   const a = app({
     mailer,
     fetch: async () => Response.json(subscription),
-    billing: { secretKey: "sk_test", webhookSecret: SECRET, ordersEmail: "orders@barnstar.test" },
+    billing: { secretKey: "sk_test", webhookSecret: SECRET, ordersEmail: "orders@agrointel.test" },
   });
   const value = {
     id: "cs_delayed",

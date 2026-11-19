@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the Orbit desktop app for this machine: Orion sidecar, go2rtc, then Tauri.
+# Build the Liv desktop app for this machine: Liv sidecar, go2rtc, then Tauri.
 # Usage: scripts/build-desktop.sh [--release]   (default: debug build, unsigned)
 set -euo pipefail
 
@@ -17,12 +17,12 @@ case "$TRIPLE" in
   *) echo "Unsupported host: $TRIPLE" >&2; exit 1 ;;
 esac
 
-BIN_DIR="apps/orbit/src-tauri/binaries"
+BIN_DIR="apps/liv/src-tauri/binaries"
 mkdir -p "$BIN_DIR"
 
-echo "==> Orion sidecar ($BUN_TARGET)"
-bun build --compile --minify --keep-names --target="$BUN_TARGET" packages/orion/src/main.ts \
-  --outfile "$BIN_DIR/orion-$TRIPLE$EXE"
+echo "==> Liv sidecar ($BUN_TARGET)"
+bun build --compile --minify --keep-names --target="$BUN_TARGET" packages/liv/src/main.ts \
+  --outfile "$BIN_DIR/liv-$TRIPLE$EXE"
 
 GO2RTC_DEST="$BIN_DIR/go2rtc-$TRIPLE$EXE"
 if [ ! -x "$GO2RTC_DEST" ]; then
@@ -47,7 +47,7 @@ if [ "$TRIPLE" = "x86_64-pc-windows-msvc" ]; then
 fi
 
 echo "==> Tauri build ($PROFILE)"
-cd apps/orbit
+cd apps/liv
 # CI=true makes the macOS DMG step skip its Finder AppleScript, which otherwise asks for Automation access.
 export CI="${CI:-true}"
 if [ "$PROFILE" = "--release" ]; then

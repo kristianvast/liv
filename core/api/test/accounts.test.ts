@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from "bun:test";
 import type { webcrypto } from "node:crypto";
 import { PGlite } from "@electric-sql/pglite";
-import { pg } from "@orbit/schema";
+import { pg } from "@liv/schema";
 import { eq, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/pglite";
 import {
@@ -94,7 +94,7 @@ async function register(a: App, email: string) {
 
 const as = (token: string, farm?: string) => ({
   authorization: `Bearer ${token}`,
-  ...(farm ? { "x-orbit-farm": farm } : {}),
+  ...(farm ? { "x-liv-farm": farm } : {}),
 });
 
 async function memberWith(a: App, ownerToken: string, email: string, role: string) {
@@ -310,7 +310,7 @@ describe("Google sign-in", () => {
     fetches = 0;
     return app({
       googleClientIds: [clientId, "desktop.apps.googleusercontent.com"],
-      corsOrigins: ["https://barnstar.dev"],
+      corsOrigins: ["https://agrointel.no"],
       fetch: async (input) => {
         expect(String(input)).toBe("https://www.googleapis.com/oauth2/v3/certs");
         fetches++;
@@ -476,7 +476,7 @@ describe("Google sign-in", () => {
   test("passwordless login and change fail cleanly; reset can set an eight-character password", async () => {
     const a = googleApp();
     const google = await signIn(a);
-    for (const password of [PASSWORD, "orbit-dummy-password"]) {
+    for (const password of [PASSWORD, "liv-dummy-password"]) {
       expect(
         await call(a, "POST", "/v1/auth/login", { email: "google@farm.test", password }),
       ).toMatchObject({ status: 401, body: { error: { code: "invalid_credentials" } } });
@@ -486,7 +486,7 @@ describe("Google sign-in", () => {
         a,
         "POST",
         "/v1/me/password",
-        { currentPassword: "orbit-dummy-password", newPassword: PASSWORD },
+        { currentPassword: "liv-dummy-password", newPassword: PASSWORD },
         as(google.body.session.token),
       ),
     ).toMatchObject({ status: 401, body: { error: { code: "invalid_credentials" } } });
@@ -509,21 +509,21 @@ describe("Google sign-in", () => {
     ).toBe(200);
   });
 
-  test("permits the Barnstar website CORS preflight and response", async () => {
+  test("permits the Agrointel website CORS preflight and response", async () => {
     const a = googleApp();
     const preflight = await a.request("/v1/auth/google", {
       method: "OPTIONS",
       headers: {
-        origin: "https://barnstar.dev",
+        origin: "https://agrointel.no",
         "access-control-request-method": "POST",
         "access-control-request-headers": "content-type",
       },
     });
     expect(preflight.status).toBe(204);
-    expect(preflight.headers.get("access-control-allow-origin")).toBe("https://barnstar.dev");
+    expect(preflight.headers.get("access-control-allow-origin")).toBe("https://agrointel.no");
     const response = await a.request("/v1/auth/google", {
       method: "POST",
-      headers: { origin: "https://barnstar.dev", "content-type": "application/json" },
+      headers: { origin: "https://agrointel.no", "content-type": "application/json" },
       body: JSON.stringify({
         credential: await credential({
           iss: "accounts.google.com",
@@ -533,7 +533,7 @@ describe("Google sign-in", () => {
       }),
     });
     expect(response.status).toBe(201);
-    expect(response.headers.get("access-control-allow-origin")).toBe("https://barnstar.dev");
+    expect(response.headers.get("access-control-allow-origin")).toBe("https://agrointel.no");
   });
 });
 
@@ -779,7 +779,7 @@ describe("farm data with user sessions", () => {
     const legacyRow = { ...animal(1), farm_id: OTHER_FARM };
     const legacy = await push(a, { authorization: `Bearer ${LEGACY}` }, "animals", legacyRow);
     expect(legacy.body.results[0]).toMatchObject({ status: "applied" });
-    const crossed = await push(a, { ...as(LEGACY), "x-orbit-farm": FARM }, "animals", legacyRow);
+    const crossed = await push(a, { ...as(LEGACY), "x-liv-farm": FARM }, "animals", legacyRow);
     expect(crossed.status).toBe(403);
   });
 
@@ -801,7 +801,7 @@ describe("farm data with user sessions", () => {
       a,
       "POST",
       "/v1/llm/v1/chat/completions",
-      { model: "orbit-default", messages: [] },
+      { model: "liv-default", messages: [] },
       as(viewer.token, FARM),
     );
     expect(r.status).toBe(200);
@@ -811,7 +811,7 @@ describe("farm data with user sessions", () => {
       a,
       "POST",
       "/v1/llm/v1/chat/completions",
-      { model: "orbit-small", messages: [] },
+      { model: "liv-small", messages: [] },
       as(viewer.token, FARM),
     );
     expect(sent.model).toBe("gpt-real");
@@ -979,7 +979,7 @@ describe("account lifecycle", () => {
     expect((await call(a, "GET", "/v1/me", undefined, as(kari.token))).status).toBe(401);
   });
 
-  test("an Orbit farm adopts the empty cloud farm bought on the website, plan included", async () => {
+  test("a Liv farm adopts the empty cloud farm bought on the website, plan included", async () => {
     const a = app();
     const kari = await register(a, "kari@farm.test");
     const bought = await call(a, "POST", "/v1/farms", { name: "Website farm" }, as(kari.token));

@@ -9,15 +9,15 @@ import {
   DEVICE_STATUS,
   OBSERVATION_KINDS,
   SPECIES,
-} from "@orbit/schema/enums";
+} from "@liv/schema/enums";
 import { type Static, Type } from "typebox";
 
 export const PROTOCOL_VERSION = 1;
 /** Default dev-server address used by the UI in browser dev mode. */
 export const DEV_SERVER_URL = "ws://127.0.0.1:7717/ws";
 export const DEV_TOKEN = "dev";
-/** Line printed on stdout by the Orion sidecar once listening: ORION_READY {"port":N} */
-export const READY_LINE_PREFIX = "ORION_READY ";
+/** Line printed on stdout by the Liv sidecar once listening: LIV_READY {"port":N} */
+export const READY_LINE_PREFIX = "LIV_READY ";
 /** WebSocket close codes used by the server. */
 export const CloseCode = {
   unauthorized: 4401,
@@ -87,7 +87,7 @@ export const AssistantItem = Type.Object({
   model: Type.Optional(Type.String()),
   stopReason: Type.Optional(Type.String()),
   errorMessage: Type.Optional(Type.String()),
-  /** True when Orion said this in a voice call. */
+  /** True when Liv said this in a voice call. */
   voice: Type.Optional(Type.Boolean()),
 });
 export const ToolItem = Type.Object({
@@ -125,7 +125,7 @@ export type TranscriptItem = Static<typeof TranscriptItem>;
 export const ThinkingLevel = Type.Enum(["off", "minimal", "low", "medium", "high", "xhigh"]);
 export type ThinkingLevel = Static<typeof ThinkingLevel>;
 
-/** The tools that need the farmer's yes before Orion first uses them. */
+/** The tools that need the farmer's yes before Liv first uses them. */
 export const AccessTool = Type.Enum(["shell", "browser", "computer"]);
 export type AccessTool = Static<typeof AccessTool>;
 export const ToolAccess = Type.Object({
@@ -142,7 +142,7 @@ export const Settings = Type.Object({
   thinkingLevel: ThinkingLevel,
   /** Share anonymised footage and outcomes to improve the models. On by default; opt out in settings. */
   shareAnonymousData: Type.Boolean(),
-  /** Which of Orion's tools the farmer allowed; each is asked once, on its own first use. */
+  /** Which of Liv's tools the farmer allowed; each is asked once, on its own first use. */
   toolAccess: ToolAccess,
   /** Which tools' first-use question the farmer has answered with Allow at least once; until then, turning one on in Settings asks it first. */
   toolAccessAccepted: ToolAccess,
@@ -175,12 +175,12 @@ export type SettingsUpdate = Static<typeof SettingsUpdate>;
 
 // ------------------------------------------------------------------ custom pages
 
-/** A page Orion built in the farm workspace (pages/<id>/index.html), shown in the app nav. */
+/** A page Liv built in the farm workspace (pages/<id>/index.html), shown in the app nav. */
 export const CustomPage = Type.Object({
   id: Type.String(),
   title: Type.String(),
   description: Type.Optional(Type.String()),
-  /** Server path of the entry file, relative to Orion's HTTP origin. Carries the session token. */
+  /** Server path of the entry file, relative to Liv's HTTP origin. Carries the session token. */
   path: Type.String(),
   /** Present when page.json names a card file: a small summary Home shows, linking to the page. */
   card: Type.Optional(Type.Object({ path: Type.String() })),
@@ -199,12 +199,12 @@ export type LocalUiState = Static<typeof LocalUiState>;
 
 export const LocalUiStatus = Type.Object({
   state: LocalUiState,
-  /** Server path of the local build's entry, relative to Orion's HTTP origin. Carries the token. */
+  /** Server path of the local build's entry, relative to Liv's HTTP origin. Carries the token. */
   path: Type.Union([Type.String(), Type.Null()]),
   builtAt: Type.Union([Type.String(), Type.Null()]),
   /** git HEAD of the checkout the build came from, when known. */
   commit: Type.Union([Type.String(), Type.Null()]),
-  /** Orbit release the build's source sits on (e.g. "0.1.6"); absent from older Orions. */
+  /** Liv release the build's source sits on (e.g. "0.1.6"); absent from older Livs. */
   baseVersion: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   syncError: Type.Optional(Type.Union([Type.String(), Type.Null()])),
   recoveryPath: Type.Optional(Type.Union([Type.String(), Type.Null()])),
@@ -217,7 +217,7 @@ export type LocalUiStatus = Static<typeof LocalUiStatus>;
 export const AuthMethod = Type.Enum(["oauth", "api_key"]);
 export type AuthMethod = Static<typeof AuthMethod>;
 
-/** A model provider Orion can sign in to, mirroring Pi's /login list. Never carries secrets. */
+/** A model provider Liv can sign in to, mirroring Pi's /login list. Never carries secrets. */
 export const AuthProviderInfo = Type.Object({
   id: Type.String(),
   name: Type.String(),
@@ -271,7 +271,7 @@ export const AuthNotice = Type.Union([
     type: Type.Literal("auth_url"),
     url: Type.String(),
     instructions: Type.Optional(Type.String()),
-    /** True when Orion already opened the page in the system browser. */
+    /** True when Liv already opened the page in the system browser. */
     opened: Type.Boolean(),
   }),
   Type.Object({

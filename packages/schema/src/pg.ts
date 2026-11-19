@@ -1,6 +1,6 @@
 // Cloud Postgres schema (Core). Column names are identical to ./sqlite.ts for every synced table.
 // Local-only tables (outbox, snapshots, sync_state) do not exist here.
-// Timestamps are timestamptz in "string" mode; @orbit/sync normalises them to ISO-8601 before
+// Timestamps are timestamptz in "string" mode; @liv/sync normalises them to ISO-8601 before
 // writing them into local SQLite.
 import { sql } from "drizzle-orm";
 import {

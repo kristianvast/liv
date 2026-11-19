@@ -44,7 +44,7 @@ test("first Google sign-in emits account creation under the new user ID", async 
     body: JSON.stringify({
       credential: `${unsigned}.${Buffer.from(signature).toString("base64url")}`,
       acceptTerms: true,
-      deviceName: "Orbit on Test-PC",
+      deviceName: "Liv on Test-PC",
     }),
   };
   const response = await a.request("/v1/auth/google", request);

@@ -1,6 +1,6 @@
 import type { Server, ServerWebSocket } from "bun";
 import { eq } from "drizzle-orm";
-import { memberRole, resolveSession } from "./auth";
+import { farmHeader, memberRole, resolveSession } from "./auth";
 import { MEMBER_LIMIT, memberFarmTokens, resolveBillingAccount } from "./billing-account";
 import { type CoreDb, voiceUsage } from "./db";
 import { entitlements, planRequired, usageThisMonth } from "./entitlements";
@@ -91,10 +91,10 @@ export function createVoiceRelay(db: CoreDb, options: RelayOptions) {
           { error: { code: "unauthorized", message: "Sign in first" } },
           { status: 401 },
         );
-      const farmId = request.headers.get("x-orbit-farm");
+      const farmId = farmHeader(request.headers);
       if (farmId !== null && !/^[0-9a-f-]{36}$/i.test(farmId))
         return Response.json(
-          { error: { code: "bad_request", message: "x-orbit-farm must be a uuid" } },
+          { error: { code: "bad_request", message: "x-liv-farm must be a uuid" } },
           { status: 400 },
         );
       if (farmId && !(await memberRole(db, farmId, user.id)))

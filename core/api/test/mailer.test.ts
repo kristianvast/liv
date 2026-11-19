@@ -3,8 +3,8 @@ import { createMailer, type EmailLinks, emails } from "../src/mailer";
 import type { FetchLike } from "../src/shape";
 
 const links: EmailLinks = {
-  siteUrl: "https://barnstar.dev/",
-  downloadUrl: "https://github.com/kristianvast/orbit/releases/latest",
+  siteUrl: "https://agrointel.no/",
+  downloadUrl: "https://github.com/kristianvast/liv/releases/latest",
 };
 
 function capture() {
@@ -19,11 +19,11 @@ function capture() {
 describe("emails", () => {
   test("customer emails carry a branded HTML part with the same link as the text part", () => {
     const mail = emails.verify(links, "farmer@example.test", "tok-123");
-    const link = "https://barnstar.dev/account/?verify=tok-123";
+    const link = "https://agrointel.no/account/?verify=tok-123";
     expect(mail.text).toContain(link);
     expect(mail.html).toContain(`href="${link}"`);
     expect(mail.html).toContain(
-      'src="https://barnstar.dev/shared/logo/barnstar-wordmark-light.png"',
+      'src="https://agrointel.no/shared/logo/agrointel-wordmark-light.png"',
     );
   });
 
@@ -66,17 +66,17 @@ describe("providers", () => {
 
   test("resend sends html and reply_to", async () => {
     const { calls, fetch } = capture();
-    const from = "Barnstar <no-reply@barnstar.dev>";
+    const from = "Agrointel <no-reply@agrointel.no>";
     await createMailer({
       provider: "resend",
       apiKey: "k",
       from,
-      replyTo: "hello@barnstar.dev",
+      replyTo: "kristian@agrointel.no",
       fetch,
     }).send(mail);
     expect(calls[0]?.body).toMatchObject({
       from,
-      reply_to: "hello@barnstar.dev",
+      reply_to: "kristian@agrointel.no",
       html: mail.html,
       text: mail.text,
     });
@@ -87,12 +87,12 @@ describe("providers", () => {
     await createMailer({
       provider: "postmark",
       apiKey: "k",
-      from: "x@barnstar.dev",
-      replyTo: "hello@barnstar.dev",
+      from: "x@agrointel.no",
+      replyTo: "kristian@agrointel.no",
       fetch,
     }).send(mail);
     expect(calls[0]?.body).toMatchObject({
-      ReplyTo: "hello@barnstar.dev",
+      ReplyTo: "kristian@agrointel.no",
       HtmlBody: mail.html,
       TextBody: mail.text,
     });
@@ -100,7 +100,7 @@ describe("providers", () => {
 
   test("a sender without reply-to omits the field", async () => {
     const { calls, fetch } = capture();
-    await createMailer({ provider: "resend", apiKey: "k", from: "x@barnstar.dev", fetch }).send(
+    await createMailer({ provider: "resend", apiKey: "k", from: "x@agrointel.no", fetch }).send(
       mail,
     );
     expect(calls[0]?.body).not.toHaveProperty("reply_to");

@@ -87,7 +87,7 @@ test("hardware orders keep shipping, wait for delayed payments and email once wh
     billing: {
       secretKey: "sk_test",
       webhookSecret: SECRET,
-      ordersEmail: "orders@barnstar.test",
+      ordersEmail: "orders@agrointel.test",
     },
   });
   const order = {
@@ -123,14 +123,14 @@ test("hardware orders keep shipping, wait for delayed payments and email once wh
   expect((await db.select().from(hardwareOrders))[0]?.status).toBe("paid");
   expect(mail.sent.map((m) => [m.template, m.to])).toEqual([
     ["hardware_order", "buyer@farm.test"],
-    ["order_notice", "orders@barnstar.test"],
+    ["order_notice", "orders@agrointel.test"],
   ]);
 });
-test("a completed plan checkout emails the buyer how to sign in to Orbit", async () => {
+test("a completed plan checkout emails the buyer how to sign in to Liv", async () => {
   const mail = createLogMailer(() => {});
   const a = app({
     mailer: mail,
-    links: { siteUrl: "https://barnstar.test", downloadUrl: "https://get.orbit.test" },
+    links: { siteUrl: "https://agrointel.test", downloadUrl: "https://get.liv.test" },
     fetch: async () => Response.json(subscription),
   });
   await webhook(a, {
@@ -146,6 +146,6 @@ test("a completed plan checkout emails the buyer how to sign in to Orbit", async
   });
   expect(mail.sent).toHaveLength(1);
   expect(mail.sent[0]).toMatchObject({ to: "owner@example.test", template: "plan_active" });
-  expect(mail.sent[0]?.text).toContain("https://get.orbit.test");
+  expect(mail.sent[0]?.text).toContain("https://get.liv.test");
   expect(mail.sent[0]?.text).toContain("sign in with owner@example.test");
 });

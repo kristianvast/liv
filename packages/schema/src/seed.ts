@@ -1,4 +1,4 @@
-// Deterministic demo farm used by `orion --seed`, the UI in browser dev mode and e2e tests.
+// Deterministic demo farm used by `liv --seed`, the UI in browser dev mode and e2e tests.
 // 24 cattle (16 dairy, 8 beef), 4 horses, a milking robot, one wearable per tagged animal
 // (collar OR bolus OR ear tag sensor), 3 cameras, 1 connector (generic CSV) and 7 days of observations with
 // a heat alert, a calving alert and a health event. Cows, two beef cows and one mare also carry a
@@ -276,7 +276,7 @@ export function seedDemoFarm(db: BunSQLiteDatabase<any>, options: SeedOptions = 
     location: c.location,
     onvifXaddr: `http://${c.ip}/onvif/device_service`,
     rtspUrl: `rtsp://${c.ip}:554/stream1`,
-    credentialRef: `orbit/camera/${i + 1}`,
+    credentialRef: `liv/camera/${i + 1}`,
     status: c.status,
     ...sync(),
   }));

@@ -1,20 +1,20 @@
 import { expect, test } from "@playwright/test";
-import { E2E_ORION_PORT, E2E_TOKEN, E2E_VITE_PORT, SEED } from "../src/index";
+import { E2E_LIV_PORT, E2E_TOKEN, E2E_VITE_PORT, SEED } from "../src/index";
 import { expectTool, setToolAccess, startChat } from "./helpers";
 
-const LOCAL_BASE = `http://127.0.0.1:${E2E_ORION_PORT}/app/${E2E_TOKEN}/`;
+const LOCAL_BASE = `http://127.0.0.1:${E2E_LIV_PORT}/app/${E2E_TOKEN}/`;
 const SHIPPED_ORIGIN = `http://127.0.0.1:${E2E_VITE_PORT}`;
 // A farm shows one species at a time; the demo farm's setting is cattle.
 const herdCounts = `${SEED.cattle} cattle`;
 
-test("Orion builds your own Orbit, the app opens it, safe mode skips it, and you can switch back", async ({
+test("Liv builds your own Liv, the app opens it, safe mode skips it, and you can switch back", async ({
   page,
 }) => {
-  // local_ui_build runs the real typecheck and vite build of apps/orbit.
+  // local_ui_build runs the real typecheck and vite build of apps/liv.
   test.setTimeout(300_000);
   // Building runs the checkout's scripts, so it needs the yes to running commands.
   await setToolAccess(page, "shell", true);
-  await startChat(page, "build my orbit");
+  await startChat(page, "build my liv");
   await expectTool(page, "local_ui_build", "done", 240_000);
 
   await page.goto("/");

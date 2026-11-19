@@ -45,7 +45,7 @@ export function billingFixture() {
 
   const headers = () => ({
     authorization: `Bearer ${session.token}`,
-    "x-orbit-farm": FARM,
+    "x-liv-farm": FARM,
     "content-type": "application/json",
   });
 

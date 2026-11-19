@@ -1,4 +1,4 @@
-import { pg } from "@orbit/schema";
+import { pg } from "@liv/schema";
 import { and, eq } from "drizzle-orm";
 import type { Hono } from "hono";
 import { type AccountEnv, ApiError, body, verifyPassword } from "./account-input";
@@ -18,7 +18,7 @@ export function registerDeleteRoute(routes: Hono<AccountEnv>, db: CoreDb, runtim
   const { requireSession, wrap } = runtime;
   /**
    * Deletes the account. Farms the caller owns alone and shares with nobody are wiped from the
-   * cloud (local Orbit copies stay on the farm PC); shared farms need another owner first, and a
+   * cloud (local Liv copies stay on the farm PC); shared farms need another owner first, and a
    * running paid plan must be cancelled first. Invoices and order records stay in Stripe and
    * hardware_orders for bookkeeping, unlinked from the account.
    */

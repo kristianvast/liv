@@ -1,4 +1,4 @@
-import { createHlc, pg } from "@orbit/schema";
+import { createHlc, pg } from "@liv/schema";
 import { and, eq, sql } from "drizzle-orm";
 import type { Hono } from "hono";
 import { type AccountEnv, ApiError, body, str, UUID } from "./account-input";
@@ -22,7 +22,7 @@ export function registerFarmRoutes(routes: Hono<AccountEnv>, db: CoreDb, runtime
    * allowed while the cloud knows nothing about that farm (no members, no rows, no farm tokens),
    * so nobody can take over a farm by learning its id. With `id` and `adopt`, the claimed farm
    * takes over an empty cloud farm the caller owns (members, plan, usage), e.g. the farm created
-   * while buying a plan on the website before Orbit was installed.
+   * while buying a plan on the website before Liv was installed.
    */
   routes.post(
     "/v1/farms",
@@ -101,7 +101,7 @@ export function registerFarmRoutes(routes: Hono<AccountEnv>, db: CoreDb, runtime
               throw new ApiError(
                 409,
                 "farm_not_empty",
-                "your cloud farm already has data; open it in Orbit instead",
+                "your cloud farm already has data; open it in Liv instead",
               );
             }
             const moved = { farmId };

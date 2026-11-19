@@ -4,10 +4,10 @@ import { createConnection } from "node:net";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
 
-const exe = process.platform === "win32" ? "orbit-desktop.exe" : "orbit-desktop";
+const exe = process.platform === "win32" ? "liv-desktop.exe" : "liv-desktop";
 const application =
-  process.env.ORBIT_APP_PATH ??
-  resolve(import.meta.dirname, "../../../apps/orbit/src-tauri/target/debug", exe);
+  process.env.LIV_APP_PATH ??
+  resolve(import.meta.dirname, "../../../apps/liv/src-tauri/target/debug", exe);
 
 const logPath = join(tmpdir(), `tauri-driver-${process.pid}.log`);
 let logFd: number | undefined;
@@ -47,7 +47,7 @@ function stopTauriDriver() {
       spawnSync("taskkill", ["/F", "/T", "/PID", String(tauriDriver.pid)], { stdio: "ignore" });
       spawnSync(
         "taskkill",
-        ["/F", "/IM", "orbit-desktop.exe", "/IM", "orion.exe", "/IM", "msedgedriver.exe"],
+        ["/F", "/IM", "liv-desktop.exe", "/IM", "liv.exe", "/IM", "msedgedriver.exe"],
         { stdio: "ignore" },
       );
     } else {
@@ -85,7 +85,7 @@ export const config: WebdriverIO.Config = {
   onPrepare() {
     if (!existsSync(application)) {
       throw new Error(
-        `Orbit debug build not found at ${application}; run tauri build --debug first.`,
+        `Liv debug build not found at ${application}; run tauri build --debug first.`,
       );
     }
   },
@@ -99,9 +99,9 @@ export const config: WebdriverIO.Config = {
       stdio: ["ignore", logFd, logFd],
       env: {
         ...process.env,
-        // No ORION_SEED: a fresh install must open minimal (seeded data would auto-enable modules).
-        ORION_MOCK_MODEL: "1",
-        ORION_SECRETS: "file",
+        // No LIV_SEED: a fresh install must open minimal (seeded data would auto-enable modules).
+        LIV_MOCK_MODEL: "1",
+        LIV_SECRETS: "file",
       },
     });
     tauriDriver.unref();

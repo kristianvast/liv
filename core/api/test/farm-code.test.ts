@@ -1,8 +1,8 @@
 import { afterAll, beforeAll, beforeEach, expect, test } from "bun:test";
 import { createHash } from "node:crypto";
 import { PGlite } from "@electric-sql/pglite";
-import { FARM_CODE_MAX_FILE_BYTES, type FarmCodePush } from "@orbit/protocol";
-import { type FarmRole, pg } from "@orbit/schema";
+import { FARM_CODE_MAX_FILE_BYTES, type FarmCodePush } from "@liv/protocol";
+import { type FarmRole, pg } from "@liv/schema";
 import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/pglite";
 import { createApp } from "../src/app";
@@ -64,7 +64,7 @@ async function call(token: string, route: string, body?: unknown, farm = FARM) {
     method: body === undefined ? "GET" : "POST",
     headers: {
       authorization: `Bearer ${token}`,
-      "x-orbit-farm": farm,
+      "x-liv-farm": farm,
       "content-type": "application/json",
     },
     body: body === undefined ? undefined : JSON.stringify(body),
@@ -76,7 +76,7 @@ test("a commit restores its manifest and only that farm can fetch its blobs", as
   const [hash = ""] = Object.keys(payload.blobs);
   payload.manifest.app = {
     baseCommit: "a".repeat(40),
-    files: { "apps/orbit/src/farm.ts": { base: null, content: hash } },
+    files: { "apps/liv/src/farm.ts": { base: null, content: hash } },
   };
   const pushed = await call(owner, "commits", payload);
   expect(pushed.status).toBe(200);

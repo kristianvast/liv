@@ -70,7 +70,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: apps/orbit/src-tauri -> target
+          workspaces: apps/liv/src-tauri -> target
           key: ${{ matrix.rust-target }}
 
       - name: Linux system dependencies
@@ -83,12 +83,12 @@ jobs:
       - name: Install
         run: bun install --frozen-lockfile
 
-      - name: Build Orion sidecar
+      - name: Build Liv sidecar
         run: |
-          mkdir -p apps/orbit/src-tauri/binaries
+          mkdir -p apps/liv/src-tauri/binaries
           bun build --compile --minify --keep-names --target=${{ matrix.bun-target }} \
-            packages/orion/src/main.ts \
-            --outfile "apps/orbit/src-tauri/binaries/orion-${{ matrix.rust-target }}${{ matrix.exe }}"
+            packages/liv/src/main.ts \
+            --outfile "apps/liv/src-tauri/binaries/liv-${{ matrix.rust-target }}${{ matrix.exe }}"
 
       - name: Download go2rtc sidecar (v1.9.15)
         run: |
@@ -101,7 +101,7 @@ jobs:
             x86_64-apple-darwin) ASSET=go2rtc_mac_amd64.zip ;;
             *) echo "Unsupported go2rtc target: $TRIPLE"; exit 1 ;;
           esac
-          DEST="apps/orbit/src-tauri/binaries/go2rtc-$TRIPLE${{ matrix.exe }}"
+          DEST="apps/liv/src-tauri/binaries/go2rtc-$TRIPLE${{ matrix.exe }}"
           DOWNLOAD_DIR="$(mktemp -d)"
           curl --fail --location --retry 3 \
             "https://github.com/AlexxIT/go2rtc/releases/download/v1.9.15/$ASSET" \
@@ -133,7 +133,7 @@ jobs:
           APPLE_API_KEY: ${{ secrets.APPLE_API_KEY }}
           APPLE_API_ISSUER: ${{ secrets.APPLE_API_ISSUER }}
           APPLE_API_KEY_P8: ${{ secrets.APPLE_API_KEY_P8 }}
-          ORBIT_DEFAULT_CORE_URL: ${{ vars.ORBIT_CORE_URL }}
+          LIV_DEFAULT_CORE_URL: ${{ vars.LIV_CORE_URL }}
         run: |
           if [[ "$RUNNER_OS" == "macOS" && -n "$APPLE_CERTIFICATE" ]]; then
             for name in APPLE_CERTIFICATE APPLE_CERTIFICATE_PASSWORD APPLE_SIGNING_IDENTITY \
@@ -146,8 +146,8 @@ jobs:
           elif [[ "$RUNNER_OS" == "macOS" ]]; then
             echo "::warning::No Apple signing secrets: this macOS build is unsigned and Gatekeeper will block it after download."
           fi
-          if [[ -n "$ORBIT_DEFAULT_CORE_URL" ]]; then
-            echo "ORBIT_DEFAULT_CORE_URL=$ORBIT_DEFAULT_CORE_URL" >> "$GITHUB_ENV"
+          if [[ -n "$LIV_DEFAULT_CORE_URL" ]]; then
+            echo "LIV_DEFAULT_CORE_URL=$LIV_DEFAULT_CORE_URL" >> "$GITHUB_ENV"
           fi
 
       - name: Release config override
@@ -160,7 +160,7 @@ jobs:
               conf.bundle.windows = {
                 signCommand: "trusted-signing-cli -e " + env.AZURE_TRUSTED_SIGNING_ENDPOINT +
                   " -a " + env.AZURE_TRUSTED_SIGNING_ACCOUNT +
-                  " -c " + env.AZURE_TRUSTED_SIGNING_PROFILE + " -d Orbit %1",
+                  " -c " + env.AZURE_TRUSTED_SIGNING_PROFILE + " -d Liv %1",
               };
             }
             await Bun.write(env.RUNNER_TEMP + "/tauri.release.conf.json", JSON.stringify(conf, null, 2));
@@ -173,11 +173,11 @@ jobs:
           TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
           TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
         with:
-          projectPath: apps/orbit
+          projectPath: apps/liv
           tauriScript: bunx tauri
           args: --target ${{ matrix.rust-target }} --config ${{ runner.temp }}/tauri.release.conf.json ${{ matrix.bundles }}
           tagName: ${{ github.ref_name }}
-          releaseName: Orbit ${{ github.ref_name }}
+          releaseName: Liv ${{ github.ref_name }}
           releaseBody: See the assets below to download and install this version.
           releaseDraft: true
           prerelease: false
@@ -219,12 +219,16 @@ jobs:
             cp "${found[0]}" "$2"
             named+=( "$2" )
           }
-          stable '*_x64-setup.exe' Orbit-Windows.exe
-          stable '*_aarch64.dmg' Orbit-macOS-Apple-Silicon.dmg
-          stable '*_x64.dmg' Orbit-macOS-Intel.dmg
-          stable '*_amd64.AppImage' Orbit-Linux-x64.AppImage
-          stable '*_arm64.deb' Orbit-Linux-arm64.deb
+          stable '*_x64-setup.exe' Liv-Windows.exe
+          stable '*_aarch64.dmg' Liv-macOS-Apple-Silicon.dmg
+          stable '*_x64.dmg' Liv-macOS-Intel.dmg
+          stable '*_amd64.AppImage' Liv-Linux-x64.AppImage
+          stable '*_arm64.deb' Liv-Linux-arm64.deb
+          # Links made before the Liv rename (the barnstar.dev site, older READMEs) ask for Orbit-*.
+          for name in Windows.exe macOS-Apple-Silicon.dmg macOS-Intel.dmg Linux-x64.AppImage Linux-arm64.deb; do
+            if [[ -f "Liv-$name" ]]; then cp "Liv-$name" "Orbit-$name"; named+=( "Orbit-$name" ); fi
+          done
           # Windows is where most farm PCs are: never publish a release without it.
-          if [[ ! -f Orbit-Windows.exe ]]; then echo "no Windows installer; leaving the release as a draft"; exit 1; fi
+          if [[ ! -f Liv-Windows.exe ]]; then echo "no Windows installer; leaving the release as a draft"; exit 1; fi
           gh release upload "$TAG" --repo "$GITHUB_REPOSITORY" --clobber latest.json "${named[@]}"
           gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --draft=false --latest

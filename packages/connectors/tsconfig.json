@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@orbit/connectors": ["./src/index.ts"]
+      "@liv/connectors": ["./src/index.ts"]
     }
   },
   "include": ["src", "test", "template", "*.ts"]

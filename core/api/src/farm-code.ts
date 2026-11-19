@@ -7,8 +7,8 @@ import {
   farmCodeHashes,
   farmCodePath,
   farmCodeSecret,
-} from "@orbit/protocol";
-import { canWriteTable } from "@orbit/schema";
+} from "@liv/protocol";
+import { canWriteTable } from "@liv/schema";
 import { and, eq, inArray, sql } from "drizzle-orm";
 import { Hono } from "hono";
 import { bodyLimit } from "hono/body-limit";

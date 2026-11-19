@@ -1,7 +1,7 @@
 // Admin CLI: `bun src/cli.ts issue-token <farm-uuid> [name]` prints a new bearer token once,
 // `bun src/cli.ts set-budget <farm-uuid> <tokens>` overrides a farm's monthly LLM budget,
 // `bun src/cli.ts add-member <farm-uuid> <email> <role>` gives a registered user a farm role.
-import { isFarmRole } from "@orbit/schema";
+import { isFarmRole } from "@liv/schema";
 import { eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/bun-sql";
 import { issueToken } from "./auth";

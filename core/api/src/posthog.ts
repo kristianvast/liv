@@ -13,7 +13,7 @@ type EventProperties = {
   };
   readonly checkout_started: Checkout & { readonly account: "personal" | "farm" };
   readonly checkout_completed: Checkout;
-  readonly orion_request: {
+  readonly liv_request: {
     readonly model: string | null;
     readonly input_tokens: number;
     readonly output_tokens: number;
@@ -97,7 +97,7 @@ export function createPosthog(options: PosthogOptions = {}): Capture {
   };
 }
 
-/** Orion sends "Orbit on <hostname>"; browsers send "Website", another label, or no label. */
+/** Liv sends "Liv on <hostname>"; browsers send "Website", another label, or no label. */
 export function accountSource(deviceName: string | null): "app" | "web" {
-  return /^Orbit on \S/i.test(deviceName ?? "") ? "app" : "web";
+  return /^Liv on \S/i.test(deviceName ?? "") ? "app" : "web";
 }

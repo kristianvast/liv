@@ -1,7 +1,7 @@
 ---
 
 name: delaval-delpro
-description: Import animals, milkings and daily weights from a DeLaval DelPro herd management server (SQL Server on the farm network). Use when the farmer has DeLaval milking equipment or DelPro and wants its data in Orbit.
+description: Import animals, milkings and daily weights from a DeLaval DelPro herd management server (SQL Server on the farm network). Use when the farmer has DeLaval milking equipment or DelPro and wants its data in Liv.
 ---
 
 # DeLaval DelPro

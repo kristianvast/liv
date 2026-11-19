@@ -9,10 +9,10 @@ import { posthogSink } from "./posthog-fixture";
 const { app, headers, session, db } = billingFixture();
 
 test.each([
-  { deviceName: "Orbit on Test-PC", source: "app" },
+  { deviceName: "Liv on Test-PC", source: "app" },
   { deviceName: "Website", source: "web" },
   { deviceName: null, source: "web" },
-  { deviceName: "Orbit on ", source: "web" },
+  { deviceName: "Liv on ", source: "web" },
 ])("registration attributes $deviceName to $source with the created user ID", async (input) => {
   const sink = posthogSink();
   const response = await app({ ...sink, mailer: createLogMailer(() => {}) }).request(
@@ -190,7 +190,7 @@ test.each(["unpaid", "no_payment_required"])(
   },
 );
 
-test("metered Orion requests emit the user's identity and actual model tokens status and plan", async () => {
+test("metered Liv requests emit the user's identity and actual model tokens status and plan", async () => {
   const { farmSubscriptions } = await import("../src/db");
   await db.insert(farmSubscriptions).values({ farmId: FARM, plan: "orion", status: "active" });
   const sink = posthogSink(async () =>
@@ -207,7 +207,7 @@ test("metered Orion requests emit the user's identity and actual model tokens st
   expect(await sink.received).toMatchObject({
     batch: [
       {
-        event: "orion_request",
+        event: "liv_request",
         distinct_id: session.userId,
         properties: {
           model: "test-model",

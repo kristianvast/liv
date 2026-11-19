@@ -1,5 +1,5 @@
 // Core-only tables (not synced to farms) plus the combined Drizzle schema used by @core/api.
-import { FARM_ROLES, pg } from "@orbit/schema";
+import { FARM_ROLES, pg } from "@liv/schema";
 import { sql } from "drizzle-orm";
 import type { PgDatabase, PgQueryResultHKT } from "drizzle-orm/pg-core";
 import {
@@ -20,7 +20,7 @@ import { chatEntries, chatSessions } from "./chat-db";
 
 const ts = (name: string) => timestamp(name, { withTimezone: true, mode: "string" });
 
-/** Bearer tokens issued to Orbit installs. Only the SHA-256 of the token is stored. */
+/** Bearer tokens issued to Liv installs. Only the SHA-256 of the token is stored. */
 export const apiTokens = pgTable(
   "api_tokens",
   {
@@ -63,7 +63,7 @@ export const llmUsage = pgTable(
   ],
 );
 
-/** People who sign in to Orbit. `email` is stored lower-cased; passwords only as argon2id hashes. */
+/** People who sign in to Liv. `email` is stored lower-cased; passwords only as argon2id hashes. */
 export const users = pgTable(
   "users",
   {
@@ -109,7 +109,7 @@ export const loginFailures = pgTable(
   (t) => [index("login_failures_email_at_idx").on(t.email, t.at)],
 );
 
-/** Signed-in sessions (an Orbit install or a browser). Only the SHA-256 of the token is stored. */
+/** Signed-in sessions (a Liv install or a browser). Only the SHA-256 of the token is stored. */
 export const userSessions = pgTable(
   "user_sessions",
   {

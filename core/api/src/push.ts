@@ -1,4 +1,4 @@
-import { ALERT_KINDS, pg } from "@orbit/schema";
+import { ALERT_KINDS, pg } from "@liv/schema";
 import { and, eq, inArray } from "drizzle-orm";
 import { type CoreDb, farmMembers, pushDevices } from "./db";
 import type { FetchLike } from "./shape";
@@ -9,7 +9,7 @@ export interface PushOptions {
   readonly fetch?: FetchLike;
 }
 type AlertKind = (typeof ALERT_KINDS)[number];
-export type OrionKind = "orion_done" | "orion_needs_you";
+export type LivKind = "liv_done" | "liv_needs_you";
 type PushMessage = {
   readonly notification: Record<string, string | readonly string[]>;
   readonly data: Readonly<Record<string, string>>;
@@ -18,8 +18,8 @@ const titles = {
   calving_alert: "push_calving_title",
   health_event: "push_health_title",
   heat_alert: "push_heat_title",
-  orion_done: "push_orion_done_title",
-  orion_needs_you: "push_orion_needs_title",
+  liv_done: "push_liv_done_title",
+  liv_needs_you: "push_liv_needs_title",
 } as const;
 
 /** Deferred work is outside the request's failure path, including DB and credential failures. */
@@ -115,7 +115,7 @@ export function createPush(db: CoreDb, options?: PushOptions) {
     async notify(
       userId: string,
       notification: {
-        readonly kind: OrionKind;
+        readonly kind: LivKind;
         readonly farmId: string;
         readonly sessionId: string;
         readonly title: string;
@@ -123,7 +123,7 @@ export function createPush(db: CoreDb, options?: PushOptions) {
     ) {
       await send([userId], {
         notification: {
-          channel_id: "orion",
+          channel_id: "liv",
           title_loc_key: titles[notification.kind],
           body: notification.title,
         },

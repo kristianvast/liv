@@ -17,7 +17,7 @@ opens the full screen.
 | `cameras`  | one camera's picture, how many are online             | a wall of still pictures by location, a larger picture on click |
 
 What the farmer sees is set in the folder's `config.json`. Each view ships with a small default on
-purpose: the point is a screen that shows what THIS farmer uses, not everything Orbit can show.
+purpose: the point is a screen that shows what THIS farmer uses, not everything Liv can show.
 
 ## Add a view
 
@@ -131,7 +131,7 @@ when the farmer tells you ("Rosa was inseminated this morning"), or bring them i
 - The refresh values are seconds between pictures.
 
 This view shows still pictures that refresh. For live video, switch on the built-in Cameras screen
-with `orbit_modules`. Cameras are added with `camera_discover` and `camera_add` (see the `cameras`
+with `liv_modules`. Cameras are added with `camera_discover` and `camera_add` (see the `cameras`
 skill); this view never asks for or shows a password.
 
 ## Dates the views work out
@@ -159,8 +159,8 @@ Build on the view instead of starting over.
 - Each folder has one file with the rules (`herd.js`, `calendar.js`, `cameras.js`): a list of
   options, each with an id, a label and the rule as a small function. Add the new option there, then
   list its id in `config.json`. Read the file first and follow its pattern.
-- `index.html` is the full screen and `card.html` the Home card. Both load `../_orbit.css` (Orbit's
-  look) and `../_orbit.js` (farm data), and read `config.json`. Keep everything in the folder; no
+- `index.html` is the full screen and `card.html` the Home card. Both load `../_liv.css` (Liv's
+  look) and `../_liv.js` (farm data), and read `config.json`. Keep everything in the folder; no
   outside requests, the farm PC may be offline.
 - The Home card is small (about 208 pixels tall) and cannot be clicked into: it only shows. Put
   controls in the full screen.

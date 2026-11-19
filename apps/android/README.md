@@ -1,6 +1,6 @@
-# Orbit for Android
+# Liv for Android
 
-Native Kotlin and Jetpack Compose companion to Orion on the farm PC.
+Native Kotlin and Jetpack Compose companion to Liv on the farm PC.
 License: AGPL-3.0-only. Version 0.1.8.
 
 Build with JDK 17 and Android SDK 36:
@@ -14,7 +14,7 @@ export PATH="$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$PATH"
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-`-Porbit.coreUrl=https://your-core.example` overrides Core for either build.
+`-Pliv.coreUrl=https://your-core.example` overrides Core for either build.
 Debug defaults to `http://10.0.2.2:8797`; release defaults to the staging Core
 specified in `app/build.gradle.kts`. Cleartext is allowed only by the debug manifest.
 
@@ -22,10 +22,10 @@ Optional, ignored `local.properties`:
 
 ```properties
 sdk.dir=/opt/homebrew/share/android-commandlinetools
-orbit.firebase.appId=
-orbit.firebase.apiKey=
-orbit.firebase.projectId=
-orbit.firebase.senderId=
+liv.firebase.appId=
+liv.firebase.apiKey=
+liv.firebase.projectId=
+liv.firebase.senderId=
 ```
 
 All four Firebase fields must be set to enable push. The app initializes Firebase
@@ -37,7 +37,7 @@ Fontshare's own TTF downloads under the ITF Free Font License
 (<https://www.fontshare.com/licenses/itf-ffl>), which allows embedding in apps and forbids
 converting or modifying the files.
 
-`Wire`, `Core`, and `Relay` own transport and encrypted sessions. `OrbitState`
+`Wire`, `Core`, and `Relay` own transport and encrypted sessions. `LivState`
 owns conversation and farm navigation. `VoiceFrames`, `VoiceCall`, and
 `VoiceAudio` own calls. `FarmWebView` serves remote page assets on a fixed
 HTTPS origin and provides an origin-scoped WebMessage bridge. `Notifications`

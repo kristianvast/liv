@@ -1,12 +1,12 @@
 export const plans = [
-  { id: "free", name: "Free", cameras: 0, monthly: 0, yearly: 0, orionTokens: 0, voiceMinutes: 0 },
+  { id: "free", name: "Free", cameras: 0, monthly: 0, yearly: 0, livTokens: 0, voiceMinutes: 0 },
   {
     id: "orion",
-    name: "Orion",
+    name: "Liv",
     cameras: 0,
     monthly: 20,
     yearly: 200,
-    orionTokens: 10_000_000,
+    livTokens: 10_000_000,
     voiceMinutes: 30,
   },
   {
@@ -15,7 +15,7 @@ export const plans = [
     cameras: 2,
     monthly: 47,
     yearly: 470,
-    orionTokens: 15_000_000,
+    livTokens: 15_000_000,
     voiceMinutes: 60,
   },
   {
@@ -24,7 +24,7 @@ export const plans = [
     cameras: 4,
     monthly: 75,
     yearly: 750,
-    orionTokens: 25_000_000,
+    livTokens: 25_000_000,
     voiceMinutes: 100,
   },
   {
@@ -33,7 +33,7 @@ export const plans = [
     cameras: 6,
     monthly: 95,
     yearly: 950,
-    orionTokens: 40_000_000,
+    livTokens: 40_000_000,
     voiceMinutes: 150,
   },
   {
@@ -42,7 +42,7 @@ export const plans = [
     cameras: 8,
     monthly: 111,
     yearly: 1110,
-    orionTokens: 50_000_000,
+    livTokens: 50_000_000,
     voiceMinutes: 200,
   },
   {
@@ -51,7 +51,7 @@ export const plans = [
     cameras: 12,
     monthly: 137,
     yearly: 1370,
-    orionTokens: 70_000_000,
+    livTokens: 70_000_000,
     voiceMinutes: 280,
   },
   {
@@ -60,13 +60,13 @@ export const plans = [
     cameras: 16,
     monthly: 155,
     yearly: 1550,
-    orionTokens: 90_000_000,
+    livTokens: 90_000_000,
     voiceMinutes: 350,
   },
 ] as const;
 
 export const hardware = [
-  { id: "box", name: "Barnstar box", price: 920, lookupKey: "pecorva_box" },
+  { id: "box", name: "Agrointel box", price: 920, lookupKey: "pecorva_box" },
   { id: "camera", name: "Tested camera", price: 150, lookupKey: "pecorva_camera" },
 ] as const;
 

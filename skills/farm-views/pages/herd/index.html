@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Herd</title>
-    <link rel="stylesheet" href="../_orbit.css" />
-    <script src="../_orbit.js"></script>
+    <link rel="stylesheet" href="../_liv.css" />
+    <script src="../_liv.js"></script>
     <style>
       .herd-sort-wrap {
         flex: 0 0 auto;
@@ -260,23 +260,23 @@
 
       <div class="kit-toolbar" id="herd-toolbar">
         <div class="kit-toolbar__grow">
-          <label for="herd-search-input" class="orbit-visually-hidden">
+          <label for="herd-search-input" class="liv-visually-hidden">
             Search by name, ear tag, or national ID
           </label>
           <input
             id="herd-search-input"
             type="search"
-            class="orbit-input"
+            class="liv-input"
             placeholder="Search name, ear tag, or national ID…"
             autocomplete="off"
             data-testid="herd-search"
           />
         </div>
         <div class="herd-sort-wrap" id="herd-sort-wrap" hidden>
-          <label for="herd-sort-select" class="orbit-visually-hidden">Sort animals</label>
+          <label for="herd-sort-select" class="liv-visually-hidden">Sort animals</label>
           <select
             id="herd-sort-select"
-            class="orbit-select herd-sort-select"
+            class="liv-select herd-sort-select"
             data-testid="herd-sort"
           ></select>
         </div>
@@ -304,7 +304,7 @@
         </div>
         <button
           type="button"
-          class="orbit-btn orbit-btn--secondary orbit-btn--sm"
+          class="liv-btn liv-btn--secondary liv-btn--sm"
           id="animal-panel-close"
           data-testid="animal-panel-close"
         >
@@ -429,7 +429,7 @@
           const desc = document.createElement("p");
           desc.className = "herd-empty__body";
           desc.textContent =
-            "There are no animals in your herd register yet. Ask Orion to add your animals or connect a herd system.";
+            "There are no animals in your herd register yet. Ask Liv to add your animals or connect a herd system.";
           empty.append(title, desc);
           bodyEl.append(empty);
           return;
@@ -494,7 +494,7 @@
           desc.textContent = "No animals match the current filter or search.";
           const showAllBtn = document.createElement("button");
           showAllBtn.type = "button";
-          showAllBtn.className = "orbit-btn orbit-btn--secondary orbit-btn--sm";
+          showAllBtn.className = "liv-btn liv-btn--secondary liv-btn--sm";
           showAllBtn.textContent = "Show all";
           showAllBtn.addEventListener("click", () => {
             activeFilterId = "all";
@@ -551,7 +551,7 @@
             badgeRow.className = "herd-tile__badges";
             for (const b of badges) {
               const span = document.createElement("span");
-              span.className = `orbit-badge orbit-badge--${b.tone}`;
+              span.className = `liv-badge liv-badge--${b.tone}`;
               span.textContent = b.label;
               badgeRow.append(span);
             }
@@ -596,7 +596,7 @@
           panelBadgesEl.hidden = false;
           for (const b of details.badges) {
             const span = document.createElement("span");
-            span.className = `orbit-badge orbit-badge--${b.tone}`;
+            span.className = `liv-badge liv-badge--${b.tone}`;
             span.textContent = b.label;
             panelBadgesEl.append(span);
           }
@@ -786,12 +786,12 @@
 
             const label = document.createElement("label");
             label.htmlFor = "animal-notes-textarea";
-            label.className = "orbit-visually-hidden";
+            label.className = "liv-visually-hidden";
             label.textContent = "Notes";
 
             const textarea = document.createElement("textarea");
             textarea.id = "animal-notes-textarea";
-            textarea.className = "orbit-input herd-notes__textarea";
+            textarea.className = "liv-input herd-notes__textarea";
             textarea.dataset.testid = "animal-notes-input";
             textarea.placeholder = "Add a note about this animal…";
             const initialNotes = animal.notes ?? "";
@@ -806,7 +806,7 @@
 
             const saveBtn = document.createElement("button");
             saveBtn.type = "button";
-            saveBtn.className = "orbit-btn orbit-btn--primary orbit-btn--sm";
+            saveBtn.className = "liv-btn liv-btn--primary liv-btn--sm";
             saveBtn.dataset.testid = "animal-notes-save";
             saveBtn.textContent = "Save";
             saveBtn.disabled = true;
@@ -826,7 +826,7 @@
               delete statusMsg.dataset.tone;
               try {
                 const nextNotes = textarea.value.trim() ? textarea.value : null;
-                await window.orbit.mutate("animals.upsert", {
+                await window.liv.mutate("animals.upsert", {
                   animal: {
                     id: animal.id,
                     species: animal.species,
@@ -866,8 +866,8 @@
         try {
           const since7d = new Date(Date.now() - 7 * DAY_MS).toISOString();
           const [detailRes, milkRes] = await Promise.all([
-            window.orbit.query("animals.get", { id: animalId }),
-            window.orbit.query("observations.recent", {
+            window.liv.query("animals.get", { id: animalId }),
+            window.liv.query("observations.recent", {
               animalId,
               kind: "milking",
               since: since7d,
@@ -949,8 +949,8 @@
           currentConfig = await loadConfig();
           const since7d = new Date(now - 7 * DAY_MS).toISOString();
           const [animalsRes, alertsRes] = await Promise.all([
-            window.orbit.query("animals.list", { status: "active", limit: 1000 }),
-            window.orbit.query("observations.recent", {
+            window.liv.query("animals.list", { status: "active", limit: 1000 }),
+            window.liv.query("observations.recent", {
               alertsOnly: true,
               since: since7d,
               limit: 1000,
@@ -974,7 +974,7 @@
           if (scopedAnimals.length > 0 && configNeedsHerdReproEvents(currentConfig)) {
             const reproRows = await Promise.all(
               REPRO_EVENT_KINDS.map((kind) =>
-                window.orbit.query("observations.recent", { kind, limit: 1000 }),
+                window.liv.query("observations.recent", { kind, limit: 1000 }),
               ),
             );
             for (const res of reproRows) {
@@ -985,7 +985,7 @@
           const milkAvgByAnimal = new Map();
           if (scopedAnimals.length > 0 && configNeedsHerdMilk(currentConfig)) {
             await mapPool(scopedAnimals, 4, async (animal) => {
-              const res = await window.orbit.query("observations.recent", {
+              const res = await window.liv.query("observations.recent", {
                 animalId: animal.id,
                 kind: "milking",
                 since: since7d,
@@ -1024,14 +1024,14 @@
           title.textContent = "Could not load herd";
           const desc = document.createElement("p");
           desc.className = "herd-empty__body";
-          desc.textContent = err?.message || "Connection to Orion failed.";
+          desc.textContent = err?.message || "Connection to Liv failed.";
           errBox.append(title, desc);
           bodyEl.append(errBox);
         }
       }
 
       let refreshTimer = null;
-      window.orbit.on((event) => {
+      window.liv.on((event) => {
         if (
           event.type === "db.changed" &&
           ["animals", "observations", "devices", "device_bindings"].includes(event.table)

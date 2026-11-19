@@ -1,5 +1,5 @@
 import type { Server, ServerWebSocket } from "bun";
-import { memberRole, resolveSession } from "./auth";
+import { farmHeader, memberRole, resolveSession } from "./auth";
 import type { CoreDb } from "./db";
 
 type Host = {
@@ -41,7 +41,7 @@ export function createPhoneRelay(db: CoreDb, now = () => new Date()) {
       const token = /^Bearer\s+(.+)$/i.exec(request.headers.get("authorization") ?? "")?.[1] ?? "";
       const user = await resolveSession(db, token, now());
       if (!user) return error(401, "unauthorized");
-      const farmId = request.headers.get("x-orbit-farm");
+      const farmId = farmHeader(request.headers);
       if (
         !farmId ||
         !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(farmId)

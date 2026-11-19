@@ -1,8 +1,8 @@
 // Factory for file-export connectors: the farmer saves a CSV/XML export from the vendor software
-// and Orbit reads that file. Used by generic_csv and by every vendor adapter.
+// and Liv reads that file. Used by generic_csv and by every vendor adapter.
 import { readFile } from "node:fs/promises";
-import type { ConnectorVendor, DeviceKind } from "@orbit/schema/enums";
-import { DEVICE_KINDS, SPECIES } from "@orbit/schema/enums";
+import type { ConnectorVendor, DeviceKind } from "@liv/schema/enums";
+import { DEVICE_KINDS, SPECIES } from "@liv/schema/enums";
 import { type Static, Type } from "typebox";
 import { type ParsedTable, parseCsv } from "./csv";
 import { ConnectorConfigError, NotImplementedError } from "./errors";

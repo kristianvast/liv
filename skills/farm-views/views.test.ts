@@ -9,7 +9,7 @@ test("the herd and calendar views carry the same reproduction rules", () => {
   expect(read("pages", "calendar", "repro.js")).toBe(read("pages", "herd", "repro.js"));
 });
 
-test("every page the skill lists has its panel, its card and settings Orion can parse", () => {
+test("every page the skill lists has its panel, its card and settings Liv can parse", () => {
   const manifest = JSON.parse(read("skill.json")) as { pages: Array<{ id: string; dir: string }> };
   expect(manifest.pages.map((page) => page.id)).toEqual(["herd", "calendar", "cameras"]);
   for (const page of manifest.pages) {

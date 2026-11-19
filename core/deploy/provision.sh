@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # allow: SIZE_OK - Ordered environment convergence keeps phase-local shell state in one entrypoint.
-# Provision (or re-converge) one Orbit Core environment on GCP. Safe to re-run: every step
+# Provision (or re-converge) one Liv Core environment on GCP. Safe to re-run: every step
 # checks before it creates, and nothing is ever deleted.
 #
 #   ENV=staging    core/deploy/provision.sh
@@ -18,7 +18,7 @@ set -euo pipefail
 ENV="${ENV:?set ENV=staging|production}"
 PROJECT="${PROJECT:-agrointel-dd8f6}"
 REGION="${REGION:-europe-north1}"
-GITHUB_REPO="${GITHUB_REPO:-kristianvast/orbit}"
+GITHUB_REPO="${GITHUB_REPO:-kristianvast/liv}"
 DEPLOY_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 case "$ENV" in
@@ -57,24 +57,24 @@ production)
 esac
 
 # Non-secret API configuration (override any of these from the environment).
-CORE_CORS_ORIGINS="${CORE_CORS_ORIGINS:-http://localhost:3000,https://barnstar.dev,https://www.barnstar.dev,https://pecorva.com,https://www.pecorva.com,http://127.0.0.1:3000,http://localhost:4317}"
+CORE_CORS_ORIGINS="${CORE_CORS_ORIGINS:-http://localhost:3000,https://agrointel.no,https://www.agrointel.no,https://barnstar.dev,https://www.barnstar.dev,https://pecorva.com,https://www.pecorva.com,http://127.0.0.1:3000,http://localhost:4317}"
 # Public website voice demo (src/voice-demo.ts). The API key is the project-level secret
 # ELEVENLABS_API_KEY, mounted only when it exists; without it the endpoint answers 503.
 ELEVENLABS_AGENT_ID="${ELEVENLABS_AGENT_ID:-agent_4301m706m15yez7vmk8k0vc8ebea}"
-# The Orbit app's voice agent (src/orion-voice-agent.ts, created by `voice:setup`). It uses the
+# The Liv app's voice agent (src/liv-voice-agent.ts, created by `voice:setup`). It uses the
 # same API key; without the id /v1/voice/agent answers 503.
 VOICE_AGENT_ID="${VOICE_AGENT_ID:-agent_9801m76gmvhke6pbeqm50xq0xp74}"
 ELEVENLABS_VOICE_MALE="${ELEVENLABS_VOICE_MALE:-iP95p4xoKVk53GoZ742B}"
 # Google sign-in (/v1/auth/google) accepts ID tokens for these OAuth client ids; unset answers 503.
-# The website (pecorva-website/shared/pecorva-config.js) and the Orbit app, which signs in through
+# The website (pecorva-website/shared/pecorva-config.js) and the Liv app, which signs in through
 # the website's /account/app/ page, both use this web client.
 GOOGLE_CLIENT_IDS="${GOOGLE_CLIENT_IDS:-1058349393837-7091dcna47e9d70lcv8rt73ivl0ccmiv.apps.googleusercontent.com}"
-BILLING_SUCCESS_URL="${BILLING_SUCCESS_URL:-https://barnstar.dev/account/?checkout=success}"
-BILLING_CANCEL_URL="${BILLING_CANCEL_URL:-https://barnstar.dev/account/?checkout=cancel}"
-PUBLIC_SITE_URL="${PUBLIC_SITE_URL:-https://barnstar.dev}"
-MAIL_FROM="${MAIL_FROM:-Barnstar <no-reply@barnstar.dev>}"
-MAIL_REPLY_TO="${MAIL_REPLY_TO:-hello@barnstar.dev}"
-ORBIT_DOWNLOAD_URL="${ORBIT_DOWNLOAD_URL:-https://github.com/kristianvast/orbit/releases/latest}"
+BILLING_SUCCESS_URL="${BILLING_SUCCESS_URL:-https://agrointel.no/account/?checkout=success}"
+BILLING_CANCEL_URL="${BILLING_CANCEL_URL:-https://agrointel.no/account/?checkout=cancel}"
+PUBLIC_SITE_URL="${PUBLIC_SITE_URL:-https://agrointel.no}"
+MAIL_FROM="${MAIL_FROM:-Agrointel <no-reply@agrointel.no>}"
+MAIL_REPLY_TO="${MAIL_REPLY_TO:-kristian@agrointel.no}"
+LIV_DOWNLOAD_URL="${LIV_DOWNLOAD_URL:-https://github.com/kristianvast/liv/releases/latest}"
 ORDERS_EMAIL="${ORDERS_EMAIL:-kristian@agrointel.no}"
 CORE_FEEDBACK_EMAIL="${CORE_FEEDBACK_EMAIL:-}"
 POSTHOG_KEY="${POSTHOG_KEY:-}"
@@ -158,7 +158,7 @@ g services enable run.googleapis.com sqladmin.googleapis.com artifactregistry.go
 log "Artifact Registry $AR_REPO"
 quiet g artifacts repositories describe "$AR_REPO" --location="$REGION" ||
   g artifacts repositories create "$AR_REPO" --location="$REGION" --repository-format=docker \
-    --description="Orbit Core images" --labels=app=orbit-core
+    --description="Liv Core images" --labels=app=orbit-core
 # build.sh pushes as the project's default Cloud Build service account.
 CLOUDBUILD_SA="$(g builds get-default-service-account --format='value(serviceAccountEmail)')"
 CLOUDBUILD_SA="${CLOUDBUILD_SA##*/}"
@@ -220,7 +220,7 @@ done
 
 log "runtime service account $RUNTIME_SA"
 quiet g iam service-accounts describe "$RUNTIME_SA" ||
-  g iam service-accounts create "$RUNTIME_SA_NAME" --display-name="Orbit Core $ENV runtime"
+  g iam service-accounts create "$RUNTIME_SA_NAME" --display-name="Liv Core $ENV runtime"
 for role in roles/cloudsql.client roles/secretmanager.secretAccessor roles/aiplatform.user; do
   project_role "serviceAccount:$RUNTIME_SA" "$role"
 done
@@ -235,7 +235,7 @@ quiet g compute networks subnets describe "$NETWORK" --region="$REGION" ||
 # Electric travel through the VPC and count as internal ingress.
 quiet g dns managed-zones describe "$DNS_ZONE" ||
   g dns managed-zones create "$DNS_ZONE" --dns-name=run.app. --visibility=private \
-    --networks="$NETWORK" --description="Orbit Core $ENV: run.app via Private Google Access"
+    --networks="$NETWORK" --description="Liv Core $ENV: run.app via Private Google Access"
 quiet g dns record-sets describe '*.run.app.' --type=A --zone="$DNS_ZONE" ||
   g dns record-sets create '*.run.app.' --type=A --ttl=300 --zone="$DNS_ZONE" \
     --rrdatas=199.36.153.8,199.36.153.9,199.36.153.10,199.36.153.11
@@ -251,7 +251,7 @@ quiet g iam workload-identity-pools providers describe "$WIF_PROVIDER" --locatio
     --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository,attribute.ref=assertion.ref,attribute.environment=assertion.environment" \
     --attribute-condition="assertion.repository == '$GITHUB_REPO'"
 quiet g iam service-accounts describe "$DEPLOYER_SA" ||
-  g iam service-accounts create "$DEPLOYER_SA_NAME" --display-name="Orbit Core GitHub deployer"
+  g iam service-accounts create "$DEPLOYER_SA_NAME" --display-name="Liv Core GitHub deployer"
 retry g iam service-accounts add-iam-policy-binding "$DEPLOYER_SA" --role=roles/iam.workloadIdentityUser \
   --member="principalSet://iam.googleapis.com/projects/$PROJECT_NUMBER/locations/global/workloadIdentityPools/$WIF_POOL/attribute.repository/$GITHUB_REPO" >/dev/null
 project_role "serviceAccount:$DEPLOYER_SA" roles/run.developer
@@ -343,7 +343,7 @@ ENV_VARS+="|VOICE_MODEL=gemini-3.8-live|VOICE_LOCATION=us-central1"
 ENV_VARS+="|CORE_CORS_ORIGINS=$CORE_CORS_ORIGINS|BILLING_SUCCESS_URL=$BILLING_SUCCESS_URL"
 ENV_VARS+="|BILLING_CANCEL_URL=$BILLING_CANCEL_URL|MAIL_PROVIDER=resend|MAIL_FROM=$MAIL_FROM"
 ENV_VARS+="|MAIL_REPLY_TO=$MAIL_REPLY_TO"
-ENV_VARS+="|PUBLIC_SITE_URL=$PUBLIC_SITE_URL|ORBIT_DOWNLOAD_URL=$ORBIT_DOWNLOAD_URL"
+ENV_VARS+="|PUBLIC_SITE_URL=$PUBLIC_SITE_URL|LIV_DOWNLOAD_URL=$LIV_DOWNLOAD_URL"
 ENV_VARS+="|ORDERS_EMAIL=$ORDERS_EMAIL|STRIPE_AUTOMATIC_TAX=$STRIPE_AUTOMATIC_TAX"
 ENV_VARS+="|CORE_FEEDBACK_EMAIL=$CORE_FEEDBACK_EMAIL"
 ENV_VARS+="|POSTHOG_KEY=$POSTHOG_KEY|POSTHOG_HOST=$POSTHOG_HOST"

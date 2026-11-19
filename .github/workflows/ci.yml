@@ -46,17 +46,17 @@ jobs:
         run: bun run test
 
       - name: Build web UI
-        run: bun run --filter '@orbit/app' build
+        run: bun run --filter '@liv/app' build
 
       - name: Workflow files parse
-        run: bun run --filter '@orbit/e2e' check:workflows
+        run: bun run --filter '@liv/e2e' check:workflows
 
       - name: Install Playwright Chromium
         working-directory: packages/e2e
         run: bunx playwright install --with-deps chromium
 
       - name: Web e2e (Playwright)
-        run: bun run --filter '@orbit/e2e' test:web
+        run: bun run --filter '@liv/e2e' test:web
 
       - name: Upload Playwright report
         if: failure()
@@ -100,7 +100,7 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
         with:
-          workspaces: apps/orbit/src-tauri -> target
+          workspaces: apps/liv/src-tauri -> target
 
       - name: Linux system dependencies (Tauri 2 + WebDriver)
         if: runner.os == 'Linux'
@@ -113,35 +113,35 @@ jobs:
       - name: Install
         run: bun install --frozen-lockfile
 
-      - name: Build Orion sidecar
+      - name: Build Liv sidecar
         run: |
           TRIPLE="$(rustc -vV | sed -n 's/^host: //p')"
           echo "Rust host triple: $TRIPLE"
-          mkdir -p apps/orbit/src-tauri/binaries
+          mkdir -p apps/liv/src-tauri/binaries
           bun build --compile --minify --keep-names --target=${{ matrix.bun-target }} \
-            packages/orion/src/main.ts \
-            --outfile "apps/orbit/src-tauri/binaries/orion-$TRIPLE${{ matrix.exe }}"
-          ls -la apps/orbit/src-tauri/binaries
+            packages/liv/src/main.ts \
+            --outfile "apps/liv/src-tauri/binaries/liv-$TRIPLE${{ matrix.exe }}"
+          ls -la apps/liv/src-tauri/binaries
 
-      - name: Smoke-test compiled Orion sidecar
+      - name: Smoke-test compiled Liv sidecar
         # go2rtc is optional at runtime; the desktop bundle below always includes it.
         run: |
           TRIPLE="$(rustc -vV | sed -n 's/^host: //p')"
           DATA_DIR="$(mktemp -d)"
-          LOG="$RUNNER_TEMP/orion-smoke.log"
-          "apps/orbit/src-tauri/binaries/orion-$TRIPLE${{ matrix.exe }}" \
+          LOG="$RUNNER_TEMP/liv-smoke.log"
+          "apps/liv/src-tauri/binaries/liv-$TRIPLE${{ matrix.exe }}" \
             --port 0 --token ci-smoke --mock-model --seed --data-dir "$DATA_DIR" \
             > "$LOG" 2>&1 &
           PID=$!
           READY=0
           for _ in $(seq 1 60); do
-            if grep -q '^ORION_READY' "$LOG"; then READY=1; break; fi
+            if grep -q '^LIV_READY' "$LOG"; then READY=1; break; fi
             kill -0 "$PID" 2>/dev/null || break
             sleep 1
           done
           kill "$PID" 2>/dev/null || true
           cat "$LOG"
-          if [ "$READY" != 1 ]; then echo "ORION_READY not printed by the compiled sidecar"; exit 1; fi
+          if [ "$READY" != 1 ]; then echo "LIV_READY not printed by the compiled sidecar"; exit 1; fi
           test -f "$DATA_DIR/resources/AGENTS.md"
           test -f "$DATA_DIR/resources/skills/herd-data/SKILL.md"
           test -f "$DATA_DIR/resources/connector-template/index.ts"
@@ -155,7 +155,7 @@ jobs:
             aarch64-apple-darwin) ASSET=go2rtc_mac_arm64.zip ;;
             *) echo "Unsupported go2rtc target: $TRIPLE"; exit 1 ;;
           esac
-          DEST="apps/orbit/src-tauri/binaries/go2rtc-$TRIPLE${{ matrix.exe }}"
+          DEST="apps/liv/src-tauri/binaries/go2rtc-$TRIPLE${{ matrix.exe }}"
           DOWNLOAD_DIR="$(mktemp -d)"
           curl --fail --location --retry 3 \
             "https://github.com/AlexxIT/go2rtc/releases/download/v1.9.15/$ASSET" \
@@ -174,18 +174,18 @@ jobs:
         run: scripts/fetch-mingit.sh
 
       - name: Build desktop app (debug, unsigned)
-        working-directory: apps/orbit
+        working-directory: apps/liv
         run: bunx tauri build --debug
 
       - name: Upload installers and binaries
         uses: actions/upload-artifact@v4
         with:
-          name: orbit-debug-${{ matrix.os }}
+          name: liv-debug-${{ matrix.os }}
           path: |
-            apps/orbit/src-tauri/target/debug/bundle/
-            apps/orbit/src-tauri/target/debug/orbit-desktop${{ matrix.exe }}
-            apps/orbit/src-tauri/target/debug/orion${{ matrix.exe }}
-            apps/orbit/src-tauri/target/debug/go2rtc${{ matrix.exe }}
+            apps/liv/src-tauri/target/debug/bundle/
+            apps/liv/src-tauri/target/debug/liv-desktop${{ matrix.exe }}
+            apps/liv/src-tauri/target/debug/liv${{ matrix.exe }}
+            apps/liv/src-tauri/target/debug/go2rtc${{ matrix.exe }}
           if-no-files-found: error
           retention-days: 14
 
@@ -228,60 +228,60 @@ jobs:
           $gsudoDir = Join-Path $env:RUNNER_TEMP "gsudo"
           Invoke-WebRequest "https://github.com/gerardog/gsudo/releases/latest/download/gsudo.portable.zip" -OutFile $gsudoZip
           Expand-Archive $gsudoZip -DestinationPath $gsudoDir -Force
-          New-Item -ItemType Directory -Force -Path "$env:APPDATA\no.agrointel.orbit" | Out-Null
-          New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\no.agrointel.orbit" | Out-Null
+          New-Item -ItemType Directory -Force -Path "$env:APPDATA\no.agrointel.liv" | Out-Null
+          New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\no.agrointel.liv" | Out-Null
           icacls "$env:GITHUB_WORKSPACE" /grant "Everyone:(OI)(CI)F" /Q | Out-Null
           icacls "$env:GITHUB_WORKSPACE\packages\e2e" /grant "Everyone:(OI)(CI)F" /T /Q | Out-Null
-          icacls "$env:APPDATA\no.agrointel.orbit" /grant "Everyone:(OI)(CI)F" /T /Q | Out-Null
-          icacls "$env:LOCALAPPDATA\no.agrointel.orbit" /grant "Everyone:(OI)(CI)F" /T /Q | Out-Null
+          icacls "$env:APPDATA\no.agrointel.liv" /grant "Everyone:(OI)(CI)F" /T /Q | Out-Null
+          icacls "$env:LOCALAPPDATA\no.agrointel.liv" /grant "Everyone:(OI)(CI)F" /T /Q | Out-Null
           icacls "$env:RUNNER_TEMP" /grant "Everyone:(OI)(CI)F" /T /Q | Out-Null
           icacls "$env:TEMP" /grant "Everyone:(OI)(CI)F" /T /Q | Out-Null
-          & "$gsudoDir\x64\gsudo.exe" --integrity Medium bun run --filter '@orbit/e2e' test:desktop
+          & "$gsudoDir\x64\gsudo.exe" --integrity Medium bun run --filter '@liv/e2e' test:desktop
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Desktop smoke (Linux, xvfb)
         if: runner.os == 'Linux'
         timeout-minutes: 5
-        run: xvfb-run -a bun run --filter '@orbit/e2e' test:desktop
+        run: xvfb-run -a bun run --filter '@liv/e2e' test:desktop
 
-      - name: Orion sidecar exits with the app (Linux)
+      - name: Liv sidecar exits with the app (Linux)
         if: runner.os == 'Linux'
         timeout-minutes: 1
         run: |
           for _ in $(seq 1 15); do
-            pgrep -f 'src-tauri/target/debug/orion' > /dev/null || { echo "No orphaned sidecar"; exit 0; }
+            pgrep -f 'src-tauri/target/debug/liv' > /dev/null || { echo "No orphaned sidecar"; exit 0; }
             sleep 1
           done
-          ps -eo pid,ppid,etime,args | grep -E 'orion|orbit-desktop' | grep -v grep || true
-          echo "Orion sidecar still running after the desktop smoke closed Orbit (orphan)"
+          ps -eo pid,ppid,etime,args | grep -E 'liv|liv-desktop' | grep -v grep || true
+          echo "Liv sidecar still running after the desktop smoke closed Liv (orphan)"
           exit 1
 
       - name: Desktop launch smoke (macOS)
         if: runner.os == 'macOS'
         timeout-minutes: 5
         env:
-          ORION_MOCK_MODEL: "1"
-          ORION_SECRETS: file
+          LIV_MOCK_MODEL: "1"
+          LIV_SECRETS: file
         run: |
-          # Same binary as target/debug/orbit-desktop, launched from inside the .app so it has
+          # Same binary as target/debug/liv-desktop, launched from inside the .app so it has
           # its bundle id and can be quit like a user would (Cmd+Q). SIGTERM would skip
           # RunEvent::Exit, which is where lib.rs kills the sidecar.
-          APP="apps/orbit/src-tauri/target/debug/bundle/macos/Orbit.app"
-          LOG="$RUNNER_TEMP/orbit-macos.log"
-          echo "Data dir (default app location): $HOME/Library/Application Support/no.agrointel.orbit"
+          APP="apps/liv/src-tauri/target/debug/bundle/macos/Liv.app"
+          LOG="$RUNNER_TEMP/liv-macos.log"
+          echo "Data dir (default app location): $HOME/Library/Application Support/no.agrointel.liv"
           /System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister \
             -f "$APP" || true
-          "$APP/Contents/MacOS/orbit-desktop" > "$LOG" 2>&1 &
+          "$APP/Contents/MacOS/liv-desktop" > "$LOG" 2>&1 &
           APP_PID=$!
-          ORION_PID=""
+          LIV_PID=""
           PORT=""
           for _ in $(seq 1 60); do
             if ! kill -0 "$APP_PID" 2>/dev/null; then
-              cat "$LOG"; echo "Orbit exited during startup"; exit 1
+              cat "$LOG"; echo "Liv exited during startup"; exit 1
             fi
-            ORION_PID="$(pgrep -P "$APP_PID" -f 'Contents/MacOS/orion' | head -n1 || true)"
-            if [ -n "$ORION_PID" ]; then
-              PORT="$(lsof -nP -iTCP -sTCP:LISTEN -a -p "$ORION_PID" 2>/dev/null \
+            LIV_PID="$(pgrep -P "$APP_PID" -f 'Contents/MacOS/liv' | head -n1 || true)"
+            if [ -n "$LIV_PID" ]; then
+              PORT="$(lsof -nP -iTCP -sTCP:LISTEN -a -p "$LIV_PID" 2>/dev/null \
                 | awk '$9 ~ /^127\.0\.0\.1:/ { sub(/.*:/, "", $9); print $9; exit }' || true)"
               if [ -n "$PORT" ]; then break; fi
             fi
@@ -289,44 +289,44 @@ jobs:
           done
           if [ -z "$PORT" ]; then
             cat "$LOG"
-            ps -axo pid,ppid,args | grep -E 'orion|orbit-desktop' | grep -v grep || true
-            kill -9 "$APP_PID" ${ORION_PID:+"$ORION_PID"} 2>/dev/null || true
-            echo "Orion sidecar did not listen on 127.0.0.1 within 60s"
+            ps -axo pid,ppid,args | grep -E 'liv|liv-desktop' | grep -v grep || true
+            kill -9 "$APP_PID" ${LIV_PID:+"$LIV_PID"} 2>/dev/null || true
+            echo "Liv sidecar did not listen on 127.0.0.1 within 60s"
             exit 1
           fi
-          echo "Orion sidecar pid $ORION_PID listening on 127.0.0.1:$PORT"
+          echo "Liv sidecar pid $LIV_PID listening on 127.0.0.1:$PORT"
           CODE="$(curl -sS -o /dev/null -w '%{http_code}' --max-time 10 "http://127.0.0.1:$PORT/" || true)"
           echo "HTTP status from sidecar: $CODE"
           if ! [[ "$CODE" =~ ^[1-5][0-9][0-9]$ ]]; then
-            kill -9 "$APP_PID" "$ORION_PID" 2>/dev/null || true
+            kill -9 "$APP_PID" "$LIV_PID" 2>/dev/null || true
             echo "Sidecar port gave no HTTP response"
             exit 1
           fi
-          screencapture -x "$RUNNER_TEMP/orbit-macos.png" || echo "::warning::screencapture failed"
-          if ! osascript -e 'tell application id "no.agrointel.orbit" to quit'; then
+          screencapture -x "$RUNNER_TEMP/liv-macos.png" || echo "::warning::screencapture failed"
+          if ! osascript -e 'tell application id "no.agrointel.liv" to quit'; then
             echo "::warning::AppleEvent quit failed; falling back to SIGTERM (skips RunEvent::Exit)"
             kill -TERM "$APP_PID" || true
           fi
           for _ in $(seq 1 20); do kill -0 "$APP_PID" 2>/dev/null || break; sleep 1; done
           if kill -0 "$APP_PID" 2>/dev/null; then
-            kill -9 "$APP_PID" "$ORION_PID" 2>/dev/null || true
-            echo "Orbit did not quit within 20s"; exit 1
+            kill -9 "$APP_PID" "$LIV_PID" 2>/dev/null || true
+            echo "Liv did not quit within 20s"; exit 1
           fi
-          for _ in $(seq 1 15); do kill -0 "$ORION_PID" 2>/dev/null || break; sleep 1; done
+          for _ in $(seq 1 15); do kill -0 "$LIV_PID" 2>/dev/null || break; sleep 1; done
           cat "$LOG"
-          if kill -0 "$ORION_PID" 2>/dev/null; then
-            kill -9 "$ORION_PID" || true
-            echo "Orion sidecar outlived Orbit (orphan)"; exit 1
+          if kill -0 "$LIV_PID" 2>/dev/null; then
+            kill -9 "$LIV_PID" || true
+            echo "Liv sidecar outlived Liv (orphan)"; exit 1
           fi
-          echo "Orbit quit and its Orion sidecar exited with it"
+          echo "Liv quit and its Liv sidecar exited with it"
 
       - name: Upload macOS launch screenshot
         if: always() && runner.os == 'macOS'
         uses: actions/upload-artifact@v4
         with:
-          name: orbit-macos-launch
+          name: liv-macos-launch
           path: |
-            ${{ runner.temp }}/orbit-macos.png
-            ${{ runner.temp }}/orbit-macos.log
+            ${{ runner.temp }}/liv-macos.png
+            ${{ runner.temp }}/liv-macos.log
           if-no-files-found: warn
           retention-days: 14

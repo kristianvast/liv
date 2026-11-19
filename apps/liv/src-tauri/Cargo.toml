@@ -1,0 +1,33 @@
+[package]
+name = "liv-desktop"
+version = "0.1.11"
+description = "Liv desktop app for livestock and farm intelligence with the Liv AI agent"
+authors = ["Agrointel <kristian@agrointel.no>"]
+license = "AGPL-3.0-only"
+edition = "2021"
+
+[lib]
+name = "liv_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-shell = "2"
+tauri-plugin-updater = "2"
+tauri-plugin-process = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+rand = "0.8"
+
+[target.'cfg(any(target_os = "macos", windows, target_os = "linux"))'.dependencies]
+tauri-plugin-single-instance = "2"
+
+# Small, fast release binaries. No panic = "abort": unwinding keeps Tauri's panic handling intact.
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = "s"
+strip = true

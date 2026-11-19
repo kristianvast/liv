@@ -1,11 +1,19 @@
-import { createHlc } from "@orbit/schema";
+import { createHlc } from "@liv/schema";
 import { sql } from "drizzle-orm";
 import { type Context, Hono, type Next } from "hono";
 import { bodyLimit } from "hono/body-limit";
 import { cors } from "hono/cors";
 import { registerAccountRoutes } from "./accounts";
 import { createAppLaunchRoutes } from "./app-launch";
-import { memberRole, type Principal, resolveSession, type TokenResolver } from "./auth";
+import {
+  FARM_HEADER,
+  farmHeader,
+  LEGACY_FARM_HEADER,
+  memberRole,
+  type Principal,
+  resolveSession,
+  type TokenResolver,
+} from "./auth";
 import { registerBillingRoutes } from "./billing";
 import {
   type ApplyOptions,
@@ -54,11 +62,10 @@ export interface AppOptions {
 
 export const DEFAULT_LINKS: EmailLinks = {
   siteUrl: "http://localhost:3000",
-  downloadUrl: "https://github.com/kristianvast/orbit/releases/latest",
+  downloadUrl: "https://github.com/kristianvast/liv/releases/latest",
 };
 
-/** Header naming the farm a user session acts on (a session can belong to several farms). */
-export const FARM_HEADER = "x-orbit-farm";
+export { FARM_HEADER } from "./auth";
 
 type Env = { Variables: { principal: Principal } };
 
@@ -89,7 +96,7 @@ export function createApp(options: AppOptions) {
   const websiteOrigins = [...(options.corsOrigins ?? ["http://localhost:3000"])];
   const websiteCors = cors({
     origin: websiteOrigins,
-    allowHeaders: ["authorization", "content-type", "x-orbit-farm"],
+    allowHeaders: ["authorization", "content-type", FARM_HEADER, LEGACY_FARM_HEADER],
     allowMethods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     exposeHeaders: ["Retry-After"],
   });
@@ -150,12 +157,12 @@ export function createApp(options: AppOptions) {
     now,
   });
 
-  // Farm-scoped routes accept a user session (+ x-orbit-farm, membership required) or a legacy
+  // Farm-scoped routes accept a user session (+ x-liv-farm, membership required) or a legacy
   // per-farm api token, which keeps full (owner) rights for installs set up before accounts.
   const farmAuth = async (c: Context<Env>, next: Next) => {
     const match = /^Bearer\s+(.+)$/i.exec(c.req.header("authorization") ?? "");
     const token = match?.[1]?.trim() ?? "";
-    const wanted = c.req.header(FARM_HEADER)?.trim().toLowerCase() || null;
+    const wanted = farmHeader(c.req.raw.headers)?.trim().toLowerCase() || null;
     const user = token ? await resolveSession(options.db, token, now()) : null;
     if (user) {
       if (!wanted) {

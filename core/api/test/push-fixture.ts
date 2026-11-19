@@ -1,5 +1,5 @@
 import { beforeEach } from "bun:test";
-import { pg } from "@orbit/schema";
+import { pg } from "@liv/schema";
 import { sql } from "drizzle-orm";
 import { createSession } from "../src/auth";
 import { farmMembers, users } from "../src/db";

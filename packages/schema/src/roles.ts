@@ -1,4 +1,4 @@
-// Farm roles and what each may do. Shared by Core (cloud enforcement) and Orion (the same rule
+// Farm roles and what each may do. Shared by Core (cloud enforcement) and Liv (the same rule
 // applied locally while signed in), so the two can never disagree.
 import type { SyncedTable } from "./enums";
 

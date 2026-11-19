@@ -21,7 +21,7 @@ export interface MailerConfig {
   provider?: string;
   apiKey?: string;
   from?: string;
-  /** Where replies go, e.g. hello@barnstar.dev, so a no-reply sender still reaches a person. */
+  /** Where replies go, e.g. kristian@agrointel.no, so a no-reply sender still reaches a person. */
   replyTo?: string;
   fetch?: FetchLike;
 }
@@ -118,7 +118,7 @@ export function createMailer(config: MailerConfig): Mailer {
 }
 
 export interface EmailLinks {
-  /** Public website origin, e.g. https://barnstar.dev; links land on its /account/ page. */
+  /** Public website origin, e.g. https://agrointel.no; links land on its /account/ page. */
   siteUrl: string;
   downloadUrl: string;
 }
@@ -148,7 +148,7 @@ interface Content {
   blocks: Block[];
 }
 
-const SUPPORT = "hello@barnstar.dev";
+const SUPPORT = "kristian@agrointel.no";
 const INK = "#1b1915";
 const BODY = "#4a443b";
 const MUTED = "#8a8275";
@@ -204,7 +204,7 @@ function blockText(block: Block): string {
 
 function renderText(content: Content, links: EmailLinks): string {
   const body = content.blocks.map(blockText);
-  return [content.heading, ...body, `--\nBarnstar · ${siteRoot(links)} · ${SUPPORT}`].join("\n\n");
+  return [content.heading, ...body, `--\nAgrointel · ${siteRoot(links)} · ${SUPPORT}`].join("\n\n");
 }
 
 function renderBlock(block: Block): string {
@@ -267,7 +267,7 @@ function renderHtml(content: Content, links: EmailLinks, subject: string): strin
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f3eee5" style="background:#f3eee5;">
 <tr><td align="center" class="shell" style="padding:40px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
-<tr><td style="padding:0 4px 24px;"><a href="${escapeHtml(site)}" target="_blank" style="text-decoration:none;"><img src="${escapeHtml(site)}/shared/logo/barnstar-wordmark-light.png" width="156" height="34" alt="Barnstar" style="display:block;width:156px;height:auto;border:0;outline:none;"></a></td></tr>
+<tr><td style="padding:0 4px 24px;"><a href="${escapeHtml(site)}" target="_blank" style="text-decoration:none;"><img src="${escapeHtml(site)}/shared/logo/agrointel-wordmark-light.png" width="156" height="34" alt="Agrointel" style="display:block;width:156px;height:auto;border:0;outline:none;"></a></td></tr>
 <tr><td class="card" bgcolor="#ffffff" style="background:#ffffff;border-radius:20px;padding:44px 44px 36px;border:1px solid ${LINE};box-shadow:0 1px 2px rgba(27,25,21,0.04),0 12px 32px rgba(27,25,21,0.06);">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:0 0 24px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="28" height="3" bgcolor="${AMBER}" style="font-size:0;line-height:0;background:${AMBER};border-radius:2px;">&nbsp;</td><td width="6" style="font-size:0;">&nbsp;</td><td width="14" height="3" bgcolor="#2f9a5c" style="font-size:0;line-height:0;background:#2f9a5c;border-radius:2px;">&nbsp;</td></tr></table></td></tr></table>
 <p style="margin:0 0 10px;font-family:${FONT};font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:${AMBER};">${escapeHtml(content.eyebrow)}</p>
@@ -279,7 +279,7 @@ Cameras that know every animal. An open app that builds what you ask.<br>
 Questions? Reply to this email or write to <a href="mailto:${SUPPORT}" style="color:${BODY};text-decoration:underline;">${SUPPORT}</a>.
 </td></tr>
 <tr><td style="padding:16px 8px 0;font-family:${FONT};font-size:12px;line-height:19px;color:#a89f90;">
-Barnstar AS &middot; Finn&oslash;y, Norway &middot; <a href="${escapeHtml(site)}" style="color:#a89f90;text-decoration:underline;">${host}</a>
+Agrointel AS &middot; Finn&oslash;y, Norway &middot; <a href="${escapeHtml(site)}" style="color:#a89f90;text-decoration:underline;">${host}</a>
 </td></tr>
 </table>
 </td></tr>
@@ -305,18 +305,18 @@ function compose(
 }
 
 const download = (links: EmailLinks): Inline => ({
-  text: "Download Orbit",
+  text: "Download Liv",
   href: links.downloadUrl,
 });
 
 export const emails = {
   verify(links: EmailLinks, to: string, token: string): EmailMessage {
-    return compose(links, to, "verify_email", "Confirm your Barnstar email address", {
-      preheader: "One click and your Barnstar account is ready.",
-      eyebrow: "Welcome to Barnstar",
+    return compose(links, to, "verify_email", "Confirm your Agrointel email address", {
+      preheader: "One click and your Agrointel account is ready.",
+      eyebrow: "Welcome to Agrointel",
       heading: "Confirm your email address",
       blocks: [
-        { kind: "p", parts: [`Confirm ${to} to finish setting up your Barnstar account.`] },
+        { kind: "p", parts: [`Confirm ${to} to finish setting up your Agrointel account.`] },
         { kind: "button", label: "Confirm email", href: accountLink(links, { verify: token }) },
         {
           kind: "note",
@@ -328,7 +328,7 @@ export const emails = {
     });
   },
   reset(links: EmailLinks, to: string, token: string): EmailMessage {
-    return compose(links, to, "password_reset", "Reset your Barnstar password", {
+    return compose(links, to, "password_reset", "Reset your Agrointel password", {
       preheader: "Choose a new password. The link works for one hour.",
       eyebrow: "Account security",
       heading: "Reset your password",
@@ -352,7 +352,7 @@ export const emails = {
     });
   },
   passwordChanged(links: EmailLinks, to: string): EmailMessage {
-    return compose(links, to, "password_changed", "Your Barnstar password was changed", {
+    return compose(links, to, "password_changed", "Your Agrointel password was changed", {
       preheader: "Every device was signed out. Not you? Reset it now.",
       eyebrow: "Account security",
       heading: "Your password was changed",
@@ -379,7 +379,7 @@ export const emails = {
     role: string,
     code: string,
   ): EmailMessage {
-    return compose(links, to, "farm_invite", `You are invited to ${farmName} on Barnstar`, {
+    return compose(links, to, "farm_invite", `You are invited to ${farmName} on Agrointel`, {
       preheader: `Join ${farmName} as ${role}. The invite works for 7 days.`,
       eyebrow: "Farm invite",
       heading: `Join ${farmName}`,
@@ -388,7 +388,7 @@ export const emails = {
         {
           kind: "steps",
           items: [
-            ["Install Orbit: ", download(links)],
+            ["Install Liv: ", download(links)],
             [`Sign in or create an account with this email address (${to}).`],
             ["In Settings > Account, enter this invite code:"],
           ],
@@ -401,14 +401,14 @@ export const emails = {
   planActive(links: EmailLinks, to: string, plan: string, interval: string): EmailMessage {
     const name = planFor(plan).name;
     const billing = interval === "year" ? "Yearly" : "Monthly";
-    return compose(links, to, "plan_active", `Your Barnstar ${name} plan is active`, {
-      preheader: `Thanks! Your ${name} plan is active and Orion is ready.`,
+    return compose(links, to, "plan_active", `Your Agrointel ${name} plan is active`, {
+      preheader: `Thanks! Your ${name} plan is active and Liv is ready.`,
       eyebrow: "Plan active",
       heading: "Thanks! Your plan is active.",
       blocks: [
         {
           kind: "p",
-          parts: ["Orion is ready on Barnstar's cloud. Here is how to get started on the farm."],
+          parts: ["Liv is ready on Agrointel's cloud. Here is how to get started on the farm."],
         },
         {
           kind: "facts",
@@ -421,10 +421,10 @@ export const emails = {
         {
           kind: "steps",
           items: [
-            ["Install Orbit on the farm PC: ", download(links)],
+            ["Install Liv on the farm PC: ", download(links)],
             [`Open Settings > Account and sign in with ${to}.`],
             [
-              "Ask Orion anything about your herd. Your monthly Orion allowance is included in the plan.",
+              "Ask Liv anything about your herd. Your monthly Liv allowance is included in the plan.",
             ],
           ],
         },
@@ -434,7 +434,7 @@ export const emails = {
     });
   },
   hardwareOrder(links: EmailLinks, to: string, boxes: number, cameras: number): EmailMessage {
-    return compose(links, to, "hardware_order", "Your Barnstar order is confirmed", {
+    return compose(links, to, "hardware_order", "Your Agrointel order is confirmed", {
       preheader: "Thanks for your order. We will email tracking details when it ships.",
       eyebrow: "Order confirmed",
       heading: "Thanks for your order",
@@ -446,7 +446,7 @@ export const emails = {
         {
           kind: "facts",
           rows: [
-            ["Barnstar box", `${boxes}`],
+            ["Agrointel box", `${boxes}`],
             ["Cameras", `${cameras}`],
           ],
         },
@@ -454,7 +454,7 @@ export const emails = {
         {
           kind: "steps",
           items: [
-            ["Install Orbit on the farm PC: ", download(links)],
+            ["Install Liv on the farm PC: ", download(links)],
             [
               `Create your account with ${to} at `,
               {

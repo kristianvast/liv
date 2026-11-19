@@ -47,7 +47,7 @@ function app(extra: Partial<AppOptions> = {}) {
     ...extra,
   });
 }
-const auth = () => ({ authorization: `Bearer ${token}`, "x-orbit-farm": FARM });
+const auth = () => ({ authorization: `Bearer ${token}`, "x-liv-farm": FARM });
 const admin = { authorization: `Bearer ${ADMIN}` };
 async function call(
   a: ReturnType<typeof app>,
@@ -88,7 +88,7 @@ describe("feedback", () => {
         locale: "en",
         diagnostics: "trace",
       },
-      signedIn ? auth() : { "x-orbit-farm": FARM },
+      signedIn ? auth() : { "x-liv-farm": FARM },
     );
     expect(response.status).toBe(201);
     const [row] = await db.select().from(feedback).where(eq(feedback.id, response.body.id));
@@ -112,7 +112,7 @@ describe("feedback", () => {
       "POST",
       "/v1/feedback",
       { kind: "idea", message: "Try this" },
-      { ...auth(), "x-orbit-farm": farm },
+      { ...auth(), "x-liv-farm": farm },
     );
     expect(response.status).toBe(201);
     const [row] = await db.select().from(feedback);
@@ -537,10 +537,10 @@ test.each(["/v1/feedback", "/v1/submissions"])("allows website CORS on %s", asyn
     headers: {
       origin: "http://localhost:3000",
       "access-control-request-method": "POST",
-      "access-control-request-headers": "authorization,content-type,x-orbit-farm",
+      "access-control-request-headers": "authorization,content-type,x-liv-farm",
     },
   });
   expect(response.status).toBe(204);
   expect(response.headers.get("access-control-allow-origin")).toBe("http://localhost:3000");
-  expect(response.headers.get("access-control-allow-headers")).toContain("x-orbit-farm");
+  expect(response.headers.get("access-control-allow-headers")).toContain("x-liv-farm");
 });

@@ -1,12 +1,12 @@
 import type { Database } from "bun:sqlite";
-import { createHlc, type Hlc, SYNCED_TABLES, type SyncedTable } from "@orbit/schema";
+import { createHlc, type Hlc, SYNCED_TABLES, type SyncedTable } from "@liv/schema";
 import { type ApplyContext, applyIncomingRow } from "./apply";
 import { isSyncedTable } from "./columns";
 import { toWireRow } from "./convert";
 
 export type FetchLike = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
 
-/** Same values as @orbit/protocol SyncState. */
+/** Same values as @liv/protocol SyncState. */
 export type SyncEngineState =
   | "disabled"
   | "offline"
@@ -35,16 +35,16 @@ export interface CycleResult {
 }
 
 export interface SyncEngineOptions {
-  /** Local Orbit database (drizzle bun:sqlite from @orbit/schema/local). Must be migrated. */
+  /** Local Liv database (drizzle bun:sqlite from @liv/schema/local). Must be migrated. */
   db: { $client: Database };
   farmId: string;
   /** Base URL of @core/api, e.g. https://core.example.com */
   coreUrl: string;
   token: string;
-  /** Sent with every Core request, e.g. { "x-orbit-farm": farmId } for a user session token. */
+  /** Sent with every Core request, e.g. { "x-liv-farm": farmId } for a user session token. */
   headers?: Record<string, string>;
   fetch?: FetchLike;
-  /** Orion's clock. When omitted a clock is created from nodeId (or a persisted random id). */
+  /** Liv's clock. When omitted a clock is created from nodeId (or a persisted random id). */
   hlc?: Hlc;
   nodeId?: string;
   tables?: readonly SyncedTable[];

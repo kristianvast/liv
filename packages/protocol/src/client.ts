@@ -1,4 +1,4 @@
-// Browser-safe typed client for the Orion WebSocket protocol, with auto-reconnect.
+// Browser-safe typed client for the Liv WebSocket protocol, with auto-reconnect.
 import { decodeServerMessage, encodeRequest, validateResult } from "./codec";
 import type {
   DbMutateResult,
@@ -20,8 +20,8 @@ import { CloseCode, type ErrorCode, PROTOCOL_VERSION, type ProtocolError } from 
 
 export type ConnectionState = "connecting" | "open" | "reconnecting" | "unauthorized" | "closed";
 
-export class OrionRequestError extends Error {
-  override name = "OrionRequestError";
+export class LivRequestError extends Error {
+  override name = "LivRequestError";
   constructor(
     readonly code: ErrorCode,
     message: string,
@@ -31,7 +31,7 @@ export class OrionRequestError extends Error {
   }
 }
 
-export interface OrionClientOptions {
+export interface LivClientOptions {
   /** WebSocket constructor; defaults to globalThis.WebSocket. */
   WebSocket?: typeof WebSocket;
   /** Per-request timeout. Default 30 000 ms. */
@@ -51,11 +51,11 @@ type ParamsArg<T extends RequestType> =
 
 export type ClientRequestType = Exclude<RequestType, "hello">;
 
-export interface OrionClient {
+export interface LivClient {
   readonly state: ConnectionState;
   /** Server info from the last successful hello. */
   readonly server: RequestResult<"hello"> | null;
-  /** Sends a request. Queued while (re)connecting; rejects with OrionRequestError. */
+  /** Sends a request. Queued while (re)connecting; rejects with LivRequestError. */
   request<T extends ClientRequestType>(type: T, ...params: ParamsArg<T>): Promise<RequestResult<T>>;
   /** Typed db.query helper. */
   query<Q extends DbQueryName>(query: Q, params?: DbQueryParams<Q>): Promise<DbQueryResults[Q]>;
@@ -78,15 +78,15 @@ interface Pending {
   frame: string;
   sent: boolean;
   resolve: (value: unknown) => void;
-  reject: (error: OrionRequestError) => void;
+  reject: (error: LivRequestError) => void;
   timer: ReturnType<typeof setTimeout>;
 }
 
-export function createOrionClient(
+export function createLivClient(
   url: string,
   token: string,
-  options: OrionClientOptions = {},
-): OrionClient {
+  options: LivClientOptions = {},
+): LivClient {
   const WS = options.WebSocket ?? globalThis.WebSocket;
   const timeoutMs = options.requestTimeoutMs ?? 30_000;
   const backoff =
@@ -105,7 +105,7 @@ export function createOrionClient(
   const pending = new Map<string, Pending>();
   const listeners = new Map<string, Set<(event: ServerEvent) => void>>();
   const stateListeners = new Set<(state: ConnectionState) => void>();
-  let readyWaiters: { resolve: () => void; reject: (e: OrionRequestError) => void }[] = [];
+  let readyWaiters: { resolve: () => void; reject: (e: LivRequestError) => void }[] = [];
 
   const setState = (next: ConnectionState) => {
     if (state === next) return;
@@ -118,7 +118,7 @@ export function createOrionClient(
       if (!filter(p)) continue;
       clearTimeout(p.timer);
       pending.delete(id);
-      p.reject(new OrionRequestError(code, message));
+      p.reject(new LivRequestError(code, message));
     }
   };
 
@@ -126,7 +126,7 @@ export function createOrionClient(
     setState(next);
     const code: ErrorCode = next === "unauthorized" ? "unauthorized" : "disconnected";
     failAll(() => true, code, message);
-    for (const w of readyWaiters) w.reject(new OrionRequestError(code, message));
+    for (const w of readyWaiters) w.reject(new LivRequestError(code, message));
     readyWaiters = [];
   };
 
@@ -176,13 +176,13 @@ export function createOrionClient(
       clearTimeout(p.timer);
       pending.delete(msg.id);
       if (!msg.ok) {
-        p.reject(new OrionRequestError(msg.error.code, msg.error.message, msg.error.details));
+        p.reject(new LivRequestError(msg.error.code, msg.error.message, msg.error.details));
         return;
       }
       if (validate) {
         const checked = validateResult(p.type, msg.result);
         if (!checked.ok) {
-          p.reject(new OrionRequestError("internal", checked.error));
+          p.reject(new LivRequestError("internal", checked.error));
           return;
         }
       }
@@ -216,7 +216,7 @@ export function createOrionClient(
       helloId = null;
       if (state === "closed" || state === "unauthorized") return;
       if (ev.code === CloseCode.unauthorized) {
-        terminal("unauthorized", "token rejected by Orion");
+        terminal("unauthorized", "token rejected by Liv");
         return;
       }
       // Requests already on the wire may or may not have run: fail them. Unsent ones stay queued.
@@ -231,7 +231,7 @@ export function createOrionClient(
   const request = (type: RequestType, params?: unknown): Promise<unknown> => {
     if (state === "closed" || state === "unauthorized") {
       return Promise.reject(
-        new OrionRequestError(
+        new LivRequestError(
           state === "closed" ? "disconnected" : "unauthorized",
           `client is ${state}`,
         ),
@@ -241,7 +241,7 @@ export function createOrionClient(
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         pending.delete(id);
-        reject(new OrionRequestError("timeout", `${type} timed out after ${timeoutMs}ms`));
+        reject(new LivRequestError("timeout", `${type} timed out after ${timeoutMs}ms`));
       }, timeoutMs);
       // biome-ignore lint/suspicious/noExplicitAny: params were type-checked by the public signature
       const frame = encodeRequest(id, type, (params ?? {}) as any);
@@ -252,14 +252,14 @@ export function createOrionClient(
 
   connect();
 
-  const client: OrionClient = {
+  const client: LivClient = {
     get state() {
       return state;
     },
     get server() {
       return server;
     },
-    request: request as OrionClient["request"],
+    request: request as LivClient["request"],
     query: (query, params) =>
       request("db.query", { query, params: params ?? {} }) as Promise<DbQueryResults[typeof query]>,
     mutate: (mutation, params) =>
@@ -282,7 +282,7 @@ export function createOrionClient(
       if (state === "open") return Promise.resolve();
       if (state === "closed" || state === "unauthorized") {
         return Promise.reject(
-          new OrionRequestError(
+          new LivRequestError(
             state === "closed" ? "disconnected" : "unauthorized",
             `client is ${state}`,
           ),

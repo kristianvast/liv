@@ -1,5 +1,5 @@
 // In-memory ConnectorWriter for tests and dry runs. Mirrors the host's rules.
-import { findWearableConflict, SingleWearableError } from "@orbit/schema";
+import { findWearableConflict, SingleWearableError } from "@liv/schema";
 import { ConnectorWriteError } from "./errors";
 import type {
   AnimalUpsert,

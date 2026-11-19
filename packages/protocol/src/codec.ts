@@ -101,7 +101,7 @@ export function decodeClientMessage(
   return { ok: true, value: frame as ClientMessage };
 }
 
-/** Client side: decode and validate a frame sent by Orion. Response results are not checked here. */
+/** Client side: decode and validate a frame sent by Liv. Response results are not checked here. */
 export function decodeServerMessage(
   raw: string | Uint8Array | ArrayBuffer,
 ): DecodeResult<ServerMessage> {
@@ -140,9 +140,9 @@ export function encodeError(id: string, error: ProtocolError): string {
   return JSON.stringify({ type: "response", id, ok: false, error } satisfies ResponseFrame);
 }
 
-/** Parses the sidecar stdout line `ORION_READY {"port":N}`; returns null for any other line. */
+/** Parses the sidecar stdout line `LIV_READY {"port":N}`; returns null for any other line. */
 export function parseReadyLine(line: string): { port: number } | null {
-  const match = /^ORION_READY (\{.*\})\s*$/.exec(line);
+  const match = /^LIV_READY (\{.*\})\s*$/.exec(line);
   if (!match) return null;
   try {
     const value = JSON.parse(match[1] as string) as { port?: unknown };

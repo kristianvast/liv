@@ -1,5 +1,5 @@
-// Feedback to the Orbit team and builds a farm shared for review. Orion relays both to Core;
-// a shared build reaches other farms only after the Orbit team approves it.
+// Feedback to the Liv team and builds a farm shared for review. Liv relays both to Core;
+// a shared build reaches other farms only after the Liv team approves it.
 import { type Static, Type } from "typebox";
 
 export const FEEDBACK_KINDS = ["issue", "idea", "other"] as const;
@@ -16,7 +16,7 @@ export const SharedBuild = Type.Object({
   name: Type.String(),
   title: Type.String(),
   status: Type.Enum(["pending", "approved", "rejected"]),
-  /** What the Orbit team wrote back, if anything. */
+  /** What the Liv team wrote back, if anything. */
   reviewNote: Type.Union([Type.String(), Type.Null()]),
   createdAt: Type.String(),
 });

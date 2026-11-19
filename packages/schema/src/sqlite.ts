@@ -30,7 +30,7 @@ const syncColumns = () => ({
   deletedAt: text("deleted_at"),
   /** Hybrid logical clock of the last write; last-writer-wins per row. */
   hlc: text("hlc").notNull(),
-  /** Install id of the Orbit device (or "cloud") that made the last write. */
+  /** Install id of the Liv device (or "cloud") that made the last write. */
   originDevice: text("origin_device").notNull(),
 });
 
@@ -227,7 +227,7 @@ export const snapshots = sqliteTable(
   (t) => [index("snapshots_created_idx").on(t.createdAt)],
 );
 
-/** Opaque per-key state for @orbit/sync (Electric shape handles/offsets, last ack, ...). */
+/** Opaque per-key state for @liv/sync (Electric shape handles/offsets, last ack, ...). */
 export const syncState = sqliteTable("sync_state", {
   key: text("key").primaryKey(),
   value: text("value", { mode: "json" }).$type<unknown>().notNull(),

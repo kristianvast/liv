@@ -1,4 +1,4 @@
-// ICAR Animal Data Exchange (ADE) v1.5.1 mapping: Orbit rows <-> ADE JSON resources.
+// ICAR Animal Data Exchange (ADE) v1.5.1 mapping: Liv rows <-> ADE JSON resources.
 // Spec: https://github.com/adewg/ICAR (Apache-2.0). The official JSON schemas this module targets
 // are vendored under vendor/icar-ade-1.5.1 and used by test/ade.test.ts to validate the output.
 // Pure functions, browser-safe. Import functions validate the fields they map and throw
@@ -6,7 +6,7 @@
 //
 // Observation convention: for ADE event kinds, observations.value_json stores the ADE event's own
 // properties under their ADE names (e.g. { inseminationType: "Insemination", sireIdentifiers: [...] }),
-// plus optional Orbit keys (unit, message, severity). value_num holds the scalar where ADE has one
+// plus optional Liv keys (unit, message, severity). value_num holds the scalar where ADE has one
 // (milk weight, live weight) in kilograms.
 import type {
   AnimalLactationStatus,
@@ -19,16 +19,16 @@ import type {
 import type { Animal, Observation } from "./sqlite";
 
 export const ADE_VERSION = "1.5.1";
-/** meta.source for resources produced by Orbit. */
+/** meta.source for resources produced by Liv. */
 export const ADE_SOURCE = "orbit";
-/** Scheme of Orbit's own animal UUIDs, used when no official identifier is known. */
-export const ORBIT_ANIMAL_SCHEME = "orbit.animal";
+/** Scheme of Liv's own animal UUIDs, used when no official identifier is known. */
+export const LIV_ANIMAL_SCHEME = "orbit.animal";
 /** Scheme for a national id stored without an issuing scheme. */
-export const ORBIT_UNSCHEMED_ID_SCHEME = "orbit.national-id";
-/** Scheme of Orbit farm ids used as the ADE location. */
-export const ORBIT_LOCATION_SCHEME = "orbit.farm";
-/** Breeds are free text in Orbit, so they are exported under an Orbit scheme. */
-export const ORBIT_BREED_SCHEME = "orbit.breed";
+export const LIV_UNSCHEMED_ID_SCHEME = "orbit.national-id";
+/** Scheme of Liv farm ids used as the ADE location. */
+export const LIV_LOCATION_SCHEME = "orbit.farm";
+/** Breeds are free text in Liv, so they are exported under a Liv scheme. */
+export const LIV_BREED_SCHEME = "orbit.breed";
 
 export type AdeIdentifier = { id: string; scheme: string };
 
@@ -97,7 +97,7 @@ const SEX_TO_ADE = {
   castrated: "MaleNeuter",
   unknown: "Unknown",
 } as const satisfies Record<AnimalSex, string>;
-/** ADE genders are finer-grained than Orbit's; import folds them onto the nearest Orbit sex. */
+/** ADE genders are finer-grained than Liv's; import folds them onto the nearest Liv sex. */
 const ADE_TO_SEX: Record<string, AnimalSex> = {
   Female: "female",
   FemaleNeuter: "female",
@@ -143,9 +143,9 @@ const ADE_TO_LACTATION = invert(LACTATION_TO_ADE);
 // ---------------------------------------------------------------- event kinds
 
 /**
- * ADE event resource per Orbit observation kind, with the ADE properties copied between
+ * ADE event resource per Liv observation kind, with the ADE properties copied between
  * value_json and the resource. Kinds absent here (activity, rumination, temperature,
- * calving_alert) are sensor aggregates or Orbit-only alerts with no ADE animal event.
+ * calving_alert) are sensor aggregates or Liv-only alerts with no ADE animal event.
  */
 export const ADE_EVENT_KINDS = {
   milking: {
@@ -332,7 +332,7 @@ function meta(row: SyncedRow): AdeMeta {
   };
 }
 
-const location = (farmId: string): AdeIdentifier => ({ id: farmId, scheme: ORBIT_LOCATION_SCHEME });
+const location = (farmId: string): AdeIdentifier => ({ id: farmId, scheme: LIV_LOCATION_SCHEME });
 
 // ---------------------------------------------------------------- animals
 
@@ -342,16 +342,16 @@ export function adeAnimalIdentifier(
 ): AdeIdentifier {
   return animal.nationalId && animal.identifierScheme
     ? { id: animal.nationalId, scheme: animal.identifierScheme }
-    : { id: animal.id, scheme: ORBIT_ANIMAL_SCHEME };
+    : { id: animal.id, scheme: LIV_ANIMAL_SCHEME };
 }
 
 export function animalToAde(animal: Animal): AdeAnimalCoreResource {
   const primary = adeAnimalIdentifier(animal);
   const alternatives: AdeIdentifier[] = [];
-  if (primary.scheme !== ORBIT_ANIMAL_SCHEME)
-    alternatives.push({ id: animal.id, scheme: ORBIT_ANIMAL_SCHEME });
+  if (primary.scheme !== LIV_ANIMAL_SCHEME)
+    alternatives.push({ id: animal.id, scheme: LIV_ANIMAL_SCHEME });
   else if (animal.nationalId)
-    alternatives.push({ id: animal.nationalId, scheme: ORBIT_UNSCHEMED_ID_SCHEME });
+    alternatives.push({ id: animal.nationalId, scheme: LIV_UNSCHEMED_ID_SCHEME });
   alternatives.push(...(animal.alternativeIdentifiers ?? []));
 
   const out: AdeAnimalCoreResource = {
@@ -365,7 +365,7 @@ export function animalToAde(animal: Animal): AdeAnimalCoreResource {
   };
   if (alternatives.length) out.alternativeIdentifiers = alternatives;
   if (animal.birthDate) out.birthDate = `${animal.birthDate}T00:00:00Z`;
-  if (animal.breed) out.primaryBreed = { id: animal.breed, scheme: ORBIT_BREED_SCHEME };
+  if (animal.breed) out.primaryBreed = { id: animal.breed, scheme: LIV_BREED_SCHEME };
   if (animal.earTagNumber) out.managementTag = animal.earTagNumber;
   if (animal.name) out.name = animal.name;
   if (animal.reproductionStatus)
@@ -374,7 +374,7 @@ export function animalToAde(animal: Animal): AdeAnimalCoreResource {
   return out;
 }
 
-/** Animal columns an ADE animal resource maps onto. `id` is set only for Orbit-issued identifiers. */
+/** Animal columns an ADE animal resource maps onto. `id` is set only for Liv-issued identifiers. */
 export type AdeAnimalFields = {
   id?: string;
   species: Species;
@@ -391,7 +391,7 @@ export type AdeAnimalFields = {
   lactationStatus: AnimalLactationStatus | null;
 };
 
-/** Map an ADE icarAnimalCoreResource onto Orbit animal columns. Throws AdeMappingError. */
+/** Map an ADE icarAnimalCoreResource onto Liv animal columns. Throws AdeMappingError. */
 export function adeToAnimal(resource: unknown): AdeAnimalFields {
   if (!isRecord(resource)) throw new AdeMappingError("invalid_value", "$", "expected an object");
   if (resource.resourceType !== undefined && resource.resourceType !== "icarAnimalCoreResource")
@@ -409,14 +409,12 @@ export function adeToAnimal(resource: unknown): AdeAnimalFields {
     ...rawAlternatives.map((a, i) => identifier(a, `$.alternativeIdentifiers[${i}]`)),
   ];
 
-  const orbitId = all.find((x) => x.scheme === ORBIT_ANIMAL_SCHEME)?.id;
+  const livId = all.find((x) => x.scheme === LIV_ANIMAL_SCHEME)?.id;
   const official =
-    primary.scheme !== ORBIT_ANIMAL_SCHEME
+    primary.scheme !== LIV_ANIMAL_SCHEME
       ? primary
-      : all.find((x) => x.scheme === ORBIT_UNSCHEMED_ID_SCHEME);
-  const rest = all.filter(
-    (x) => x !== primary && x !== official && x.scheme !== ORBIT_ANIMAL_SCHEME,
-  );
+      : all.find((x) => x.scheme === LIV_UNSCHEMED_ID_SCHEME);
+  const rest = all.filter((x) => x !== primary && x !== official && x.scheme !== LIV_ANIMAL_SCHEME);
 
   let breed: string | null = null;
   if (resource.primaryBreed !== undefined)
@@ -432,7 +430,7 @@ export function adeToAnimal(resource: unknown): AdeAnimalFields {
     status: optionalLookup(ADE_TO_STATUS, resource.status, "$.status") ?? "active",
     nationalId: official?.id ?? null,
     identifierScheme:
-      official && official.scheme !== ORBIT_UNSCHEMED_ID_SCHEME ? official.scheme : null,
+      official && official.scheme !== LIV_UNSCHEMED_ID_SCHEME ? official.scheme : null,
     alternativeIdentifiers: rest.length ? rest : null,
     earTagNumber: optionalString(resource.managementTag, "$.managementTag"),
     name: optionalString(resource.name, "$.name"),
@@ -449,7 +447,7 @@ export function adeToAnimal(resource: unknown): AdeAnimalFields {
       "$.lactationStatus",
     ),
   };
-  if (orbitId) out.id = orbitId;
+  if (livId) out.id = livId;
   return out;
 }
 
@@ -521,7 +519,7 @@ function kilograms(v: unknown, unitKey: string, valueKey: string, path: string):
   return value * factor;
 }
 
-/** Map an ADE animal event resource onto Orbit observation columns. Throws AdeMappingError. */
+/** Map an ADE animal event resource onto Liv observation columns. Throws AdeMappingError. */
 export function adeToObservation(resource: unknown): AdeObservationFields {
   if (!isRecord(resource)) throw new AdeMappingError("invalid_value", "$", "expected an object");
   const rt = resource.resourceType;

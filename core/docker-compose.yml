@@ -14,15 +14,15 @@ services:
         "max_wal_senders=10",
       ]
     environment:
-      POSTGRES_USER: orbit
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-orbit}
-      POSTGRES_DB: orbit
+      POSTGRES_USER: liv
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-liv}
+      POSTGRES_DB: liv
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U orbit -d orbit"]
+      test: ["CMD-SHELL", "pg_isready -U liv -d liv"]
       interval: 2s
       timeout: 3s
       retries: 30
@@ -30,7 +30,7 @@ services:
   electric:
     image: electricsql/electric:latest
     environment:
-      DATABASE_URL: postgresql://orbit:${POSTGRES_PASSWORD:-orbit}@postgres:5432/orbit?sslmode=disable
+      DATABASE_URL: postgresql://liv:${POSTGRES_PASSWORD:-liv}@postgres:5432/liv?sslmode=disable
       ELECTRIC_SECRET: ${ELECTRIC_SECRET:?set ELECTRIC_SECRET in core/.env}
       ELECTRIC_STORAGE_DIR: /var/lib/electric
     volumes:
@@ -51,7 +51,7 @@ services:
       dockerfile: core/api/Dockerfile
     environment:
       PORT: "8080"
-      DATABASE_URL: postgresql://orbit:${POSTGRES_PASSWORD:-orbit}@postgres:5432/orbit
+      DATABASE_URL: postgresql://liv:${POSTGRES_PASSWORD:-liv}@postgres:5432/liv
       ELECTRIC_URL: http://electric:3000
       ELECTRIC_SECRET: ${ELECTRIC_SECRET}
       CORE_STATIC_TOKENS: ${CORE_STATIC_TOKENS:-}

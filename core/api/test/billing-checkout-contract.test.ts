@@ -257,18 +257,18 @@ test("a configured website origin may receive the buyer even when the defaults p
   const forms: URLSearchParams[] = [];
   const response = await app({
     fetch: stripeFake(forms),
-    corsOrigins: ["https://barnstar.test"],
+    corsOrigins: ["https://agrointel.test"],
   }).request("/v1/billing/checkout", {
     method: "POST",
     headers: headers(),
     body: JSON.stringify({
       plan: "orion",
       interval: "year",
-      successUrl: "https://barnstar.test/account/?checkout=success",
+      successUrl: "https://agrointel.test/account/?checkout=success",
     }),
   });
   expect(response.status).toBe(200);
-  expect(forms[0]?.get("success_url")).toBe("https://barnstar.test/account/?checkout=success");
+  expect(forms[0]?.get("success_url")).toBe("https://agrointel.test/account/?checkout=success");
   expect(forms[0]?.get("cancel_url")).toBe("http://localhost:3000/account/");
 });
 

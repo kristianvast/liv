@@ -32,7 +32,7 @@ export function buildLatestJson(
   }
   return {
     version: tag.replace(/^v/, ""),
-    notes: `Orbit ${tag}`,
+    notes: `Liv ${tag}`,
     pub_date: now.toISOString(),
     platforms,
   };

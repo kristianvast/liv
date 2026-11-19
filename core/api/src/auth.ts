@@ -1,4 +1,4 @@
-import type { FarmRole } from "@orbit/schema";
+import type { FarmRole } from "@liv/schema";
 import { and, eq, gt, isNull } from "drizzle-orm";
 import { apiTokens, type CoreDb, farmMembers, userSessions, users } from "./db";
 
@@ -117,4 +117,13 @@ export function createTokenResolver(db: CoreDb, staticTokens = ""): TokenResolve
       .limit(1);
     return row[0]?.farmId ?? null;
   };
+}
+
+/** Header naming the farm a user session acts on (a session can belong to several farms). */
+export const FARM_HEADER = "x-liv-farm";
+/** The same header as sent by installs from before the Liv rename (0.1.10 and older). */
+export const LEGACY_FARM_HEADER = "x-orbit-farm";
+
+export function farmHeader(headers: Headers): string | null {
+  return headers.get(FARM_HEADER) ?? headers.get(LEGACY_FARM_HEADER);
 }

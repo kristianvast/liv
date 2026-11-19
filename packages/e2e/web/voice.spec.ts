@@ -1,9 +1,9 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
-import { E2E_ORION_PORT, E2E_TOKEN, SEED } from "../src/index";
+import { E2E_LIV_PORT, E2E_TOKEN, SEED } from "../src/index";
 import { setToolAccess } from "./helpers";
 
 const HERD_ANSWER = `There are ${SEED.cattle + SEED.horses} animals in your herd.`;
-const HERD_PAGE = `http://127.0.0.1:${E2E_ORION_PORT}/pages/${E2E_TOKEN}/herd/index.html`;
+const HERD_PAGE = `http://127.0.0.1:${E2E_LIV_PORT}/pages/${E2E_TOKEN}/herd/index.html`;
 const FAKE_MICROPHONE = {
   permissions: ["microphone"],
   launchOptions: {
@@ -13,7 +13,7 @@ const FAKE_MICROPHONE = {
 
 async function startCallOnHome(page: Page): Promise<Locator> {
   await page.goto("/");
-  const widget = page.getByTestId("home-orion-widget");
+  const widget = page.getByTestId("home-liv-widget");
   await widget.getByTestId("home-voice-start").click();
   await expect(widget).toHaveAttribute("data-voice-state", "listening");
   return widget;
@@ -80,7 +80,7 @@ test("a spoken conversation is kept in chat and continues there", async ({ page 
   await expect(transcript).toContainText('You said: "hello after the call"');
 });
 
-test("Orion points at Settings, opens it, and the call follows to that page", async ({ page }) => {
+test("Liv points at Settings, opens it, and the call follows to that page", async ({ page }) => {
   const widget = await startCallOnHome(page);
 
   await say(widget, "where are the settings?");
@@ -95,8 +95,8 @@ test("Orion points at Settings, opens it, and the call follows to that page", as
   await dock.getByTestId("voice-end").click();
 });
 
-test("Orion shows the page it opened in its browser and marks where to start", async ({ page }) => {
-  // Orion's browser gets 45 s to open a page and 15 s to take its picture (browser.ts); a cold
+test("Liv shows the page it opened in its browser and marks where to start", async ({ page }) => {
+  // Liv's browser gets 45 s to open a page and 15 s to take its picture (browser.ts); a cold
   // browser on a CI runner uses much of that, so this wait covers the same budget.
   test.setTimeout(120_000);
   await setToolAccess(page, "browser", false);
@@ -114,7 +114,7 @@ test("Orion shows the page it opened in its browser and marks where to start", a
   await stage.getByTestId("voice-end").click();
 });
 
-test("a bigger job is handed over and Orion reports back when it is ready", async ({ page }) => {
+test("a bigger job is handed over and Liv reports back when it is ready", async ({ page }) => {
   const stage = await startCallInChat(page);
 
   await sayInChat(page, "build me a calving overview");

@@ -1,7 +1,7 @@
 // GET /v1/shape: authenticated proxy in front of Electric. The client chooses only the table and
 // its stream position; Core forces the row filter to the token's farm so a farm can never read
 // another farm's rows (https://electric-sql.com/docs/guides/auth).
-import { SYNCED_TABLES } from "@orbit/schema";
+import { SYNCED_TABLES } from "@liv/schema";
 
 export type FetchLike = (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
 

@@ -1,0 +1,512 @@
+import type { Observation, WearableKind } from "@liv/schema";
+import {
+  Activity,
+  AlertTriangle,
+  CheckCircle2,
+  ChevronRight,
+  Flame,
+  HeartPulse,
+  LogIn,
+  Sparkles,
+} from "lucide-react";
+import { type FormEvent, type ReactNode, useMemo, useState } from "react";
+import { useNavigate } from "react-router";
+import { Badge, Button, EmptyState, Skeleton } from "../design";
+import { PageCards, useCustomPages } from "../features/pages";
+import { HomeVoiceWidget } from "../features/voice";
+import { Tour } from "../features/welcome";
+import { type MessageKey, type TranslateFn, useI18n } from "../i18n";
+import { useLiv, useLivQuery } from "../lib/liv";
+import { type ModuleId, useModules } from "../lib/modules";
+import { useSetupState } from "../lib/setup";
+import { formatPrimaryAnimalCount, useFarmSpecies } from "../lib/species";
+import { useTourSeen } from "../lib/tour";
+import { useTheme } from "./providers";
+import "./home.css";
+
+function formatAlertKind(
+  kind: Observation["kind"],
+  t: TranslateFn,
+): {
+  label: string;
+  variant: "danger" | "warn" | "info";
+} {
+  switch (kind) {
+    case "calving_alert":
+      return { label: t("home.alertKind.calving"), variant: "danger" };
+    case "health_event":
+      return { label: t("home.alertKind.health"), variant: "danger" };
+    case "heat_alert":
+      return { label: t("home.alertKind.heat"), variant: "warn" };
+    default:
+      return { label: kind.replace(/_/g, " "), variant: "info" };
+  }
+}
+
+function formatAlertDescription(obs: Observation, t: TranslateFn): string {
+  const val = obs.valueJson ?? {};
+  const note =
+    typeof val.note === "string"
+      ? val.note
+      : typeof val.summary === "string"
+        ? val.summary
+        : typeof val.message === "string"
+          ? val.message
+          : null;
+  if (note) return note;
+
+  if (obs.kind === "health_event" && obs.valueNum !== null) {
+    const unit = typeof val.unit === "string" ? val.unit : "°C";
+    return t("home.desc.temperature", { value: obs.valueNum, unit });
+  }
+  if (obs.kind === "calving_alert") {
+    return t("home.desc.calving");
+  }
+  if (obs.kind === "heat_alert") {
+    return t("home.desc.heat");
+  }
+  return t("home.desc.source", { source: obs.source });
+}
+
+function formatRelativeTime(iso: string, t: TranslateFn): string {
+  const ms = Date.now() - new Date(iso).getTime();
+  if (!Number.isFinite(ms) || ms < 0) return t("home.time.justNow");
+  const hours = Math.floor(ms / 3_600_000);
+  if (hours < 1) {
+    const mins = Math.max(1, Math.floor(ms / 60_000));
+    return t("home.time.minutes", { count: mins });
+  }
+  if (hours < 24) return t("home.time.hours", { count: hours });
+  const days = Math.floor(hours / 24);
+  return t("home.time.days", { count: days });
+}
+
+function formatWearableChip(kind: WearableKind, batteryPct: number | null, t: TranslateFn): string {
+  const label =
+    kind === "collar"
+      ? t("herd.wearable.collar")
+      : kind === "bolus"
+        ? t("herd.wearable.bolus")
+        : t("herd.wearable.ear_tag_sensor");
+  if (batteryPct !== null && Number.isFinite(batteryPct)) {
+    return `${label} · ${Math.round(batteryPct)}%`;
+  }
+  return label;
+}
+
+interface Instrument {
+  id: string;
+  moduleId: ModuleId;
+  label: string;
+  value: string;
+  detail: string;
+  tone: "ok" | "warn" | "danger";
+  to: string;
+  testId?: string;
+}
+
+export function HomePage() {
+  const navigate = useNavigate();
+  const { t } = useI18n();
+  const [question, setQuestion] = useState("");
+  const { loading: modulesLoading, isEnabled, anyEnabled } = useModules();
+  const { species } = useFarmSpecies();
+  const customPages = useCustomPages();
+  const { theme } = useTheme();
+
+  const { data: summary, loading } = useLivQuery("farm.summary", undefined, {
+    refetchTables: [
+      "farms",
+      "animals",
+      "devices",
+      "device_bindings",
+      "cameras",
+      "connectors",
+      "observations",
+    ],
+  });
+
+  const herdEnabled = isEnabled("herd");
+  const devicesEnabled = isEnabled("devices");
+
+  const { data: animalsData } = useLivQuery(
+    "animals.list",
+    { limit: 500 },
+    { enabled: herdEnabled, refetchTables: ["animals", "device_bindings", "devices"] },
+  );
+
+  const animalRows = animalsData?.rows ?? [];
+  const animalById = useMemo(() => new Map(animalRows.map((a) => [a.id, a])), [animalRows]);
+
+  const cattle = summary?.counts?.cattle ?? 0;
+  const horses = summary?.counts?.horses ?? 0;
+  const totalAnimals = cattle + horses;
+  const primaryAnimals =
+    species === "horse" ? (horses > 0 ? horses : cattle) : cattle > 0 ? cattle : horses;
+  const totalCameras = summary?.counts?.cameras ?? 0;
+  const camerasOnline = summary?.counts?.camerasOnline ?? 0;
+  const totalConnectors = summary?.counts?.connectors ?? 0;
+  const connectorsWithErrors = summary?.counts?.connectorsWithErrors ?? 0;
+  const recentAlerts = summary?.recentAlerts ?? [];
+  const isLoading = (loading && !summary) || modulesLoading;
+
+  const isMinimalHome = !isLoading && !anyEnabled && totalAnimals === 0;
+  const livOnline = useLiv().state === "open";
+  const setup = useSetupState();
+  const tourSeen = useTourSeen();
+  const isHorse = species === "horse";
+
+  const suggestedQuestions: readonly MessageKey[] = isHorse
+    ? ["home.suggest.alerts.horse", "home.suggest.calving.horse"]
+    : ["home.suggest.alerts.cattle", "home.suggest.calving"];
+
+  const minimalStarters: ReadonlyArray<{
+    id: string;
+    labelKey: MessageKey;
+    promptKey: MessageKey;
+  }> = [
+    {
+      id: "herd",
+      labelKey: isHorse
+        ? "home.minimal.starter.herd.label.horse"
+        : "home.minimal.starter.herd.label",
+      promptKey: isHorse
+        ? "home.minimal.starter.herd.prompt.horse"
+        : "home.minimal.starter.herd.prompt",
+    },
+    {
+      id: "devices",
+      labelKey: isHorse
+        ? "home.minimal.starter.devices.label.horse"
+        : "home.minimal.starter.devices.label",
+      promptKey: isHorse
+        ? "home.minimal.starter.devices.prompt.horse"
+        : "home.minimal.starter.devices.prompt",
+    },
+    {
+      id: "cameras",
+      labelKey: isHorse
+        ? "home.minimal.starter.cameras.label.horse"
+        : "home.minimal.starter.cameras.label",
+      promptKey: isHorse
+        ? "home.minimal.starter.cameras.prompt.horse"
+        : "home.minimal.starter.cameras.prompt",
+    },
+    {
+      id: "page",
+      labelKey: isHorse
+        ? "home.minimal.starter.page.label.horse"
+        : "home.minimal.starter.page.label",
+      promptKey: isHorse
+        ? "home.minimal.starter.page.prompt.horse"
+        : "home.minimal.starter.page.prompt",
+    },
+  ];
+
+  const openLivWithQuestion = (prompt?: string) => {
+    const trimmed = prompt?.trim();
+    if (trimmed) {
+      navigate(`/chat?prompt=${encodeURIComponent(trimmed)}&send=1`, {
+        state: { prefill: trimmed },
+      });
+    } else {
+      navigate("/chat");
+    }
+  };
+
+  const submitQuestion = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    openLivWithQuestion(question);
+  };
+
+  // Liv's place on Home: the ask box and the call button, or, on an install where Liv cannot
+  // answer yet, one button to sign in. Nothing until Liv has said which.
+  const livBox = (placeholder: string, starters: ReactNode) =>
+    setup === "setup" ? (
+      <Button
+        variant="primary"
+        icon={<LogIn size={16} />}
+        className="liv-home__sign-in"
+        onClick={() => void navigate("/settings/account")}
+        data-testid="home-sign-in"
+      >
+        {t("home.setup.signIn")}
+      </Button>
+    ) : setup === "ready" ? (
+      <HomeVoiceWidget
+        ask={{ value: question, onChange: setQuestion, onSubmit: submitQuestion, placeholder }}
+      >
+        {starters}
+      </HomeVoiceWidget>
+    ) : null;
+  // The tour plays once, the first time Home has a Liv that can answer.
+  const tour = setup === "ready" && !tourSeen ? <Tour /> : null;
+
+  if (isMinimalHome) {
+    return (
+      <div className="liv-container liv-home liv-home--minimal" data-testid="home-minimal">
+        <header className="liv-home__head liv-home__head--minimal">
+          {livOnline && setup === "ready" && (
+            <div className="liv-home__meta">
+              <Badge variant="ok" icon={<CheckCircle2 size={13} />} data-testid="home-alerts">
+                {t("home.minimal.badge")}
+              </Badge>
+            </div>
+          )}
+
+          <h1 data-testid="home-hero-headline" className="liv-home__headline">
+            {t("home.minimal.headline")}
+          </h1>
+
+          <p className="liv-home__lede" data-testid="home-minimal-lede">
+            {t(isHorse ? "home.minimal.lede.horse" : "home.minimal.lede.cattle")}
+          </p>
+
+          {livBox(
+            t("home.ask.placeholder"),
+            <ul
+              className="liv-starter-grid"
+              aria-label={t("home.minimal.startersLabel")}
+              data-testid="home-starter-chips"
+            >
+              {minimalStarters.map((starter) => (
+                <li key={starter.id}>
+                  <button
+                    type="button"
+                    className="liv-starter-tile"
+                    data-testid={`home-starter-${starter.id}`}
+                    onClick={() => openLivWithQuestion(t(starter.promptKey))}
+                  >
+                    <span>{t(starter.labelKey)}</span>
+                    <ChevronRight size={15} aria-hidden="true" />
+                  </button>
+                </li>
+              ))}
+            </ul>,
+          )}
+        </header>
+
+        <PageCards pages={customPages} theme={theme} />
+        {tour}
+      </div>
+    );
+  }
+
+  const allInstruments: Instrument[] = [
+    {
+      id: "animals",
+      moduleId: "herd",
+      label: t(isHorse ? "home.gauge.animals.horse" : "home.gauge.animals.cattle"),
+      value: String(primaryAnimals),
+      detail: t(isHorse ? "home.gauge.animalsDetail.horse" : "home.gauge.animalsDetail.cattle", {
+        count: primaryAnimals,
+      }),
+      tone: "ok",
+      to: "/herd",
+      testId: "home-animals-gauge",
+    },
+    {
+      id: "cameras",
+      moduleId: "cameras",
+      label: t("home.gauge.cameras"),
+      value: `${camerasOnline}/${totalCameras}`,
+      detail:
+        totalCameras - camerasOnline > 0
+          ? t("home.gauge.offline", { count: totalCameras - camerasOnline })
+          : t("home.gauge.allStreaming"),
+      tone: camerasOnline < totalCameras ? "warn" : "ok",
+      to: "/cameras",
+      testId: "home-cameras-live",
+    },
+    {
+      id: "connectors",
+      moduleId: "devices",
+      label: t("home.gauge.connectors"),
+      value: String(totalConnectors),
+      detail:
+        connectorsWithErrors > 0
+          ? t("home.gauge.connectorErrors", { count: connectorsWithErrors })
+          : t("home.gauge.connectorsSynced"),
+      tone: connectorsWithErrors > 0 ? "danger" : "ok",
+      to: "/devices",
+      testId: "home-connectors-gauge",
+    },
+  ];
+
+  const instruments = allInstruments.filter((ins) => {
+    if (ins.id === "connectors") return devicesEnabled && totalConnectors > 0;
+    return isEnabled(ins.moduleId) || (ins.moduleId === "herd" && totalAnimals > 0);
+  });
+
+  const heroHeadline = !summary
+    ? t("home.hero.waiting")
+    : recentAlerts.length > 0
+      ? t("home.hero.alerts", { count: recentAlerts.length })
+      : t("home.hero.quiet");
+
+  return (
+    <div className="liv-container liv-home liv-home--fit">
+      <header className="liv-home__head">
+        <div className="liv-home__masthead">
+          <div className="liv-home__masthead-main">
+            <div className="liv-home__meta">
+              {summary && (
+                <Badge
+                  data-testid="home-alerts"
+                  variant={recentAlerts.length > 0 ? "warn" : "ok"}
+                  icon={
+                    recentAlerts.length > 0 ? (
+                      <AlertTriangle size={13} />
+                    ) : (
+                      <CheckCircle2 size={13} />
+                    )
+                  }
+                >
+                  {recentAlerts.length > 0
+                    ? t("home.badge.alerts", { count: recentAlerts.length })
+                    : t("home.badge.steady")}
+                </Badge>
+              )}
+              {(herdEnabled || totalAnimals > 0) && (
+                <span data-testid="home-herd-counts" className="liv-home__counts">
+                  {formatPrimaryAnimalCount(cattle, horses, species, t)}
+                </span>
+              )}
+            </div>
+
+            <h1 data-testid="home-hero-headline" className="liv-home__headline">
+              {heroHeadline}
+            </h1>
+          </div>
+
+          {instruments.length > 0 && (
+            <ul className="liv-gauges">
+              {instruments.map((ins) => (
+                <li key={ins.id}>
+                  <button
+                    type="button"
+                    className="liv-gauge"
+                    data-testid={ins.testId}
+                    onClick={() => navigate(ins.to)}
+                  >
+                    <span className="liv-gauge__label">{ins.label}</span>
+                    {isLoading ? (
+                      <Skeleton width="3rem" height="1.5rem" />
+                    ) : (
+                      <span className="liv-gauge__value">{ins.value}</span>
+                    )}
+                    <span className="liv-gauge__detail" data-tone={ins.tone}>
+                      {ins.detail}
+                    </span>
+                    <ChevronRight size={16} className="liv-gauge__chevron" aria-hidden="true" />
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </header>
+
+      <div className="liv-home__grid">
+        {livBox(
+          t("home.ask.placeholder"),
+          <ul className="liv-ask__suggestions" aria-label={t("home.ask.suggestions")}>
+            {suggestedQuestions.map((key) => (
+              <li key={key}>
+                <button
+                  type="button"
+                  className="liv-ask__suggestion"
+                  onClick={() => openLivWithQuestion(t(key))}
+                >
+                  {t(key)}
+                </button>
+              </li>
+            ))}
+          </ul>,
+        )}
+        <section className="liv-card liv-home__panel" aria-labelledby="home-alerts-title">
+          <div className="liv-home__panel-head">
+            <h2 id="home-alerts-title" className="liv-home__panel-title">
+              {t("home.alerts.title")}
+            </h2>
+            <span className="liv-home__panel-meta">{t("home.alerts.period")}</span>
+          </div>
+
+          {isLoading ? (
+            <div className="liv-home__skeletons">
+              <Skeleton height="3.5rem" />
+              <Skeleton height="3.5rem" />
+              <Skeleton height="3.5rem" />
+            </div>
+          ) : recentAlerts.length === 0 ? (
+            <EmptyState title={t("home.alerts.emptyTitle")} />
+          ) : (
+            <ul className="liv-alert-list">
+              {recentAlerts.map((alert) => {
+                const meta = formatAlertKind(alert.kind, t);
+                const animal = alert.animalId ? animalById.get(alert.animalId) : null;
+                const animalLabel = animal
+                  ? (animal.name ?? t("home.alerts.unnamed"))
+                  : t("home.alerts.barn");
+                const Icon =
+                  alert.kind === "health_event"
+                    ? HeartPulse
+                    : alert.kind === "heat_alert"
+                      ? Flame
+                      : Activity;
+                return (
+                  <li key={alert.id} className="liv-alert" data-tone={meta.variant}>
+                    <span className="liv-alert__icon" aria-hidden="true">
+                      <Icon size={18} />
+                    </span>
+                    <div className="liv-alert__body">
+                      <div className="liv-alert__title-row">
+                        <span className="liv-alert__animal">{animalLabel}</span>
+                        {animal?.earTagNumber && (
+                          <span className="liv-alert__tag">{animal.earTagNumber}</span>
+                        )}
+                        {animal?.wearable && (
+                          <span className="liv-alert__wearable">
+                            {formatWearableChip(
+                              animal.wearable.kind,
+                              animal.wearable.batteryPct,
+                              t,
+                            )}
+                          </span>
+                        )}
+                        <span className="liv-alert__kind">{meta.label}</span>
+                        <span className="liv-alert__time">{formatRelativeTime(alert.ts, t)}</span>
+                      </div>
+                      <p className="liv-alert__desc">{formatAlertDescription(alert, t)}</p>
+                    </div>
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      icon={<Sparkles size={15} />}
+                      title={t("home.alerts.ask")}
+                      aria-label={t("home.alerts.askAria", {
+                        animal: animalLabel,
+                        kind: meta.label.toLowerCase(),
+                      })}
+                      onClick={() =>
+                        openLivWithQuestion(
+                          t("home.alerts.askPrompt", {
+                            kind: meta.label.toLowerCase(),
+                            source: alert.source,
+                          }),
+                        )
+                      }
+                    />
+                  </li>
+                );
+              })}
+            </ul>
+          )}
+        </section>
+      </div>
+
+      <PageCards pages={customPages} theme={theme} />
+      {tour}
+    </div>
+  );
+}

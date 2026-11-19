@@ -1,6 +1,6 @@
-# @orbit/connectors
+# @liv/connectors
 
-Connectors import data from milking robots, herd software and wearable sensors into Orbit. They are **read-only** toward the vendor: they read an export or an API and write into Orbit through a typed writer. Nothing here can change a robot, a herd package or a sensor.
+Connectors import data from milking robots, herd software and wearable sensors into Liv. They are **read-only** toward the vendor: they read an export or an API and write into Liv through a typed writer. Nothing here can change a robot, a herd package or a sensor.
 
 ## How a farmer's agent builds a connector
 
@@ -24,13 +24,13 @@ Connectors import data from milking robots, herd software and wearable sensors i
    ```
 
    A column can be one header or a list of candidates (first one present wins). Decimal commas, `;`/tab delimiters, a BOM, ISO and `dd.mm.yyyy` dates and a separate `time` column are handled.
-3. **If the config cannot express it, copy `template/`** (Orion's `connector_scaffold` does this), rename the `id`, and edit `index.ts`. Keep `fixture.csv` as a real, anonymised sample and make `index.test.ts` assert what the sync must write.
+3. **If the config cannot express it, copy `template/`** (Liv's `connector_scaffold` does this), rename the `id`, and edit `index.ts`. Keep `fixture.csv` as a real, anonymised sample and make `index.test.ts` assert what the sync must write.
 4. **Run `bun test` and `tsc --noEmit`.** Enable the connector only when both pass, then run its `test()` against the farmer's real file.
 
 ## SDK
 
 ```ts
-import { defineConnector, createMemoryWriter, runSync } from "@orbit/connectors";
+import { defineConnector, createMemoryWriter, runSync } from "@liv/connectors";
 
 export default defineConnector({
   id: "my_feed",

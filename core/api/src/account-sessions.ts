@@ -159,7 +159,7 @@ export function registerSessionRoutes(
         .from(hardwareOrders)
         .where(or(eq(hardwareOrders.userId, user.id), eq(hardwareOrders.email, user.email))),
     ]);
-    c.header("content-disposition", `attachment; filename="barnstar-account-${user.id}.json"`);
+    c.header("content-disposition", `attachment; filename="agrointel-account-${user.id}.json"`);
     return c.json({
       exportedAt: now().toISOString(),
       profile,

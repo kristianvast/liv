@@ -11,7 +11,7 @@ import {
   adeToAnimal,
   adeToObservation,
   animalToAde,
-  ORBIT_ANIMAL_SCHEME,
+  LIV_ANIMAL_SCHEME,
   observationToAde,
 } from "../src/ade";
 import type { Animal, Observation } from "../src/sqlite";
@@ -145,11 +145,11 @@ describe("animals", () => {
     expect(v(broken)).toBe(false);
   });
 
-  test("official id is primary; Orbit id rides along as an alternative identifier", () => {
+  test("official id is primary; Liv id rides along as an alternative identifier", () => {
     const ade = animalToAde(cow);
     expect(ade.identifier).toEqual({ id: "NL123456789", scheme: "nl.naktuinbouw" });
-    expect(ade.alternativeIdentifiers).toContainEqual({ id: cow.id, scheme: ORBIT_ANIMAL_SCHEME });
-    expect(animalToAde(horse).identifier).toEqual({ id: horse.id, scheme: ORBIT_ANIMAL_SCHEME });
+    expect(ade.alternativeIdentifiers).toContainEqual({ id: cow.id, scheme: LIV_ANIMAL_SCHEME });
+    expect(animalToAde(horse).identifier).toEqual({ id: horse.id, scheme: LIV_ANIMAL_SCHEME });
   });
 
   test.each([cow, horse])("round trip preserves mapped columns (%#)", (animal) => {

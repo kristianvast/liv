@@ -1,4 +1,4 @@
-// Connector SDK. A connector IMPORTS data from a vendor system into Orbit. It is READ-ONLY toward
+// Connector SDK. A connector IMPORTS data from a vendor system into Liv. It is READ-ONLY toward
 // the vendor: nothing in this SDK can write back to a milking robot, herd package or sensor.
 import type {
   AnimalSex,
@@ -8,7 +8,7 @@ import type {
   DeviceStatus,
   ObservationKind,
   Species,
-} from "@orbit/schema/enums";
+} from "@liv/schema/enums";
 import type { Static, TSchema } from "typebox";
 import { Value } from "typebox/value";
 import { ConnectorConfigError } from "./errors";
@@ -24,7 +24,7 @@ export type ConnectorCategory = (typeof CONNECTOR_CATEGORIES)[number];
 
 /**
  * Entities are addressed by the vendor's own id (externalId). The host maps (connector, externalId)
- * to Orbit UUIDs, so re-running a sync updates rows instead of duplicating them.
+ * to Liv UUIDs, so re-running a sync updates rows instead of duplicating them.
  */
 export interface AnimalUpsert {
   externalId: string;

@@ -14,7 +14,7 @@ export const PLAN_REQUIRED = {
   error: {
     code: "plan_required",
     message:
-      "Your free Orion month has ended. An Orion or camera plan, or your own model key in Settings, keeps Orion running.",
+      "Your free Liv month has ended. A Liv or camera plan, or your own model key in Settings, keeps Liv running.",
   },
 } as const;
 
@@ -22,11 +22,11 @@ export const EMAIL_REQUIRED = {
   error: {
     code: "plan_required",
     message:
-      "Confirm your email address to start your free Orion month. An Orion or camera plan, or your own model key in Settings, also keeps Orion running.",
+      "Confirm your email address to start your free Liv month. A Liv or camera plan, or your own model key in Settings, also keeps Liv running.",
   },
 } as const;
 
-/** The 402 body for a farm without cloud Orion: the address is unconfirmed, or the month is over. */
+/** The 402 body for a farm without cloud Liv: the address is unconfirmed, or the month is over. */
 export function planRequired(entitlement: { readonly trialNeedsEmail: boolean }) {
   return entitlement.trialNeedsEmail ? EMAIL_REQUIRED : PLAN_REQUIRED;
 }
@@ -80,7 +80,7 @@ export async function entitlements(db: CoreDb, account: string | BillingAccount,
     trialEndsAt,
     trialNeedsEmail,
     usageStart: trialEndsAt && owner ? owner.createdAt : monthStart(now),
-    tokenAllowance: override?.monthlyTokenBudget ?? allowance.orionTokens,
+    tokenAllowance: override?.monthlyTokenBudget ?? allowance.livTokens,
     voiceSecondsAllowance: allowance.voiceMinutes * 60,
   };
 }

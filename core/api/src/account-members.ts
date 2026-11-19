@@ -1,4 +1,4 @@
-import { assignableRoles, canManageMember, canManageMembers, type FarmRole } from "@orbit/schema";
+import { assignableRoles, canManageMember, canManageMembers, type FarmRole } from "@liv/schema";
 import { and, eq } from "drizzle-orm";
 import type { Hono } from "hono";
 import {

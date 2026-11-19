@@ -66,14 +66,14 @@ describe("billing and voice wire contracts", () => {
       plans: [
         {
           id: "orion",
-          name: "Orion",
+          name: "Liv",
           cameras: 0,
-          orionTokens: 2000000,
+          livTokens: 2000000,
           voiceMinutes: 30,
           ...(locked ? {} : { monthly: 20, yearly: 200 }),
         },
       ],
-      hardware: [{ id: "box", name: "Barnstar box", ...(locked ? {} : { price: 920 }) }],
+      hardware: [{ id: "box", name: "Agrointel box", ...(locked ? {} : { price: 920 }) }],
     };
     expect(validateResult("billing.plans", catalogue).ok).toBe(true);
     expect(validateResult("billing.plans", { ...catalogue, plans: [{ id: "orion" }] }).ok).toBe(

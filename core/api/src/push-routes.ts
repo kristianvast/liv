@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { Hono } from "hono";
-import { memberRole, resolveSession } from "./auth";
+import { farmHeader, memberRole, resolveSession } from "./auth";
 import { type CoreDb, pushDevices } from "./db";
 import { afterResponse, type createPush } from "./push";
 
@@ -61,7 +61,7 @@ export function createPushRoutes(db: CoreDb, push: ReturnType<typeof createPush>
     return c.json({ ok: true });
   });
   app.post("/notify", async (c) => {
-    const farmId = c.req.header("x-orbit-farm");
+    const farmId = farmHeader(c.req.raw.headers);
     if (!farmId || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(farmId))
       return c.json({ error: { code: "bad_request" } }, 400);
     const userId = c.get("userId");
@@ -78,7 +78,7 @@ export function createPushRoutes(db: CoreDb, push: ReturnType<typeof createPush>
       !body ||
       typeof body !== "object" ||
       !("kind" in body) ||
-      (body.kind !== "orion_done" && body.kind !== "orion_needs_you") ||
+      (body.kind !== "liv_done" && body.kind !== "liv_needs_you") ||
       !("sessionId" in body) ||
       typeof body.sessionId !== "string" ||
       !body.sessionId ||

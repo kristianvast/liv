@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Calendar</title>
-  <link rel="stylesheet" href="../_orbit.css">
-  <script src="../_orbit.js"></script>
+  <link rel="stylesheet" href="../_liv.css">
+  <script src="../_liv.js"></script>
   <style>
     .calendar-head-main {
       display: flex;
@@ -299,14 +299,14 @@
         <p class="calendar-month-label" id="calendar-month-label" data-testid="calendar-month-label"></p>
       </div>
       <nav class="calendar-nav" aria-label="Month navigation">
-        <button type="button" class="orbit-btn orbit-btn--secondary orbit-btn--sm" id="calendar-prev" data-testid="calendar-prev" aria-label="Previous month">
+        <button type="button" class="liv-btn liv-btn--secondary liv-btn--sm" id="calendar-prev" data-testid="calendar-prev" aria-label="Previous month">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
           <span>Previous</span>
         </button>
-        <button type="button" class="orbit-btn orbit-btn--subtle orbit-btn--sm" id="calendar-today" data-testid="calendar-today">
+        <button type="button" class="liv-btn liv-btn--subtle liv-btn--sm" id="calendar-today" data-testid="calendar-today">
           <span>Today</span>
         </button>
-        <button type="button" class="orbit-btn orbit-btn--secondary orbit-btn--sm" id="calendar-next" data-testid="calendar-next" aria-label="Next month">
+        <button type="button" class="liv-btn liv-btn--secondary liv-btn--sm" id="calendar-next" data-testid="calendar-next" aria-label="Next month">
           <span>Next</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
         </button>
@@ -466,12 +466,12 @@
 
       if (ev.overdue) {
         const badge = document.createElement("span");
-        badge.className = "orbit-badge orbit-badge--danger";
+        badge.className = "liv-badge liv-badge--danger";
         badge.textContent = "Overdue";
         li.append(badge);
       } else if (ev.planned) {
         const badge = document.createElement("span");
-        badge.className = `orbit-badge orbit-badge--${ev.tone === "warn" ? "warn" : "info"}`;
+        badge.className = `liv-badge liv-badge--${ev.tone === "warn" ? "warn" : "info"}`;
         badge.textContent = "Planned";
         li.append(badge);
       }
@@ -727,8 +727,8 @@
         statusEl.hidden = false;
         statusEl.textContent =
           animalCount === 0
-            ? "No animals registered yet. Recording inseminations, calvings, and dry-offs creates calendar dates—ask Orion to add your herd and record breeding events."
-            : "No calendar events yet. Recording inseminations, calvings, pregnancy checks, and dry-offs fills your calendar—ask Orion to record them for your animals.";
+            ? "No animals registered yet. Recording inseminations, calvings, and dry-offs creates calendar dates—ask Liv to add your herd and record breeding events."
+            : "No calendar events yet. Recording inseminations, calvings, pregnancy checks, and dry-offs fills your calendar—ask Liv to record them for your animals.";
         renderGrid();
         renderSelectedDay();
         renderUpcoming();
@@ -770,10 +770,10 @@
       const since60 = new Date(nowDate.getTime() - 60 * DAY_MS).toISOString();
 
       const [animalsRes, alertsRes, ...kindResults] = await Promise.all([
-        window.orbit.query("animals.list", { limit: 1000 }),
-        window.orbit.query("observations.recent", { alertsOnly: true, since: since60, limit: 1000 }),
+        window.liv.query("animals.list", { limit: 1000 }),
+        window.liv.query("observations.recent", { alertsOnly: true, since: since60, limit: 1000 }),
         ...RECORDED_KINDS.map((kind) =>
-          window.orbit.query("observations.recent", { kind, since: since400, limit: 1000 }),
+          window.liv.query("observations.recent", { kind, since: since400, limit: 1000 }),
         ),
       ]);
 
@@ -818,8 +818,8 @@
     });
 
     let debounceTimer = null;
-    if (window.orbit?.on) {
-      window.orbit.on((event) => {
+    if (window.liv?.on) {
+      window.liv.on((event) => {
         if (
           event.type === "db.changed" &&
           (!event.table || event.table === "animals" || event.table === "observations")

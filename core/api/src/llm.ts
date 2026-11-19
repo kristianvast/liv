@@ -16,9 +16,9 @@ export interface LlmGatewayOptions {
   /** "authorization" sends `Bearer <key>`; "x-api-key" sends the raw key (Anthropic). */
   authHeader: "authorization" | "x-api-key";
   defaultMonthlyTokenBudget: number;
-  /** Upstream model used when Orion asks for the generic "orbit-default" model. */
+  /** Upstream model used when Liv asks for the generic "liv-default" model. */
   defaultModel?: string;
-  /** Upstream model for "orbit-small": short background jobs such as naming a conversation. */
+  /** Upstream model for "liv-small": short background jobs such as naming a conversation. */
   smallModel?: string;
   /** Google OAuth token provider; supersedes the static upstream key. */
   accessToken?: () => Promise<string>;
@@ -30,8 +30,13 @@ export interface LlmGatewayOptions {
   now: () => Date;
 }
 
-export const ORBIT_DEFAULT_MODEL = "orbit-default";
-export const ORBIT_SMALL_MODEL = "orbit-small";
+export const LIV_DEFAULT_MODEL = "liv-default";
+export const LIV_SMALL_MODEL = "liv-small";
+/** Names installs from before the Liv rename (0.1.10 and older) still ask for. */
+const LEGACY_MODELS: Record<string, string> = {
+  "orbit-default": LIV_DEFAULT_MODEL,
+  "orbit-small": LIV_SMALL_MODEL,
+};
 
 const FORWARDED_HEADERS = ["content-type", "accept", "anthropic-version", "anthropic-beta"];
 
@@ -170,10 +175,11 @@ export async function handleLlm(
   try {
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     let changed = false;
+    const asked = LEGACY_MODELS[String(parsed.model)] ?? parsed.model;
     const upstreamModel =
-      parsed.model === ORBIT_DEFAULT_MODEL
+      asked === LIV_DEFAULT_MODEL
         ? options.defaultModel
-        : parsed.model === ORBIT_SMALL_MODEL
+        : asked === LIV_SMALL_MODEL
           ? (options.smallModel ?? options.defaultModel)
           : undefined;
     if (upstreamModel) {
@@ -215,7 +221,7 @@ export async function handleLlm(
     // Legacy farm API tokens have no person identity; never merge their usage into a user.
     if (options.userId)
       options.capture?.({
-        event: "orion_request",
+        event: "liv_request",
         distinct_id: options.userId,
         properties: {
           model,

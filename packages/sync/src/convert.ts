@@ -1,7 +1,7 @@
 // Value conversion between the wire (Electric shapes / Core write API) and local SQLite.
 // Wire rows use SQL column names. Electric sends Postgres text values ("t"/"f", numbers as
 // strings, timestamptz as "2026-11-03 10:00:00+00"); already-parsed values are accepted too.
-import type { SyncedTable } from "@orbit/schema";
+import type { SyncedTable } from "@liv/schema";
 import { type ColumnMeta, TABLE_COLUMNS } from "./columns";
 
 export type LocalValue = string | number | null;

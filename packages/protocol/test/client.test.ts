@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, test } from "bun:test";
 import type { ServerWebSocket } from "bun";
-import { createOrionClient, OrionRequestError } from "../src/client";
+import { createLivClient, LivRequestError } from "../src/client";
 import { decodeClientMessage, encodeError, encodeEvent, encodeResult } from "../src/codec";
 import { CloseCode, type SessionSummary } from "../src/model";
 
@@ -17,7 +17,7 @@ const session: SessionSummary = {
 
 type Conn = ServerWebSocket<{ authed: boolean }>;
 
-/** Minimal Orion-like test server. */
+/** Minimal Liv-like test server. */
 function startServer() {
   const sockets = new Set<Conn>();
   const connected: ((ws: Conn) => void)[] = [];
@@ -101,10 +101,10 @@ afterEach(() => {
   cleanup = [];
 });
 
-describe("createOrionClient", () => {
+describe("createLivClient", () => {
   test("hello, typed requests, queries and events", async () => {
     const srv = startServer();
-    const client = createOrionClient(srv.url, "secret", { clientName: "test" });
+    const client = createLivClient(srv.url, "secret", { clientName: "test" });
     cleanup.push(() => client.close(), srv.stop);
     // Queued before the connection is open.
     const listing = client.request("sessions.list");
@@ -128,12 +128,12 @@ describe("createOrionClient", () => {
     expect(await client.query("animals.list", { species: "cattle" })).toMatchObject({ rows: [] });
   });
 
-  test("error responses and invalid results reject with OrionRequestError", async () => {
+  test("error responses and invalid results reject with LivRequestError", async () => {
     const srv = startServer();
-    const client = createOrionClient(srv.url, "secret");
+    const client = createLivClient(srv.url, "secret");
     cleanup.push(() => client.close(), srv.stop);
     const del = client.request("sessions.delete", { sessionId: "x" });
-    await expect(del).rejects.toBeInstanceOf(OrionRequestError);
+    await expect(del).rejects.toBeInstanceOf(LivRequestError);
     await expect(del).rejects.toMatchObject({ code: "not_found" });
     await expect(
       client.request("sessions.rename", { sessionId: "s1", title: "t" }),
@@ -142,14 +142,14 @@ describe("createOrionClient", () => {
 
   test("request timeout", async () => {
     const srv = startServer();
-    const client = createOrionClient(srv.url, "secret", { requestTimeoutMs: 50 });
+    const client = createLivClient(srv.url, "secret", { requestTimeoutMs: 50 });
     cleanup.push(() => client.close(), srv.stop);
     await expect(client.request("settings.get")).rejects.toMatchObject({ code: "timeout" });
   });
 
   test("bad token ends in unauthorized without reconnecting", async () => {
     const srv = startServer();
-    const client = createOrionClient(srv.url, "wrong");
+    const client = createLivClient(srv.url, "wrong");
     cleanup.push(() => client.close(), srv.stop);
     await expect(client.ready()).rejects.toMatchObject({ code: "unauthorized" });
     expect(client.state).toBe("unauthorized");
@@ -158,7 +158,7 @@ describe("createOrionClient", () => {
 
   test("reconnects after a dropped connection and fails in-flight requests", async () => {
     const srv = startServer();
-    const client = createOrionClient(srv.url, "secret", {
+    const client = createLivClient(srv.url, "secret", {
       reconnect: { minDelayMs: 10, maxDelayMs: 20 },
     });
     cleanup.push(() => client.close(), srv.stop);
@@ -178,7 +178,7 @@ describe("createOrionClient", () => {
 
   test("close rejects pending work and stops", async () => {
     const srv = startServer();
-    const client = createOrionClient(srv.url, "secret");
+    const client = createLivClient(srv.url, "secret");
     cleanup.push(srv.stop);
     await client.ready();
     const pending = client.request("settings.get");

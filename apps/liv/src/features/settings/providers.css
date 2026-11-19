@@ -1,0 +1,399 @@
+.liv-providers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.liv-providers__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.liv-providers__tabs {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-elevated);
+}
+
+.liv-providers__tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  min-block-size: 2rem;
+  padding: 0 var(--space-3);
+  border: none;
+  border-radius: calc(var(--radius-md) - 2px);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.liv-providers__tab[aria-selected="true"] {
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  box-shadow: 0 1px 2px rgba(24, 22, 18, 0.12);
+}
+
+.liv-providers__search {
+  flex: 1;
+  min-inline-size: 10rem;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-block-size: 2.25rem;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-control);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface);
+  color: var(--text-muted);
+}
+
+.liv-providers__search:focus-within {
+  border-color: var(--border-focus);
+}
+
+.liv-providers__search input {
+  flex: 1;
+  min-inline-size: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+}
+
+.liv-providers__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  max-block-size: 24rem;
+  overflow-y: auto;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  scrollbar-width: thin;
+}
+
+.liv-providers__empty {
+  padding: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.liv-provider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-block-end: 1px solid var(--border-subtle);
+}
+
+.liv-provider:last-child {
+  border-block-end: none;
+}
+
+.liv-provider[data-configured="true"] {
+  background-color: var(--bg-elevated);
+}
+
+.liv-provider__text {
+  flex: 1;
+  min-inline-size: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.liv-provider__name {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.liv-provider__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  white-space: nowrap;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+
+.liv-provider__tag {
+  padding: 0 var(--space-2);
+  border-radius: var(--radius-full);
+  background-color: var(--accent-primary-subtle);
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.liv-provider__actions {
+  flex-shrink: 0;
+}
+
+.liv-login {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+}
+
+.liv-login p {
+  margin: 0;
+}
+
+.liv-login__step {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.liv-login__muted {
+  color: var(--text-secondary);
+}
+
+.liv-login__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.liv-login__row--end {
+  justify-content: flex-end;
+  inline-size: 100%;
+}
+
+.liv-login__code {
+  align-self: flex-start;
+  padding: var(--space-2) var(--space-4);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-elevated);
+  font-family: var(--font-mono);
+  font-size: var(--text-h3);
+  letter-spacing: 0.12em;
+}
+
+.liv-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.liv-login__choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.liv-login__choices legend {
+  margin-block-end: var(--space-2);
+  font-weight: 600;
+}
+
+.liv-login__choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-surface);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+}
+
+.liv-login__choice:hover {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-strong);
+}
+
+.liv-login__choice small {
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.liv-login__progress,
+.liv-login__success {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+}
+
+.liv-login__success {
+  color: var(--status-ok);
+  font-weight: 600;
+}
+
+.liv-login__error {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border: 1px solid var(--status-danger-border);
+  border-radius: var(--radius-md);
+  background-color: var(--status-danger-bg);
+}
+
+/* ------------------------------------------------------------------ billing section */
+
+.liv-billing {
+  margin-block-start: var(--space-4);
+  padding-block-start: var(--space-4);
+  border-block-start: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.liv-billing--signed-out {
+  gap: var(--space-2);
+}
+
+.liv-billing__summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.liv-billing__summary-lead,
+.liv-billing__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.liv-billing__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: var(--space-3);
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.liv-billing__meter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.liv-billing__meter-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  font-size: var(--text-sm);
+}
+
+.liv-billing__meter-val {
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.liv-billing__meter-track {
+  block-size: 0.5rem;
+  inline-size: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--bg-subtle);
+  overflow: hidden;
+}
+
+.liv-billing__meter-fill {
+  block-size: 100%;
+  transition: inline-size var(--duration-normal) var(--ease-out);
+}
+
+.liv-billing__multi {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.liv-billing__source {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.liv-billing__source-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.liv-billing__source-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.liv-billing__allowances {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
+  gap: var(--space-3);
+}
+
+.liv-billing__allowance {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  font-size: var(--text-sm);
+}
+
+.liv-billing__allowance[data-active="true"] {
+  background-color: var(--accent-primary-subtle);
+}
+
+.liv-billing__allowance-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.liv-billing__allowance-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+@media (max-width: 900px), (pointer: coarse) {
+  .liv-billing__actions .liv-btn {
+    min-block-size: var(--control-height-md);
+  }
+}

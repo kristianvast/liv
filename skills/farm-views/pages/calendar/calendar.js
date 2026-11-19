@@ -1,4 +1,4 @@
-// Pure calendar logic and event-type registry for Orbit farm-views.
+// Pure calendar logic and event-type registry for Liv farm-views.
 import { DAY_MS, reproFacts, reproSettings } from "./repro.js";
 
 /** Priority order: earlier in this array means higher priority for a day's single mark and sorting within a day. */

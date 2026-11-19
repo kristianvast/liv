@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { SingleWearableError } from "@orbit/schema";
+import { SingleWearableError } from "@liv/schema";
 import { Type } from "typebox";
 import {
   builtinConnectors,

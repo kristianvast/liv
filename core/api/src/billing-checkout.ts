@@ -85,7 +85,7 @@ export function redirectUrl(
   }
   // A link to Stripe that returns the buyer to a stranger's site is a phishing tool.
   if (supplied && !redirectOrigins(options).has(url.origin))
-    throw new BillingError(400, "bad_request", "Redirect URL must point at the Barnstar website");
+    throw new BillingError(400, "bad_request", "Redirect URL must point at the Agrointel website");
   return url.href;
 }
 

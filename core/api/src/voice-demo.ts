@@ -1,5 +1,5 @@
 // Public voice demo for the marketing website: mints a short-lived ElevenLabs Conversational AI
-// credential for one fixed demo agent so a visitor can talk to Orion without an account.
+// credential for one fixed demo agent so a visitor can talk to Liv without an account.
 // Unrelated to voice.ts (the authenticated Gemini Live gateway for paid farms).
 //
 // Abuse limits:

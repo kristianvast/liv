@@ -2,7 +2,7 @@ import { createHash, timingSafeEqual } from "node:crypto";
 import { desc, eq, getTableColumns } from "drizzle-orm";
 import { type Context, Hono } from "hono";
 import { ADMIN_PAGE } from "./admin-page";
-import { hashToken, memberRole, resolveSession, type SessionUser } from "./auth";
+import { farmHeader, hashToken, memberRole, resolveSession, type SessionUser } from "./auth";
 import { type CoreDb, feedback, submissions } from "./db";
 import type { EmailMessage, Mailer } from "./mailer";
 import { withinRate } from "./rate-limit";
@@ -111,7 +111,7 @@ export function createFeedbackRoutes(db: CoreDb, options: FeedbackOptions) {
     return user;
   }
   async function farm(c: Context, user: SessionUser | null) {
-    const wanted = c.req.header("x-orbit-farm")?.trim() ?? "";
+    const wanted = farmHeader(c.req.raw.headers)?.trim() ?? "";
     return user && UUID.test(wanted) && (await memberRole(db, wanted, user.id)) ? wanted : null;
   }
   async function notify(message: Omit<EmailMessage, "to">) {
@@ -165,7 +165,7 @@ export function createFeedbackRoutes(db: CoreDb, options: FeedbackOptions) {
     });
     await notify({
       template: "feedback_received",
-      subject: `Orbit feedback: ${kind}`,
+      subject: `Liv feedback: ${kind}`,
       text: `Kind: ${kind}\nWho: ${user?.email ?? contactEmail ?? "anonymous"}\nUser: ${user?.id ?? "anonymous"}\nContact: ${contactEmail ?? "-"}\nVersion: ${appVersion ?? "-"}\nOS: ${os ?? "-"}\n\n${message}`,
     });
     return c.json(row, 201);
@@ -235,7 +235,7 @@ export function createFeedbackRoutes(db: CoreDb, options: FeedbackOptions) {
     if (!row) throw new TypeError("submission insert returned no row");
     await notify({
       template: "submission_received",
-      subject: `Orbit submission: ${name}`,
+      subject: `Liv submission: ${name}`,
       text: `Kind: ${kind}\nName: ${name}\nTitle: ${title}\nWho: ${user.email} (${user.id})\nVersion: ${appVersion ?? "-"}\n\n${description}\n\nFiles:\n${files.map((file) => file.path).join("\n")}`,
     });
     return c.json(row, 201);

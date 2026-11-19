@@ -1,4 +1,4 @@
-import type { FarmRole } from "@orbit/schema";
+import type { FarmRole } from "@liv/schema";
 import { and, eq, gte, sql } from "drizzle-orm";
 import {
   type AccountOptions,

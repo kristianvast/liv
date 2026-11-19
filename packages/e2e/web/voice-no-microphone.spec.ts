@@ -3,7 +3,7 @@ import { SEED } from "../src/index";
 
 test("without a microphone, typed questions still get an answer", async ({ page }) => {
   await page.goto("/");
-  const widget = page.getByTestId("home-orion-widget");
+  const widget = page.getByTestId("home-liv-widget");
   await widget.getByTestId("home-voice-start").click();
   await expect(widget).toHaveAttribute("data-voice-state", /^(listening|speaking|working)$/);
 

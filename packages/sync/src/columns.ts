@@ -1,6 +1,6 @@
-// Column metadata for every synced table, derived from the @orbit/schema Drizzle definitions so
+// Column metadata for every synced table, derived from the @liv/schema Drizzle definitions so
 // the sync engine stays generic: SQL name, TS property name and a value kind for conversion.
-import { pg, SYNCED_TABLES, type SyncedTable, sqliteSyncedTables } from "@orbit/schema";
+import { pg, SYNCED_TABLES, type SyncedTable, sqliteSyncedTables } from "@liv/schema";
 import { getTableColumns } from "drizzle-orm";
 
 export type ColumnKind = "text" | "timestamp" | "date" | "boolean" | "real" | "json";
