@@ -15,15 +15,13 @@ export function BrandMark({ size = 22, className, ...rest }: BrandMarkProps) {
       focusable="false"
       {...rest}
     >
-      <rect
-        x="6.2"
-        y="3"
-        width="11.6"
-        height="18"
-        rx="5.8"
+      <path
+        d="M 8.2 4.4 V 18.6 H 15.8"
         fill="none"
         stroke="currentColor"
         strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <g transform="rotate(-28 12 12)">
         <path

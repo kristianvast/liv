@@ -25,13 +25,12 @@ const muted = "#a99f8c";
 const mark = (id: string) => `
   <mask id="${id}-cut">
     <rect width="512" height="512" fill="#fff"/>
-    <rect x="198" y="148" width="116" height="216" rx="58" fill="#000"/>
     <g transform="rotate(-28 256 256)"><path d="M 54 256 A 202 70 0 0 0 458 256" fill="none" stroke="#000" stroke-width="32" stroke-linecap="round"/></g>
   </mask>
   <g id="${id}">
     <rect width="512" height="512" rx="114" fill="${ink}"/>
     <g transform="rotate(-28 256 256)"><path d="M 54 256 A 202 70 0 0 1 458 256" fill="none" stroke="${ember}" stroke-opacity="0.38" stroke-width="12" stroke-linecap="round"/></g>
-    <rect x="134" y="86" width="244" height="340" rx="122" fill="${paper}" mask="url(#${id}-cut)"/>
+    <path d="M 143 132 A 50 50 0 0 1 243 132 L 243 324 L 319 324 A 50 50 0 0 1 319 424 L 193 424 A 50 50 0 0 1 143 374 Z" fill="${paper}" mask="url(#${id}-cut)"/>
     <g transform="rotate(-28 256 256)"><path d="M 54 256 A 202 70 0 0 0 458 256" fill="none" stroke="${ember}" stroke-width="15" stroke-linecap="round"/></g>
     <circle cx="434" cy="161" r="24" fill="${ink}"/><circle cx="434" cy="161" r="17" fill="${ember}"/>
     <circle cx="78" cy="351" r="15" fill="${ink}"/><circle cx="78" cy="351" r="10" fill="${field}"/>
@@ -67,7 +66,7 @@ const panel = (w: number, h: number) => {
       <tspan x="${cx}" y="${h * 0.3 + 120}">Your farm, run from</tspan>
       <tspan x="${cx}" y="${h * 0.3 + 135}">your own computer</tspan>
     </text>
-    <text x="${cx}" y="${h - 16}" text-anchor="middle" font-family="Switzer" font-weight="600" font-size="9" letter-spacing="1.6" fill="${ember}" opacity="0.85">WITH LIV</text>`;
+    <text x="${cx}" y="${h - 16}" text-anchor="middle" font-family="Switzer" font-weight="600" font-size="9" letter-spacing="1.6" fill="${ember}" opacity="0.85">BY AGROINTEL</text>`;
 };
 
 const glow = (cx: string, cy: string) =>
