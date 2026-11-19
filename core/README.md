@@ -244,7 +244,9 @@ signed-URL request returns 502 `upstream_error` before upgrade and creates no us
 The `/v1/voice/live` endpoint remains available for released desktop clients.
 
 The Liv agent itself (what Liv is told, its voice, and its five client tools) is defined in
-`api/src/liv-voice-agent.ts`. `bun run --filter '@core/api' voice:setup -- --print` shows what
+`api/src/liv-voice-agent.ts`, with the prompt text in `api/src/liv-voice-prompt.md`. The deploy
+workflow runs `voice:setup` after every deploy, against the `VOICE_AGENT_ID` of the service it
+just deployed, so the agent follows main. `bun run --filter '@core/api' voice:setup -- --print` shows what
 would be sent. With `ELEVENLABS_API_KEY` set, `voice:setup` creates the agent and its tools in
 ElevenLabs and prints the id to use as `VOICE_AGENT_ID`; with `VOICE_AGENT_ID` also set it
 updates that agent and only the tools that agent already uses. A run that fails removes the tools

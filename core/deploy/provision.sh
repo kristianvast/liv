@@ -259,6 +259,11 @@ retry g artifacts repositories add-iam-policy-binding "$AR_REPO" --location="$RE
   --member="serviceAccount:$DEPLOYER_SA" --role=roles/artifactregistry.writer >/dev/null
 retry g iam service-accounts add-iam-policy-binding "$RUNTIME_SA" --role=roles/iam.serviceAccountUser \
   --member="serviceAccount:$DEPLOYER_SA" >/dev/null
+# The deploy workflow syncs the Liv voice agent in ElevenLabs after each deploy (voice:setup).
+if quiet g secrets describe ELEVENLABS_API_KEY; then
+  retry g secrets add-iam-policy-binding ELEVENLABS_API_KEY --role=roles/secretmanager.secretAccessor \
+    --member="serviceAccount:$DEPLOYER_SA" >/dev/null
+fi
 
 log "WORKING: core-deploy - database init job (REPLICATION for Electric)"
 g run jobs deploy "$DBINIT_JOB" --region="$REGION" --image=postgres:17-alpine \

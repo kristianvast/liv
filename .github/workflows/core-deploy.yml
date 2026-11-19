@@ -3,7 +3,8 @@ name: Core deploy
 # Staging deploys on every push to main that touches Core. Production is manual
 # (workflow_dispatch) and gated by the `production` GitHub Environment's required reviewers.
 # Infrastructure, env vars and secrets are owned by core/deploy/provision.sh; this workflow
-# only ships a new image.
+# only ships a new image, then brings the Liv voice agent in ElevenLabs in line with this commit
+# (its prompt and tools live there, not in Core).
 
 on:
   push:
@@ -11,6 +12,7 @@ on:
     paths:
       - "core/**"
       - "packages/schema/**"
+      - "packages/protocol/**"
       - ".github/workflows/core-deploy.yml"
   workflow_dispatch:
     inputs:
@@ -112,3 +114,27 @@ jobs:
         env:
           URL: ${{ steps.deploy.outputs.url }}
         run: curl -fsS --retry 5 --retry-delay 5 --retry-all-errors "$URL/health"
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install
+        run: bun install --frozen-lockfile
+
+      # Updates the agent this environment's Core calls. Without an id voice:setup would create a
+      # new agent, so a service that has none stops the run instead.
+      - name: Sync voice agent
+        run: |
+          VOICE_AGENT_ID="$(gcloud run services describe "orbit-core-$TARGET" --project "$PROJECT" \
+            --region "$REGION" --format json |
+            jq -r '.spec.template.spec.containers[0].env[]? | select(.name == "VOICE_AGENT_ID") | .value')"
+          if [[ -z "$VOICE_AGENT_ID" ]]; then
+            echo "orbit-core-$TARGET has no VOICE_AGENT_ID" >&2
+            exit 1
+          fi
+          ELEVENLABS_API_KEY="$(gcloud secrets versions access latest --project "$PROJECT" \
+            --secret ELEVENLABS_API_KEY)"
+          echo "::add-mask::$ELEVENLABS_API_KEY"
+          export VOICE_AGENT_ID ELEVENLABS_API_KEY
+          bun run --filter '@core/api' voice:setup
