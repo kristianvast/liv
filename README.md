@@ -15,9 +15,9 @@ It runs on your own computer, and its built-in AI assistant shapes it into what 
 
 [**Download**](#download) · [Website](https://agrointel.no) · [Architecture](docs/ARCHITECTURE.md) · [Roadmap](docs/ROADMAP.md) · [Contributing](CONTRIBUTING.md)
 
-<a href="https://agrointel.no/assets/video/v11-orbit-motion/v11-orbit-motion-light_audio.mp4"><img src="docs/media/liv-film.webp" width="100%" alt="A farmer asks Liv for a calving watch, and Liv builds the page, the camera view and the text alert"></a>
+<a href="https://agrointel.no/assets/video/ag-v11-orbit-motion/ag-v11-orbit-motion-light_audio.mp4"><img src="docs/media/liv-film.webp" width="100%" alt="A farmer asks Liv for a calving watch, and Liv builds the page, the camera view and the text alert"></a>
 
-<sub>▶ <a href="https://agrointel.no/assets/video/v11-orbit-motion/v11-orbit-motion-light_audio.mp4">Watch the full film with sound</a> (55 seconds)</sub>
+<sub>▶ <a href="https://agrointel.no/assets/video/ag-v11-orbit-motion/ag-v11-orbit-motion-light_audio.mp4">Watch the full film with sound</a> (55 seconds)</sub>
 
 </div>
 
