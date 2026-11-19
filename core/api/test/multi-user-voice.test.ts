@@ -60,7 +60,7 @@ test("voice uses the personal account's exhausted allowance without a farm", asy
   await db.insert(voiceUsage).values({
     accountId: person.id,
     userId: person.id,
-    seconds: 1800,
+    seconds: 3600,
     model: "live",
     createdAt: NOW.toISOString(),
   });

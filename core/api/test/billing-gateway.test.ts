@@ -88,6 +88,6 @@ test("billing status includes metered voice usage", async () => {
   });
   const response = await app().request("/v1/billing/status", { headers: headers() });
   expect(await response.json()).toMatchObject({
-    usage: { voiceSecondsUsed: 123, voiceSecondsAllowance: 3600 },
+    usage: { voiceSecondsUsed: 123, voiceSecondsAllowance: 7200 },
   });
 });

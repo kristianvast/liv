@@ -26,7 +26,7 @@ test("the free month grants Liv allowances and reports its end while plan stays 
   expect(await response.json()).toMatchObject({
     plan: "free",
     trialEndsAt: END,
-    usage: { tokenAllowance: 10_000_000, voiceSecondsAllowance: 1800 },
+    usage: { tokenAllowance: 10_000_000, voiceSecondsAllowance: 3600 },
   });
 });
 
@@ -61,7 +61,7 @@ test("an unconfirmed owner gets no free month until the address is confirmed", a
   expect(await confirmed.json()).toMatchObject({
     plan: "free",
     trialEndsAt: END,
-    usage: { tokenAllowance: 10_000_000, voiceSecondsAllowance: 1800 },
+    usage: { tokenAllowance: 10_000_000, voiceSecondsAllowance: 3600 },
   });
 });
 
@@ -216,7 +216,7 @@ test.each(["active", "trialing"])("a paid %s plan supersedes the free month", as
   expect(await response.json()).toMatchObject({
     plan: "cam6",
     trialEndsAt: null,
-    usage: { tokenAllowance: 40_000_000, voiceSecondsAllowance: 9000 },
+    usage: { tokenAllowance: 40_000_000, voiceSecondsAllowance: 18000 },
   });
 });
 

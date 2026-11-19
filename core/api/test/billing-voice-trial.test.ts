@@ -11,7 +11,7 @@ test.each([
   {
     name: "previous calendar month voice consumes the free pool",
     at: NOW,
-    used: 1800,
+    used: 3600,
     status: 429,
   },
   {

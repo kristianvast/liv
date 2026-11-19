@@ -44,7 +44,7 @@ test.each([
     name: "spent allowance",
     headers: null,
     paid: true,
-    used: 1800,
+    used: 3600,
     status: 429,
     code: "budget_exceeded",
   },

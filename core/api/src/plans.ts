@@ -7,7 +7,7 @@ export const plans = [
     monthly: 20,
     yearly: 200,
     livTokens: 10_000_000,
-    voiceMinutes: 30,
+    voiceMinutes: 60,
   },
   {
     id: "cam2",
@@ -16,7 +16,7 @@ export const plans = [
     monthly: 47,
     yearly: 470,
     livTokens: 15_000_000,
-    voiceMinutes: 60,
+    voiceMinutes: 120,
   },
   {
     id: "cam4",
@@ -25,7 +25,7 @@ export const plans = [
     monthly: 75,
     yearly: 750,
     livTokens: 25_000_000,
-    voiceMinutes: 100,
+    voiceMinutes: 200,
   },
   {
     id: "cam6",
@@ -34,7 +34,7 @@ export const plans = [
     monthly: 95,
     yearly: 950,
     livTokens: 40_000_000,
-    voiceMinutes: 150,
+    voiceMinutes: 300,
   },
   {
     id: "cam8",
@@ -43,7 +43,7 @@ export const plans = [
     monthly: 111,
     yearly: 1110,
     livTokens: 50_000_000,
-    voiceMinutes: 200,
+    voiceMinutes: 400,
   },
   {
     id: "cam12",
@@ -52,7 +52,7 @@ export const plans = [
     monthly: 137,
     yearly: 1370,
     livTokens: 70_000_000,
-    voiceMinutes: 280,
+    voiceMinutes: 560,
   },
   {
     id: "cam16",
@@ -61,7 +61,7 @@ export const plans = [
     monthly: 155,
     yearly: 1550,
     livTokens: 90_000_000,
-    voiceMinutes: 350,
+    voiceMinutes: 700,
   },
 ] as const;
 

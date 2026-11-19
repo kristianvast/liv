@@ -86,7 +86,7 @@ test("agent persists periodic usage and closes both sockets at the shared allowa
     farmId: FARM,
     accountId: FARM,
     model: "live",
-    seconds: 1799,
+    seconds: 3599,
     createdAt: NOW.toISOString(),
   });
   let clock = NOW.getTime();
@@ -118,7 +118,7 @@ test("agent persists periodic usage and closes both sockets at the shared allowa
     await gateway.closed;
     await upstreamClosed.promise;
     expect(await db.select().from(voiceUsage)).toMatchObject([
-      { seconds: 1799 },
+      { seconds: 3599 },
       { model: "elevenlabs:agent_test", seconds: 1 },
     ]);
   } finally {
