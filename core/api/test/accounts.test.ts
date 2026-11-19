@@ -776,6 +776,13 @@ describe("farm data with user sessions", () => {
     const outsider = await register(a, "out@farm.test");
     expect((await push(a, as(owner.token), "animals", animal(1))).status).toBe(400);
     expect((await push(a, as(outsider.token, FARM), "animals", animal(1))).status).toBe(403);
+    const before = await push(
+      a,
+      { authorization: `Bearer ${owner.token}`, "x-orbit-farm": FARM },
+      "animals",
+      { ...animal(1), id: "00000000-0000-4000-8000-0000000000a2" },
+    );
+    expect(before.body.results[0]).toMatchObject({ status: "applied" });
     const legacyRow = { ...animal(1), farm_id: OTHER_FARM };
     const legacy = await push(a, { authorization: `Bearer ${LEGACY}` }, "animals", legacyRow);
     expect(legacy.body.results[0]).toMatchObject({ status: "applied" });
@@ -815,7 +822,17 @@ describe("farm data with user sessions", () => {
       as(viewer.token, FARM),
     );
     expect(sent.model).toBe("gpt-real");
+    // Installs from before the Liv rename still ask for the old alias.
+    await call(
+      a,
+      "POST",
+      "/v1/llm/v1/chat/completions",
+      { model: "orbit-default", messages: [] },
+      as(viewer.token, FARM),
+    );
+    expect(sent.model).toBe("gpt-real");
     expect(await db.select().from(llmUsage)).toMatchObject([
+      { farmId: FARM, model: "gpt-real", totalTokens: 7 },
       { farmId: FARM, model: "gpt-real", totalTokens: 7 },
       { farmId: FARM, model: "gpt-real", totalTokens: 7 },
     ]);
