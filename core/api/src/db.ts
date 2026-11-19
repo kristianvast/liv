@@ -184,6 +184,7 @@ export const farmSubscriptions = pgTable("farm_subscriptions", {
   plan: text("plan", {
     enum: ["free", "orion", "cam2", "cam4", "cam6", "cam8", "cam12", "cam16"],
   }).notNull(),
+  currency: text("currency").notNull().default("eur"),
   interval: text("interval", { enum: ["month", "year"] }),
   status: text("status").notNull(),
   stripeSubscriptionId: text("stripe_subscription_id").unique(),

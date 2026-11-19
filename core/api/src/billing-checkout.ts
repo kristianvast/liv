@@ -1,6 +1,13 @@
 import { resolveSession } from "./auth";
 import type { CoreDb } from "./db";
-import { currency, hardware, type PaidPlanId, planFor } from "./plans";
+import {
+  type Currency,
+  currencies,
+  defaultCurrency,
+  hardware,
+  type PaidPlanId,
+  planFor,
+} from "./plans";
 import {
   BillingError,
   object,
@@ -118,12 +125,11 @@ export function hardwareSelection(body: Record<string, unknown>) {
   return { box, cameras } as const;
 }
 
-const euros = (amount: number) =>
-  new Intl.NumberFormat("en-IE", {
-    style: "currency",
-    currency: "EUR",
-    maximumFractionDigits: 0,
-  }).format(Math.round(amount));
+export function checkoutCurrency(value: unknown = defaultCurrency): Currency {
+  const currency = currencies.find((candidate) => candidate === value);
+  if (!currency) throw new BillingError(400, "bad_request", "Choose eur or nok");
+  return currency;
+}
 
 /**
  * The website quotes every plan per month, also when yearly billing is picked. A yearly
@@ -132,19 +138,29 @@ const euros = (amount: number) =>
  */
 export function addYearlyNote(
   form: URLSearchParams,
-  plan: PaidPlanId,
-  selection: ReturnType<typeof hardwareSelection>,
+  order: {
+    readonly plan: PaidPlanId;
+    readonly currency: Currency;
+    readonly hardware: ReturnType<typeof hardwareSelection>;
+  },
   options: StripeOptions,
 ) {
-  const { name, monthly, yearly } = planFor(plan);
-  const hardwareTotal = selection.box * hardware[0].price + selection.cameras * hardware[1].price;
-  const due = euros(yearly + hardwareTotal) + (options.automaticTax ? " before VAT" : "");
+  const { currency, hardware: selection } = order;
+  const { name, monthly, yearly } = planFor(order.plan);
+  const money = new Intl.NumberFormat(currency === "nok" ? "nb-NO" : "en-IE", {
+    style: "currency",
+    currency,
+    maximumFractionDigits: 0,
+  }).format;
+  const hardwareTotal =
+    selection.box * hardware[0].price[currency] + selection.cameras * hardware[1].price[currency];
+  const due = money(yearly[currency] + hardwareTotal) + (options.automaticTax ? " before VAT" : "");
   const covers =
     hardwareTotal > 0 ? "a year of your plan plus your hardware" : "a year of your plan";
   form.set(
     "custom_text[submit][message]",
-    `Due today: ${due}, for ${covers}. The pricing page showed ${name} at ${euros(yearly / 12)} a month; here it is billed yearly at ${euros(yearly)}. To pay ${euros(
-      monthly,
+    `Due today: ${due}, for ${covers}. The pricing page showed ${name} at ${money(yearly[currency] / 12)} a month; here it is billed yearly at ${money(yearly[currency])}. To pay ${money(
+      monthly[currency],
     )} every month instead, go back to the previous page and pick Monthly.`,
   );
 }
@@ -183,7 +199,7 @@ export async function hardwareCheckout(db: CoreDb, request: Request, options: St
     throw new BillingError(400, "bad_request", "Choose a positive number of boxes or cameras");
   const form = new URLSearchParams({
     mode: "payment",
-    currency,
+    currency: checkoutCurrency(body.currency),
     success_url: redirectUrl(body.successUrl, options.successUrl, options),
     cancel_url: redirectUrl(body.cancelUrl, options.cancelUrl, options),
     customer_creation: "always",

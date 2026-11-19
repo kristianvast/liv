@@ -178,21 +178,11 @@ the provisioning placeholder never enables the admin routes.
 
 ## Billing and Gemini
 
-`GET /v1/billing/plans` returns `{currency:"eur",locked:false,trialDays:30,plans,hardware}` publicly:
-
-| Plan                 | Cameras | EUR/month | EUR/year | Liv tokens/month | Voice minutes/month |
-| -------------------- | ------- | --------- | -------- | ---------------- | ------------------- |
-| Free (`free`)        | 0       | 0         | 0        | 0                | 0                   |
-| Liv (`orion`)        | 0       | 20        | 200      | 2,000,000        | 30                  |
-| 2 cameras (`cam2`)   | 2       | 47        | 470      | 3,000,000        | 60                  |
-| 4 cameras (`cam4`)   | 4       | 75        | 750      | 5,000,000        | 100                 |
-| 6 cameras (`cam6`)   | 6       | 95        | 950      | 8,000,000        | 150                 |
-| 8 cameras (`cam8`)   | 8       | 111       | 1110     | 10,000,000       | 200                 |
-| 12 cameras (`cam12`) | 12      | 137       | 1370     | 14,000,000       | 280                 |
-| 16 cameras (`cam16`) | 16      | 155       | 1550     | 18,000,000       | 350                 |
-
-The Agrointel box is EUR 920 and a Tested camera is EUR 150 once. API prices are euros;
-Stripe amounts are cents. Paid allowances reset at the UTC calendar month start.
+`GET /v1/billing/plans?currency=nok` returns `{currency:"nok",currencies:["eur","nok"],locked:false,trialDays:30,plans,hardware}` publicly.
+Omit `currency` for EUR. The catalog and both checkout routes accept only `eur` or `nok`; other values return 400.
+Amounts are whole units of the selected currency, before tax, not exchange-rate conversions.
+The plan fields `monthly` and `yearly` are full-term prices; `hardware[].price` is per unit.
+`api/src/plans.ts` owns prices and allowances. Stripe receives minor units. Paid allowances reset at the UTC calendar month start.
 Each farm gets one free Liv pool (10 million tokens and 60 voice minutes) for 30 days from
 the earliest account creation date among its owners. During this month its plan remains `free`
 and usage counts from that date, across calendar month boundaries. The month is granted only once
@@ -201,7 +191,7 @@ a confirm-your-email message. Farms without an owner have no free month. A paid 
 trialing subscription supersedes it.
 
 Set `STRIPE_SECRET_KEY` and run `bun run --filter '@core/api' stripe:setup` once per Stripe
-account. It idempotently creates products and EUR lookup prices. Configure Stripe to send
+account. It idempotently creates products and lookup prices with EUR as the default and a fixed NOK option. Rerun setup before releasing a price change. Configure Stripe to send
 `checkout.session.completed`, `customer.subscription.created|updated|deleted`, and
 `checkout.session.async_payment_succeeded|failed`, and `invoice.payment_failed` to
 `POST /v1/billing/webhook`, then set `STRIPE_WEBHOOK_SECRET`.
@@ -209,13 +199,13 @@ Signatures expire after five minutes; event claims and subscription effects comm
 
 Session routes take `Authorization: Bearer <session>` and `x-liv-farm`:
 
-- `POST /v1/billing/checkout`: `{plan:"orion"|"cam2"|"cam4"|"cam6"|"cam8"|"cam12"|"cam16",interval:"month"|"year",box?,cameras?,successUrl?,cancelUrl?}`.
+- `POST /v1/billing/checkout`: `{plan:"orion"|"cam2"|"cam4"|"cam6"|"cam8"|"cam12"|"cam16",interval:"month"|"year",currency?,box?,cameras?,successUrl?,cancelUrl?}`.
   Hardware quantities are whole numbers (`box` 0–2, `cameras` 0–16). Nonzero quantities add
   one-time hardware to the same subscription Checkout Session and collect shipping.
 - `POST /v1/billing/portal`: `{returnUrl?}`. Checkout and portal require owner or manager.
-- `GET /v1/billing/status`: subscription state plus token and voice usage for any member.
+- `GET /v1/billing/status`: subscription state, purchased `currency` (null without a subscription), plus token and voice usage for any member.
   `trialEndsAt` is an ISO timestamp during the free month, otherwise null.
-- `POST /v1/billing/hardware-checkout`: `{box:0,cameras:1,successUrl?,cancelUrl?}` with shipping
+- `POST /v1/billing/hardware-checkout`: `{box:0,cameras:1,currency?,successUrl?,cancelUrl?}` with shipping
   collection. Requires a user session, with no farm header. Buyer email comes from the session.
   Paid hardware orders and receipts are recorded once for either session mode.
 

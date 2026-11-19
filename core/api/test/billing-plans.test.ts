@@ -79,6 +79,7 @@ test.each([undefined, "Bearer unknown", "Bearer orb_s_unknown", "Bearer legacy-f
     expect(response.headers.get("access-control-allow-origin")).toBe("http://localhost:3000");
     expect(await response.json()).toEqual({
       currency: "eur",
+      currencies: ["eur", "nok"],
       locked: false,
       trialDays: 30,
       plans: catalog,
@@ -97,6 +98,7 @@ test("a signed-in account receives the same EUR catalog without a farm header", 
   expect(response.status).toBe(200);
   expect(await response.json()).toEqual({
     currency: "eur",
+    currencies: ["eur", "nok"],
     locked: false,
     trialDays: 30,
     plans: catalog,
@@ -105,4 +107,27 @@ test("a signed-in account receives the same EUR catalog without a farm header", 
       { id: "camera", name: "Tested camera", price: 150 },
     ],
   });
+});
+
+test("NOK catalog returns fixed kroner prices for every term and hardware item", async () => {
+  const response = await app().request("/v1/billing/plans?currency=nok");
+  const data = await response.json();
+  const monthly = [0, 229, 549, 879, 1099, 1299, 1599, 1799];
+  expect(data).toMatchObject({
+    currency: "nok",
+    currencies: ["eur", "nok"],
+    plans: catalog.map((p, i) => ({
+      id: p.id,
+      monthly: monthly[i],
+      yearly: (monthly[i] ?? 0) * 10,
+    })),
+    hardware: [
+      { id: "box", price: 10790 },
+      { id: "camera", price: 1749 },
+    ],
+  });
+});
+
+test("unsupported catalog currency is not silently quoted in euros", async () => {
+  expect((await app().request("/v1/billing/plans?currency=usd")).status).toBe(400);
 });

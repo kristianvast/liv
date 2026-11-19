@@ -6,16 +6,17 @@ import { hardware, plans } from "./plans";
 import type { FetchLike } from "./shape";
 import { object, string } from "./stripe";
 
-const eur = (n: number) => `${n} euros`;
-const PRICES = `Prices, in euros: ${plans
-  .filter((p) => p.monthly > 0)
+const price = (n: { readonly eur: number; readonly nok: number }) =>
+  `${n.eur} euros or ${n.nok} Norwegian kroner`;
+const PRICES = `Quote NOK in Norwegian and EUR in English: ${plans
+  .filter((p) => p.id !== "free")
   .map(
     (p) =>
-      `${p.cameras > 0 ? `up to ${p.cameras} cameras` : "Liv alone, without cameras"} ${eur(p.monthly)} a month or ${eur(p.yearly)} a year`,
+      `${p.cameras > 0 ? `up to ${p.cameras} cameras` : "Liv alone, without cameras"} ${price(p.monthly)} a month or ${price(p.yearly)} a year`,
   )
   .join(
     "; ",
-  )}. More cameras by arrangement. Hardware is one-time, at founding-farm prices: ${hardware.map((h) => `${h.name} ${eur(h.price)}${h.id === "camera" ? " each" : ""}`).join(", ")}.`;
+  )}. More cameras by arrangement. Hardware is one-time, at founding-farm prices: ${hardware.map((h) => `${h.name} ${price(h.price)}${h.id === "camera" ? " each" : ""}`).join(", ")}.`;
 
 export const LIV_VOICE_PROMPT = `You are Liv, the farm assistant in the Liv app. You are on a voice call with the farmer of {{farm_name}}. Liv runs on the farmer's own computer and you work in it through your tools.
 

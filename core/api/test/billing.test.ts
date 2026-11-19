@@ -8,11 +8,12 @@ const { app, db, headers, session } = billingFixture();
 
 test("a signed subscription update changes billing status and allowances", async () => {
   const a = app();
-  expect((await webhook(a)).status).toBe(200);
+  expect((await webhook(a, { value: { ...subscription, currency: "nok" } })).status).toBe(200);
   const response = await a.request("/v1/billing/status", { headers: headers() });
   expect(await response.json()).toMatchObject({
     plan: "cam2",
     status: "active",
+    currency: "nok",
     interval: "month",
     cancelAtPeriodEnd: true,
     currentPeriodEnd: new Date(subscription.current_period_end * 1000).toISOString(),
@@ -95,7 +96,7 @@ test("hardware orders keep shipping, wait for delayed payments and email once wh
     mode: "payment",
     payment_status: "unpaid",
     amount_total: 122000,
-    currency: "eur",
+    currency: "nok",
     customer_details: { email: "buyer@farm.test" },
     collected_information: { shipping_details: { name: "Kari", address: { country: "NO" } } },
     metadata: { box: "1", cameras: "2", user_id: session.userId },
@@ -106,6 +107,7 @@ test("hardware orders keep shipping, wait for delayed payments and email once wh
       status: "pending",
       userId: session.userId,
       amountTotal: 122000,
+      currency: "nok",
       shipping: { name: "Kari", address: { country: "NO" } },
     },
   ]);

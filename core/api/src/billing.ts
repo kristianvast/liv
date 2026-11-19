@@ -5,6 +5,7 @@ import {
   addHardware,
   addTaxFields,
   addYearlyNote,
+  checkoutCurrency,
   hardwareCheckout,
   hardwareSelection,
   redirectUrl,
@@ -12,7 +13,7 @@ import {
 import { billingStatus, checkoutAccount } from "./billing-status";
 import { billingWebhook } from "./billing-webhook";
 import { billingCustomers, type CoreDb, users } from "./db";
-import { currency, hardware, isPaidPlan, lookupKey, plans, trialDays } from "./plans";
+import { currencies, hardware, isPaidPlan, lookupKey, plans, trialDays } from "./plans";
 import { BillingError, object, priceFor, type StripeOptions, string, stripeClient } from "./stripe";
 
 export type FarmEnv = { Variables: { principal: Principal } };
@@ -27,15 +28,21 @@ export function registerBillingRoutes(app: Hono<FarmEnv>, db: CoreDb, options: S
       return c.json({ error: { code: "bad_request", message: "Invalid JSON" } }, 400);
     throw error;
   });
-  routes.get("/plans", (c) =>
-    c.json({
+  routes.get("/plans", (c) => {
+    const currency = checkoutCurrency(c.req.query("currency"));
+    return c.json({
+      currencies,
       currency,
       locked: false,
       trialDays,
-      plans,
-      hardware: hardware.map(({ id, name, price }) => ({ id, name, price })),
-    }),
-  );
+      plans: plans.map(({ monthly, yearly, ...plan }) => ({
+        ...plan,
+        monthly: monthly[currency],
+        yearly: yearly[currency],
+      })),
+      hardware: hardware.map(({ id, name, price }) => ({ id, name, price: price[currency] })),
+    });
+  });
   routes.post("/webhook", (c) => billingWebhook(db, c.req.raw, options));
   routes.post("/hardware-checkout", (c) => hardwareCheckout(db, c.req.raw, options));
   routes.use("*", async (c, next) => {
@@ -59,6 +66,7 @@ export function registerBillingRoutes(app: Hono<FarmEnv>, db: CoreDb, options: S
   routes.post("/checkout", async (c) => {
     const body = object(await c.req.json());
     const { plan, interval } = body;
+    const currency = checkoutCurrency(body.currency);
     if (!isPaidPlan(plan) || (interval !== "month" && interval !== "year"))
       throw new BillingError(400, "bad_request", "Choose a Liv or camera plan and month or year");
     const selection = hardwareSelection(body);
@@ -93,6 +101,7 @@ export function registerBillingRoutes(app: Hono<FarmEnv>, db: CoreDb, options: S
     }
     const form = new URLSearchParams({
       mode: "subscription",
+      currency,
       customer: customer.stripeCustomerId,
       "line_items[0][price]": await priceFor(stripe, lookupKey(plan, interval)),
       "line_items[0][quantity]": "1",
@@ -101,7 +110,7 @@ export function registerBillingRoutes(app: Hono<FarmEnv>, db: CoreDb, options: S
     });
     addTaxFields(form, options);
     await addHardware(form, selection, stripe);
-    if (interval === "year") addYearlyNote(form, plan, selection, options);
+    if (interval === "year") addYearlyNote(form, { plan, currency, hardware: selection }, options);
     if (options.automaticTax) {
       form.set("customer_update[address]", "auto");
       form.set("customer_update[name]", "auto");

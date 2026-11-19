@@ -1,11 +1,18 @@
+export const currencies = ["eur", "nok"] as const;
+export type Currency = (typeof currencies)[number];
+export const defaultCurrency = currencies[0];
+
+function rates(eur: number, nok: number) {
+  return { monthly: { eur, nok }, yearly: { eur: eur * 10, nok: nok * 10 } } as const;
+}
+
 export const plans = [
-  { id: "free", name: "Free", cameras: 0, monthly: 0, yearly: 0, livTokens: 0, voiceMinutes: 0 },
+  { id: "free", name: "Free", cameras: 0, ...rates(0, 0), livTokens: 0, voiceMinutes: 0 },
   {
     id: "orion",
     name: "Liv",
     cameras: 0,
-    monthly: 20,
-    yearly: 200,
+    ...rates(20, 229),
     livTokens: 10_000_000,
     voiceMinutes: 60,
   },
@@ -13,8 +20,7 @@ export const plans = [
     id: "cam2",
     name: "2 cameras",
     cameras: 2,
-    monthly: 47,
-    yearly: 470,
+    ...rates(47, 549),
     livTokens: 15_000_000,
     voiceMinutes: 120,
   },
@@ -22,8 +28,7 @@ export const plans = [
     id: "cam4",
     name: "4 cameras",
     cameras: 4,
-    monthly: 75,
-    yearly: 750,
+    ...rates(75, 879),
     livTokens: 25_000_000,
     voiceMinutes: 200,
   },
@@ -31,8 +36,7 @@ export const plans = [
     id: "cam6",
     name: "6 cameras",
     cameras: 6,
-    monthly: 95,
-    yearly: 950,
+    ...rates(95, 1099),
     livTokens: 40_000_000,
     voiceMinutes: 300,
   },
@@ -40,8 +44,7 @@ export const plans = [
     id: "cam8",
     name: "8 cameras",
     cameras: 8,
-    monthly: 111,
-    yearly: 1110,
+    ...rates(111, 1299),
     livTokens: 50_000_000,
     voiceMinutes: 400,
   },
@@ -49,8 +52,7 @@ export const plans = [
     id: "cam12",
     name: "12 cameras",
     cameras: 12,
-    monthly: 137,
-    yearly: 1370,
+    ...rates(137, 1599),
     livTokens: 70_000_000,
     voiceMinutes: 560,
   },
@@ -58,22 +60,25 @@ export const plans = [
     id: "cam16",
     name: "16 cameras",
     cameras: 16,
-    monthly: 155,
-    yearly: 1550,
+    ...rates(155, 1799),
     livTokens: 90_000_000,
     voiceMinutes: 700,
   },
 ] as const;
 
 export const hardware = [
-  { id: "box", name: "Agrointel box", price: 920, lookupKey: "pecorva_box" },
-  { id: "camera", name: "Tested camera", price: 150, lookupKey: "pecorva_camera" },
+  { id: "box", name: "Agrointel box", price: { eur: 920, nok: 10790 }, lookupKey: "pecorva_box" },
+  {
+    id: "camera",
+    name: "Tested camera",
+    price: { eur: 150, nok: 1749 },
+    lookupKey: "pecorva_camera",
+  },
 ] as const;
 
 export type PlanId = (typeof plans)[number]["id"];
 export type PaidPlanId = Exclude<PlanId, "free">;
 export type BillingInterval = "month" | "year";
-export const currency = "eur";
 export const trialDays = 30;
 export const lookupKey = (plan: PaidPlanId, interval: BillingInterval) =>
   `pecorva_${plan}_${interval === "month" ? "monthly" : "yearly"}`;

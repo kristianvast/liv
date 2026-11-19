@@ -43,6 +43,7 @@ export async function billingStatus(db: CoreDb, principal: Principal, now: Date)
   return {
     plan: plan.id,
     trialEndsAt,
+    currency: subscription?.currency ?? null,
     interval: subscription?.interval ?? null,
     status: subscription?.status ?? "free",
     currentPeriodEnd: subscription?.currentPeriodEnd

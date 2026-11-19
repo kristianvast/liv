@@ -47,6 +47,9 @@ export async function subscriptionUpdate(
     farmId,
     plan,
     interval,
+    ...(value.currency === undefined
+      ? {}
+      : { currency: string(value.currency, "subscription currency") }),
     status: string(value.status, "subscription status"),
     stripeSubscriptionId: string(value.id, "subscription id"),
     currentPeriodEnd: typeof end === "number" ? new Date(end * 1000).toISOString() : null,

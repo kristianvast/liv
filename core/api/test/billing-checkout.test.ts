@@ -56,6 +56,7 @@ test("checkout resolves a lookup price and attaches the farm to session and subs
   expect(customerForm?.get("email")).toBe("owner@example.test");
   expect(Object.fromEntries(checkout ?? [])).toMatchObject({
     mode: "subscription",
+    currency: "eur",
     customer: "cus_test",
     "line_items[0][price]": "price_cam2",
     "metadata[farm_id]": FARM,
@@ -117,15 +118,19 @@ test("with automatic tax on, checkouts collect VAT ids and billing addresses", a
   await a.request("/v1/billing/checkout", {
     method: "POST",
     headers: headers(),
-    body: JSON.stringify({ plan: "cam6", interval: "year" }),
+    body: JSON.stringify({ plan: "cam6", interval: "year", currency: "nok" }),
   });
   await a.request("/v1/billing/hardware-checkout", {
     method: "POST",
     headers: headers(),
-    body: JSON.stringify({ box: 1, cameras: 2 }),
+    body: JSON.stringify({ box: 1, cameras: 2, currency: "nok" }),
   });
   const [subscriptionForm, hardwareForm] = sessions.map((s) => Object.fromEntries(s));
+  expect(subscriptionForm?.["custom_text[submit][message]"]?.replace(/\s/g, " ")).toContain(
+    "10 990",
+  );
   expect(subscriptionForm).toMatchObject({
+    currency: "nok",
     "automatic_tax[enabled]": "true",
     "tax_id_collection[enabled]": "true",
     billing_address_collection: "required",
@@ -133,6 +138,7 @@ test("with automatic tax on, checkouts collect VAT ids and billing addresses", a
     "metadata[user_id]": session.userId,
   });
   expect(hardwareForm).toMatchObject({
+    currency: "nok",
     "automatic_tax[enabled]": "true",
     "invoice_creation[enabled]": "true",
     customer_email: "owner@example.test",
@@ -172,4 +178,13 @@ test("checkout without x-liv-farm buys a personal plan without creating a farm",
   expect(sessions[0]?.get("metadata[farm_id]")).toBe(session.userId);
   expect(sessions[0]?.get("metadata[account]")).toBe("personal");
   expect(sessions[0]?.get("subscription_data[metadata][account]")).toBe("personal");
+});
+
+test.each(["checkout", "hardware-checkout"])("%s rejects unsupported currency", async (route) => {
+  const response = await app().request(`/v1/billing/${route}`, {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify({ plan: "orion", interval: "month", box: 1, currency: "usd" }),
+  });
+  expect(response.status).toBe(400);
 });
