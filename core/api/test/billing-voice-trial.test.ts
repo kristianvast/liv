@@ -1,39 +1,42 @@
 import { expect, test } from "bun:test";
 import { eq } from "drizzle-orm";
-import { users, voiceUsage } from "../src/db";
+import { farmSubscriptions, users, voiceUsage } from "../src/db";
 import { createVoiceGateway, type VoiceConnection } from "../src/voice";
 import { billingFixture, FARM, NOW } from "./billing-fixture";
 
 const { db, headers, session } = billingFixture();
 
 test.each([
-  { name: "the free month grants voice access", at: NOW, used: 0, status: 426 },
+  { name: "a verified signup alone lacks voice access", trial: false, usedAt: NOW, status: 402 },
   {
-    name: "previous calendar month voice consumes the free pool",
-    at: NOW,
-    used: 3600,
+    name: "a paid trial grants a fresh voice pool each calendar month",
+    trial: true,
+    usedAt: new Date("2026-10-31T23:59:59Z"),
+    status: 426,
+  },
+  {
+    name: "a paid trial cannot exceed the plan's monthly voice allowance",
+    trial: true,
+    usedAt: NOW,
     status: 429,
   },
-  {
-    name: "day 31 ends free voice access",
-    at: new Date("2026-11-20T12:00:00Z"),
-    used: 0,
-    status: 402,
-  },
-])("$name", async ({ at, used, status }) => {
+])("$name", async ({ trial, usedAt, status }) => {
   await db
     .update(users)
     .set({ createdAt: "2026-10-20T12:00:00Z" })
     .where(eq(users.id, session.userId));
-  await db.insert(voiceUsage).values({
-    farmId: FARM,
-    accountId: FARM,
-    model: "live",
-    seconds: used,
-    createdAt: "2026-10-21T12:00:00Z",
-  });
+  if (trial) {
+    await db.insert(farmSubscriptions).values({ farmId: FARM, plan: "orion", status: "trialing" });
+    await db.insert(voiceUsage).values({
+      farmId: FARM,
+      accountId: FARM,
+      model: "live",
+      seconds: 3600,
+      createdAt: usedAt.toISOString(),
+    });
+  }
   const gateway = createVoiceGateway(db, {
-    now: () => at,
+    now: () => NOW,
     accessToken: async () => {
       throw new TypeError("Must not reach Vertex");
     },

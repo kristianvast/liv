@@ -424,15 +424,17 @@ against the real device before showing their data or controls; validated catalog
   `<core>/v1/llm/v1` with the session and `x-liv-farm`; Core maps `liv-default` to
   `LLM_DEFAULT_MODEL` and calls the provider with its own key. Signing out clears that default.
   Plans are `free`, `orion`, `cam2`, `cam4`, `cam6`, `cam8`, `cam12` and `cam16`; Core supplies their names, prices
-  and allowances through `billing.plans`. A free Liv month keeps the `free` plan with
-  `trialEndsAt` and cloud allowances. Calls without an allowance return 402 `plan_required`, while BYO
+  and allowances through `billing.plans`. A billing account's first Stripe subscription starts
+  with a 30-day card-required trial; it has the paid plan's allowance and displays Stripe's
+  `trialEndsAt` while trialing. Signup alone grants no cloud allowance.
+  Calls without an allowance return 402 `plan_required`, while BYO
   providers remain available. `farm_budgets` overrides the token allowance; legacy farm API
   tokens retain their previous default/override budget behavior.
   `LLM_UPSTREAM_AUTH=google` uses cached ADC OAuth tokens and the global Vertex OpenAI endpoint,
   mapping `liv-default` to `google/gemini-3.8-flash` and stripping Liv's `/v1` prefix.
   Core's `/v1/voice/live` and `/v1/voice/agent` require a session and farm membership and share
   voice entitlement checks, connected-second metering in `voice_usage`, and close code 4402
-  when the allowance is consumed. Without a paid plan or free month they return HTTP 402
+  when the allowance is consumed. Without an active or trialing paid plan they return HTTP 402
   before WebSocket upgrade. The existing live route proxies Gemini Live JSON frames to Vertex
   in `us-central1` and forces `VOICE_MODEL=gemini-3.8-live`. The agent route relays opaque
   ElevenLabs text frames for `VOICE_AGENT_ID`, using `ELEVENLABS_API_KEY` to obtain a signed

@@ -1,6 +1,7 @@
 import { canManageMembers } from "@liv/schema";
 import type { Principal } from "./auth";
 import { memberFarmTokens, resolveBillingAccount } from "./billing-account";
+import { trialAvailable, trialEndsAt } from "./billing-subscription";
 import type { CoreDb } from "./db";
 import { type BillingAccount, entitlements, usageThisMonth } from "./entitlements";
 import { BillingError } from "./stripe";
@@ -29,20 +30,23 @@ export async function billingStatus(db: CoreDb, principal: Principal, now: Date)
     now,
   );
   const summary = async (account: BillingAccount) => {
-    const entitlement = await entitlements(db, account, now);
+    const entitlement =
+      account.id === effective.id ? effective.entitlement : await entitlements(db, account.id, now);
     const usage = await usageThisMonth(db, account.id, entitlement.usageStart);
     return {
       plan: entitlement.plan.id,
-      trialEndsAt: entitlement.trialEndsAt,
+      trialEndsAt: trialEndsAt(entitlement.subscription),
+      trialAvailable: trialAvailable(entitlement.subscription),
       tokensUsed: usage.tokensUsed,
       tokenAllowance: entitlement.tokenAllowance,
     };
   };
-  const { subscription, plan, tokenAllowance, voiceSecondsAllowance, trialEndsAt, usageStart } =
+  const { subscription, plan, tokenAllowance, voiceSecondsAllowance, usageStart } =
     effective.entitlement;
   return {
     plan: plan.id,
-    trialEndsAt,
+    trialEndsAt: trialEndsAt(subscription),
+    trialAvailable: trialAvailable(subscription),
     currency: subscription?.currency ?? null,
     interval: subscription?.interval ?? null,
     status: subscription?.status ?? "free",

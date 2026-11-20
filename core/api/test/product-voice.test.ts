@@ -1,4 +1,5 @@
 import { expect, test } from "bun:test";
+import { farmSubscriptions } from "../src/db";
 import { createPosthog } from "../src/posthog";
 import { NOW } from "./billing-fixture";
 import { multiUserFixture } from "./multi-user-fixture";
@@ -8,6 +9,7 @@ import { deferred, serveAgent, socketEvent } from "./voice-agent-fixture";
 const { db, person, memberHeaders } = multiUserFixture();
 
 test("a voice session reports its final seconds once under its user's identity", async () => {
+  await db.insert(farmSubscriptions).values({ farmId: person.id, plan: "orion", status: "active" });
   let clock = NOW.getTime();
   const upstreamClosed = deferred<void>();
   const upstream = Bun.serve({

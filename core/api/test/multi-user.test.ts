@@ -7,7 +7,11 @@ import { multiUserFixture } from "./multi-user-fixture";
 
 const { db, headers, session, person, gateway, memberHeaders, join, llm, memberKey } =
   multiUserFixture();
-test("accepted invite without farm permission bills the member's personal free month", async () => {
+const subscribePerson = () =>
+  db.insert(farmSubscriptions).values({ farmId: person.id, plan: "orion", status: "trialing" });
+
+test("accepted invite without farm permission bills the member's own trialing plan", async () => {
+  await subscribePerson();
   const a = await join();
   expect((await llm(a)).status).toBe(200);
   expect(await db.select().from(llmUsage)).toMatchObject([
@@ -104,6 +108,7 @@ test("member list splits farm and own tokens and hides other people's usage from
 });
 
 test("member cap rejects a request at the calendar month's farm token limit", async () => {
+  await subscribePerson();
   const a = await join(true);
   await db.update(farmMembers).set({ monthlyTokenLimit: 7 }).where(memberKey());
   await db.insert(llmUsage).values([
@@ -146,7 +151,8 @@ test.each([{ useFarmPlan: false }, { monthlyTokenLimit: 0 }])(
   },
 );
 
-test("a session without a farm uses its own confirmed free month", async () => {
+test("a session without a farm uses its own trialing plan", async () => {
+  await subscribePerson();
   expect((await llm(gateway(), false)).status).toBe(200);
   expect(await db.select().from(llmUsage)).toMatchObject([
     { farmId: null, accountId: person.id, userId: person.id },
@@ -154,6 +160,7 @@ test("a session without a farm uses its own confirmed free month", async () => {
 });
 
 test("choosing own source routes farm requests to personal billing and reports both accounts", async () => {
+  await subscribePerson();
   const a = await join(true);
   const response = await a.request(`/v1/farms/${FARM}/me`, {
     method: "PATCH",
@@ -170,12 +177,13 @@ test("choosing own source routes farm requests to personal billing and reports b
     farmPlanAllowed: true,
     member: { tokensUsed: 0, tokenLimit: null },
     usage: { tokensUsed: 7 },
-    personal: { plan: "free", tokensUsed: 7, tokenAllowance: 10_000_000 },
+    personal: { plan: "orion", tokensUsed: 7, tokenAllowance: 10_000_000, trialAvailable: false },
     farm: { plan: "orion", tokensUsed: 0, tokenAllowance: 10_000_000 },
   });
 });
 
 test("automatic source falls back to personal when the farm has no allowance", async () => {
+  await subscribePerson();
   const a = await join(true);
   await db.delete(farmSubscriptions).where(eq(farmSubscriptions.farmId, FARM));
   expect((await llm(a)).status).toBe(200);
@@ -183,6 +191,7 @@ test("automatic source falls back to personal when the farm has no allowance", a
 });
 
 test("explicit farm source without permission still charges personal", async () => {
+  await subscribePerson();
   const a = await join();
   await db.update(farmMembers).set({ usageSource: "farm" }).where(memberKey());
   expect((await llm(a)).status).toBe(200);

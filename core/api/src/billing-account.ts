@@ -27,7 +27,8 @@ export async function resolveBillingAccount(db: CoreDb, request: RequestAccount,
   const account: BillingAccount = useFarm
     ? { kind: "farm", id: farmId }
     : { kind: "personal", id: userId ?? "" };
-  const entitlement = account.kind === "farm" && farm ? farm : await entitlements(db, account, now);
+  const entitlement =
+    account.kind === "farm" && farm ? farm : await entitlements(db, account.id, now);
   return { ...account, entitlement, member: member ?? null };
 }
 

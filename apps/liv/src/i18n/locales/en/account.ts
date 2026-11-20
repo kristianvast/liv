@@ -23,8 +23,7 @@ export const account = {
   "forgot.needEmail": "Enter your email above first",
   "forgot.sent": "If an account exists for that address, we emailed a reset link",
   "verify.title": "Confirm your email address",
-  "verify.body":
-    "We sent a link to {email}. Confirm it to start your free Liv month, start a plan or join a farm. Liv keeps working meanwhile.",
+  "verify.body": "We sent a link to {email}. Confirm it to start a plan or join a farm.",
   "verify.resend": "Send the email again",
   "verify.sent": "Email sent",
   "verify.done": "I have confirmed it",
@@ -109,8 +108,12 @@ export const account = {
   "billing.member.withLimit": "Your farm-plan use this month: {used} / {limit} tokens",
   "billing.member.noLimit": "Your farm-plan use this month: {used} tokens",
   "billing.trial": {
-    one: "Free Liv month: {days} day left (ends {date})",
-    other: "Free Liv month: {days} days left (ends {date})",
+    one: "Free trial: {days} day left, then billed on {date}",
+    other: "Free trial: {days} days left, then billed on {date}",
+  },
+  "billing.trialCanceled": {
+    one: "Free trial: {days} day left, ends on {date} without a charge",
+    other: "Free trial: {days} days left, ends on {date} without a charge",
   },
   "billing.status.active": "Active",
   "billing.status.trialing": "Trial",

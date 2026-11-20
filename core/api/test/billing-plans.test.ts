@@ -82,6 +82,7 @@ test.each([undefined, "Bearer unknown", "Bearer orb_s_unknown", "Bearer legacy-f
       currencies: ["eur", "nok"],
       locked: false,
       trialDays: 30,
+      trialRequiresCard: true,
       plans: catalog,
       hardware: [
         { id: "box", name: "Agrointel box", price: 920 },
@@ -101,6 +102,7 @@ test("a signed-in account receives the same EUR catalog without a farm header", 
     currencies: ["eur", "nok"],
     locked: false,
     trialDays: 30,
+    trialRequiresCard: true,
     plans: catalog,
     hardware: [
       { id: "box", name: "Agrointel box", price: 920 },

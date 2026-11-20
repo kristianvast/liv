@@ -98,7 +98,7 @@ function AllowanceItem({
           allowance: formatNumber(allowance.tokenAllowance),
         })}
       </span>
-      {allowance.trialEndsAt && (
+      {allowance.plan !== "free" && allowance.trialEndsAt && (
         <span className="settings-muted tabular-nums" data-testid={`${testId}-trial`}>
           {t("account.billing.allowance.trialEnds", {
             date: formatDate(allowance.trialEndsAt, {

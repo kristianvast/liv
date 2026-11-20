@@ -33,7 +33,7 @@ export function registerProfileRoute(
       ...farm,
       plan: plan && status && PAID_STATUSES.includes(status) ? plan : "free",
     }));
-    const personal = await entitlements(db, { kind: "personal", id: user.id }, now());
+    const personal = await entitlements(db, user.id, now());
     return c.json({ user: userView(user), farms, personal: { plan: personal.plan.id } });
   });
 }

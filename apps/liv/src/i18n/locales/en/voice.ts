@@ -44,7 +44,7 @@ export const voice = {
     "Liv could not open your microphone. Allow microphone access in your browser or system settings, or keep talking to Liv by typing below.",
   "plan.requiredTitle": "Voice calls with Liv need a plan",
   "plan.requiredBody":
-    "Live voice runs on Agrointel's cloud. Start your free 30-day trial or choose a plan in Settings to talk to Liv.",
+    "Live voice runs in the cloud. Choose a plan in Settings to talk to Liv. Your first plan includes 30 days free with a card.",
   "plan.budgetTitle": "Voice minutes used up for this period",
   "plan.budgetBody":
     "Your farm has used its included voice minutes for this billing period. Manage your plan in Settings, or continue in text chat.",

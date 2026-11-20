@@ -349,17 +349,16 @@ describe("AccountCard billing plans and usage meters", () => {
   });
 
   it.each([
-    { plan: "free", trialEndsAt: "2026-11-13T00:00:00Z", visible: true },
-    { plan: "free", trialEndsAt: null, visible: false },
-    { plan: "free", trialEndsAt: undefined, visible: false },
-    { plan: "free", trialEndsAt: "2026-11-09T00:00:00Z", visible: false },
-    { plan: "free", trialEndsAt: "2026-11-10T00:00:00Z", visible: false },
-    { plan: "orion", trialEndsAt: "2026-11-13T00:00:00Z", visible: false },
+    { plan: "free", status: "free", trialEndsAt: "2026-11-13T00:00:00Z", visible: false },
+    { plan: "orion", status: "trialing", trialEndsAt: null, visible: false },
+    { plan: "orion", status: "trialing", trialEndsAt: "2026-11-10T00:00:00Z", visible: false },
+    { plan: "orion", status: "active", trialEndsAt: "2026-11-13T00:00:00Z", visible: false },
+    { plan: "orion", status: "trialing", trialEndsAt: "2026-11-13T00:00:00Z", visible: true },
   ] as const)(
-    "shows the free month only for a future free trial: $plan $trialEndsAt",
-    async ({ plan, trialEndsAt, visible }) => {
+    "shows the countdown only for an ongoing paid trial: $plan $status $trialEndsAt",
+    async ({ plan, status, trialEndsAt, visible }) => {
       const { client } = createBillingVoiceClient({
-        billing: { ...freeBilling, plan, ...(trialEndsAt === undefined ? {} : { trialEndsAt }) },
+        billing: { ...freeBilling, plan, status, trialEndsAt },
       });
       render(
         <AppProviders initialClient={client}>
@@ -373,7 +372,7 @@ describe("AccountCard billing plans and usage meters", () => {
       );
       if (visible) {
         expect(screen.getByTestId("billing-trial")).toHaveTextContent(
-          "Free Liv month: 3 days left",
+          "Free trial: 3 days left, then billed on",
         );
         expect(screen.getByTestId("billing-trial")).toHaveTextContent(
           new Intl.DateTimeFormat("en-US", {

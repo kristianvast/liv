@@ -5,6 +5,25 @@ import { BillingError, object, string } from "./stripe";
 
 export type BillingTx = Parameters<Parameters<CoreDb["transaction"]>[0]>[0];
 
+export async function subscriptionFor(db: CoreDb | BillingTx, accountId: string) {
+  const [subscription] = await db
+    .select()
+    .from(farmSubscriptions)
+    .where(eq(farmSubscriptions.farmId, accountId));
+  return subscription;
+}
+
+/** Stripe updates retain the paid plan on the account row even after cancellation. */
+export function trialAvailable(subscription: Awaited<ReturnType<typeof subscriptionFor>>) {
+  return !isPaidPlan(subscription?.plan);
+}
+
+export function trialEndsAt(subscription: Awaited<ReturnType<typeof subscriptionFor>>) {
+  return subscription?.status === "trialing" && subscription.trialEnd
+    ? new Date(subscription.trialEnd).toISOString()
+    : null;
+}
+
 type SubscriptionContext = {
   readonly tx: BillingTx;
   readonly now: Date;
@@ -43,6 +62,7 @@ export async function subscriptionUpdate(
     throw new BillingError(400, "invalid_subscription", "Unknown subscription plan or interval");
   }
   const end = value.current_period_end ?? first.current_period_end;
+  const trialEnd = value.trial_end;
   const row: typeof farmSubscriptions.$inferInsert = {
     farmId,
     plan,
@@ -53,6 +73,7 @@ export async function subscriptionUpdate(
     status: string(value.status, "subscription status"),
     stripeSubscriptionId: string(value.id, "subscription id"),
     currentPeriodEnd: typeof end === "number" ? new Date(end * 1000).toISOString() : null,
+    trialEnd: typeof trialEnd === "number" ? new Date(trialEnd * 1000).toISOString() : null,
     cancelAtPeriodEnd: value.cancel_at_period_end === true,
     updatedAt: now.toISOString(),
     stripeEventAt: eventAt,

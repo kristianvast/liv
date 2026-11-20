@@ -7,6 +7,7 @@ const PlanId = Type.Enum(["free", "orion", "cam2", "cam4", "cam6", "cam8", "cam1
 export const AccountAllowance = Type.Object({
   plan: PlanId,
   trialEndsAt: Type.Union([Type.String(), Type.Null()]),
+  trialAvailable: Type.Optional(Type.Boolean()),
   tokensUsed: Type.Number({ minimum: 0 }),
   tokenAllowance: Type.Number({ minimum: 0 }),
 });
@@ -22,6 +23,7 @@ export const BillingStatus = Type.Object({
   status: Type.String(),
   currentPeriodEnd: Type.Union([Type.String(), Type.Null()]),
   trialEndsAt: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+  trialAvailable: Type.Optional(Type.Boolean()),
   cancelAtPeriodEnd: Type.Boolean(),
   usage: Type.Object({
     tokensUsed: Type.Number({ minimum: 0 }),
@@ -53,6 +55,7 @@ export const BillingPlans = Type.Object({
   currency: Type.Literal("eur"),
   locked: Type.Boolean(),
   trialDays: Type.Number({ minimum: 0 }),
+  trialRequiresCard: Type.Optional(Type.Boolean()),
   plans: Type.Array(
     Type.Object({
       id: Type.Enum(["free", "orion", "cam2", "cam4", "cam6", "cam8", "cam12", "cam16"]),

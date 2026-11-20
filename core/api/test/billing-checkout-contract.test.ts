@@ -151,8 +151,9 @@ test("a yearly checkout states what is due today; a monthly one carries no note"
     expect(response.status).toBe(200);
   }
   const [yearly, monthly] = forms;
-  // 1370 for the year + 2 x 920 + 12 x 150 of hardware
-  expect(yearly?.get("custom_text[submit][message]")).toContain("Due today: €5,010");
+  // 2 x 920 + 12 x 150 is charged now; the annual subscription is deferred.
+  expect(yearly?.get("custom_text[submit][message]")).toContain("Due today: €3,640");
+  expect(yearly?.get("custom_text[submit][message]")).toContain("then €1,370");
   expect(monthly?.has("custom_text[submit][message]")).toBe(false);
 });
 

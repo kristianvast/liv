@@ -12,6 +12,7 @@ import {
   createLogMailer,
   createTokenResolver,
   farmMembers,
+  farmSubscriptions,
   llmUsage,
   migrate,
 } from "@core/api";
@@ -727,7 +728,7 @@ describe("Liv account", () => {
     ]);
   });
 
-  test("a farm on the free month shares a page through Liv, and Core holds it for review", async () => {
+  test("a trialing account shares a page through Liv, and Core holds it for review", async () => {
     const reply = (chunks: object[]) =>
       new Response(
         new Blob([
@@ -776,13 +777,17 @@ describe("Liv account", () => {
       ]);
     };
     const c = await boot();
-    await c.request("account.register", {
+    const { user } = await c.request("account.register", {
       email: "kari@farm.test",
       password: PASSWORD,
       acceptTerms: true,
     });
+    if (!user) throw new TypeError("Expected a signed-in user");
     await verifyEmail("kari@farm.test");
     await c.request("account.refresh", {});
+    await db
+      .insert(farmSubscriptions)
+      .values({ farmId: user.id, plan: "orion", interval: "month", status: "trialing" });
     const page = join(dir, "workspace", "pages", "morning-round");
     mkdirSync(page, { recursive: true });
     writeFileSync(join(page, "index.html"), "<h1>Morning round</h1>");
@@ -828,6 +833,9 @@ describe("Liv account", () => {
     });
     const kari = signedIn.user?.id as string;
     await verifyEmail("kari@farm.test");
+    await db
+      .insert(farmSubscriptions)
+      .values({ farmId: kari, plan: "orion", interval: "month", status: "trialing" });
     await c.request("account.refresh", {});
     expect(await c.request("account.acceptInvite", { code })).toMatchObject({
       farm: { id: farmId, role: "worker" },

@@ -216,14 +216,14 @@ export const chat = {
   "planError.planRequiredTitle": "Liv cloud model needs a plan or your own key",
   "planError.budgetExceededTitle": "Liv cloud allowance used up for this period",
   "planError.planRequiredBody":
-    "Liv is open source and free when you connect your own AI key or subscription in Providers, or you can choose a Pen or Barn plan to run Liv on Agrointel's cloud.",
+    "Choose a plan to use Liv in the cloud. Your first plan includes 30 days free with a card. To use Liv locally, add your own AI key in Providers.",
   "planError.budgetExceededBody":
     "Your farm has reached its included Liv allowance for the current billing period. Connect your own AI key in Providers or manage your plan in Settings.",
   "planError.modelRequiredTitle": "Set up an AI model for Liv",
   "planError.modelRequiredBody":
-    "Liv needs an AI model to answer. Create a free Liv account for 30 free days, or add your own AI key in Settings, then send your message again.",
+    "Liv needs an AI model to answer. Add your own AI key in Settings, or create an account and choose a plan. Your first plan includes 30 days free with a card.",
   "planError.setUpModel": "Set up a model",
   "planError.useOwnKey": "Use your own key",
   "planError.seePlans": "See plans",
-  "planError.startTrial": "Start 30 days free",
+  "planError.createAccount": "Create an account",
 } as const satisfies Messages;

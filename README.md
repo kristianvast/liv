@@ -44,7 +44,7 @@ More formats (`.msi`, `.deb`) are on the [latest release](https://github.com/kri
 
 **Getting started takes three steps:**
 
-1. **Switch Liv on.** Create a free Liv account (30 days free, no card needed) or bring your own AI key or subscription.
+1. **Switch Liv on.** Bring your own AI key or subscription for local use, or create a Liv account and choose a cloud plan. Your first plan includes a 30-day trial and requires a card.
 2. **Tell Liv about your farm.** Dairy cattle, beef cattle or horses, and what you want to see first.
 3. **Ask for what you need.** A calving watch, a dry-cow board, a connection to your milking system.
 
@@ -73,7 +73,7 @@ Liv knows real barn rules too: an animal wears a collar **or** a bolus **or** an
 
 ## Free and open source
 
-Liv is free. Run it fully locally with your own AI key from providers such as Anthropic, OpenAI or Google, or create a free Liv account for a 30-day trial with no card. Optional paid plans cover cloud AI, voice minutes and sync: see [pricing](https://agrointel.no/pricing/).
+Liv is free to run locally with your own AI key from providers such as Anthropic, OpenAI or Google. Optional paid plans cover cloud AI, voice minutes and sync. Your first subscription starts with a 30-day trial in Checkout. A card is required, and the plan is billed after the trial unless canceled: see [pricing](https://agrointel.no/pricing/).
 
 ## For developers
 

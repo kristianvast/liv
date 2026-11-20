@@ -45,7 +45,7 @@ export const voice: Catalog<typeof en> = {
     "Liv fikk ikke åpnet mikrofonen. Tillat mikrofontilgang i nettleser- eller systeminnstillingene, eller fortsett ved å skrive til Liv nedenfor.",
   "plan.requiredTitle": "Talesamtaler med Liv krever et abonnement",
   "plan.requiredBody":
-    "Direktetale kjører i Agrointels sky. Start 30 dagers gratis prøveperiode eller velg en plan i Innstillinger for å snakke med Liv.",
+    "Direktetale bruker skyen. Velg en plan i Innstillinger for å snakke med Liv. Den første planen gir 30 dager gratis med betalingskort.",
   "plan.budgetTitle": "Taleminuttene er brukt opp for denne perioden",
   "plan.budgetBody":
     "Gården har brukt opp de inkluderte taleminuttene for denne perioden. Endre planen i Innstillinger, eller fortsett i tekstchatten.",

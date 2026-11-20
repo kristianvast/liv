@@ -28,7 +28,7 @@ export type VoiceSocketData = { readonly kind: "voice"; readonly voiceId: string
 
 /**
  * Why this farm may not start a call, or null when it may. The voice seconds Core grants are the
- * rule, never the plan's name: a farm in its free month has plan "free" and still has an allowance.
+ * rule, never the plan's name: a trialing subscription gets its paid plan's normal allowance.
  */
 export function voiceRefusal(status: BillingStatus): AccountError | null {
   const { voiceSecondsAllowance, voiceSecondsUsed } = status.usage;

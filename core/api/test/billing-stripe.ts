@@ -6,7 +6,9 @@ export function stripeFake(forms: URLSearchParams[]): FetchLike {
     if (url.pathname === "/v1/customers") return Response.json({ id: "cus_test" });
     if (url.pathname === "/v1/prices")
       return Response.json({ data: [{ id: `price_${url.searchParams.get("lookup_keys[]")}` }] });
+    if (url.pathname === "/v1/subscriptions") return Response.json({ data: [] });
     if (url.pathname === "/v1/checkout/sessions") {
+      if (init?.method === "GET") return Response.json({ data: [] });
       forms.push(new URLSearchParams(String(init?.body)));
       return Response.json({ url: "https://checkout.stripe.test/combined" });
     }

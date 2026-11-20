@@ -4,7 +4,7 @@
 import { and, eq, gte, sql } from "drizzle-orm";
 import { MEMBER_LIMIT, memberFarmTokens, resolveBillingAccount } from "./billing-account";
 import { type CoreDb, farmBudgets, llmUsage } from "./db";
-import { planRequired } from "./entitlements";
+import { PLAN_REQUIRED } from "./entitlements";
 import type { Capture } from "./posthog";
 import type { FetchLike } from "./shape";
 
@@ -134,13 +134,8 @@ export async function handleLlm(
     now,
   );
   const entitlement = options.sessionPrincipal ? account.entitlement : null;
-  if (
-    entitlement &&
-    entitlement.plan.id === "free" &&
-    !entitlement.trialEndsAt &&
-    entitlement.tokenAllowance === 0
-  ) {
-    return Response.json(planRequired(entitlement), { status: 402 });
+  if (entitlement?.plan.id === "free" && entitlement.tokenAllowance === 0) {
+    return Response.json(PLAN_REQUIRED, { status: 402 });
   }
   if (!options.upstreamUrl || (!options.upstreamApiKey && !options.accessToken)) {
     return Response.json(

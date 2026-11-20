@@ -2,7 +2,7 @@ import { expect, test } from "bun:test";
 import { eq } from "drizzle-orm";
 import { billingCustomers, farmMembers, farmSubscriptions, users } from "../src/db";
 import { webhook } from "./billing-events";
-import { FARM, NOW } from "./billing-fixture";
+import { FARM } from "./billing-fixture";
 import { stripeFake } from "./billing-stripe";
 import { multiUserFixture } from "./multi-user-fixture";
 
@@ -13,6 +13,8 @@ test("personal billing status works without a farm header", async () => {
   expect(response.status).toBe(200);
   expect(await response.json()).toMatchObject({
     account: "personal",
+    trialAvailable: true,
+    trialEndsAt: null,
     farmPlanAllowed: false,
     usageSource: null,
     member: null,
@@ -20,8 +22,9 @@ test("personal billing status works without a farm header", async () => {
     personal: {
       plan: "free",
       tokensUsed: 0,
-      tokenAllowance: 10_000_000,
-      trialEndsAt: new Date(NOW.getTime() + 30 * 86400000).toISOString(),
+      tokenAllowance: 0,
+      trialEndsAt: null,
+      trialAvailable: true,
     },
   });
 });
@@ -62,6 +65,7 @@ test("an owner can explicitly choose personal checkout despite having a farm hea
   });
   expect(response.status).toBe(200);
   expect(forms[0]?.get("metadata[farm_id]")).toBe(session.userId);
+  expect(forms[0]?.get("subscription_data[trial_period_days]")).toBe("30");
 });
 
 test("personal portal works without a farm header", async () => {

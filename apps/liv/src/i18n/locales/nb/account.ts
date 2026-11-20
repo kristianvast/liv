@@ -25,7 +25,7 @@ export const account: Catalog<typeof en> = {
   "forgot.sent": "Hvis det finnes en konto for adressen, har vi sendt en lenke for å nullstille",
   "verify.title": "Bekreft e-postadressen din",
   "verify.body":
-    "Vi sendte en lenke til {email}. Bekreft den for å starte den gratis Liv-måneden, starte et abonnement eller bli med på en gård. Liv virker som før imens.",
+    "Vi sendte en lenke til {email}. Bekreft den for å starte et abonnement eller bli med på en gård.",
   "verify.resend": "Send e-posten på nytt",
   "verify.sent": "E-post sendt",
   "verify.done": "Jeg har bekreftet",
@@ -110,8 +110,12 @@ export const account: Catalog<typeof en> = {
   "billing.member.withLimit": "Ditt forbruk på gårdens plan denne måneden: {used} / {limit} tokens",
   "billing.member.noLimit": "Ditt forbruk på gårdens plan denne måneden: {used} tokens",
   "billing.trial": {
-    one: "Gratis Liv-måned: {days} dag igjen (slutter {date})",
-    other: "Gratis Liv-måned: {days} dager igjen (slutter {date})",
+    one: "Gratis prøveperiode: {days} dag igjen, deretter trekkes betalingen {date}",
+    other: "Gratis prøveperiode: {days} dager igjen, deretter trekkes betalingen {date}",
+  },
+  "billing.trialCanceled": {
+    one: "Gratis prøveperiode: {days} dag igjen, avsluttes {date} uten betaling",
+    other: "Gratis prøveperiode: {days} dager igjen, avsluttes {date} uten betaling",
   },
   "billing.status.active": "Aktiv",
   "billing.status.trialing": "Prøveperiode",

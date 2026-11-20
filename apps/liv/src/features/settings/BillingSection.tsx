@@ -94,7 +94,10 @@ export function BillingSection({ status, now = Date.now() }: BillingSectionProps
   const voiceMinutesUsed = Math.round(billing.usage.voiceSecondsUsed / 60);
   const voiceMinutesAllowance = Math.round(billing.usage.voiceSecondsAllowance / 60);
   const trialEnd = billing.trialEndsAt ? new Date(billing.trialEndsAt).getTime() : 0;
-  const trialDays = billing.plan === "free" ? Math.ceil((trialEnd - now) / 86_400_000) : 0;
+  const trialDays =
+    billing.plan !== "free" && billing.status === "trialing"
+      ? Math.ceil((trialEnd - now) / 86_400_000)
+      : 0;
   const portalParams = buildPortalParams(status, billing);
   const canChoosePlan = resolveBillingAccount(status, billing) !== null;
 
@@ -149,7 +152,7 @@ export function BillingSection({ status, now = Date.now() }: BillingSectionProps
             </Badge>
           )}
         </div>
-        {billing.currentPeriodEnd && (
+        {billing.currentPeriodEnd && trialDays <= 0 && (
           <span
             className="tabular-nums"
             style={{ fontSize: "var(--text-sm)", color: "var(--text-secondary)" }}
@@ -179,15 +182,18 @@ export function BillingSection({ status, now = Date.now() }: BillingSectionProps
 
       {trialDays > 0 && billing.trialEndsAt && (
         <p data-testid="billing-trial">
-          {t("account.billing.trial", {
-            count: trialDays,
-            days: formatNumber(trialDays),
-            date: formatDate(billing.trialEndsAt, {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            }),
-          })}
+          {t(
+            billing.cancelAtPeriodEnd ? "account.billing.trialCanceled" : "account.billing.trial",
+            {
+              count: trialDays,
+              days: formatNumber(trialDays),
+              date: formatDate(billing.trialEndsAt, {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+              }),
+            },
+          )}
         </p>
       )}
 

@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { farmHeader, memberRole, resolveSession } from "./auth";
 import { MEMBER_LIMIT, memberFarmTokens, resolveBillingAccount } from "./billing-account";
 import { type CoreDb, voiceUsage } from "./db";
-import { entitlements, planRequired, usageThisMonth } from "./entitlements";
+import { entitlements, PLAN_REQUIRED, usageThisMonth } from "./entitlements";
 import type { Capture } from "./posthog";
 import { object } from "./stripe";
 
@@ -21,7 +21,6 @@ export interface VoiceConnection {
   readonly id: string;
   readonly farmId: string | null;
   readonly accountId: string;
-  readonly accountKind: "farm" | "personal";
   readonly model: string;
   readonly allowance: number;
   readonly startedAt: number;
@@ -109,7 +108,7 @@ export function createVoiceRelay(db: CoreDb, options: RelayOptions) {
       )
         return Response.json(MEMBER_LIMIT, { status: 429 });
       if (entitlement.voiceSecondsAllowance === 0)
-        return Response.json(planRequired(entitlement), { status: 402 });
+        return Response.json(PLAN_REQUIRED, { status: 402 });
       const usage = await usageThisMonth(db, account.id, entitlement.usageStart);
       if (usage.voiceSecondsUsed >= entitlement.voiceSecondsAllowance)
         return Response.json({ error: { code: "budget_exceeded" } }, { status: 429 });
@@ -135,7 +134,6 @@ export function createVoiceRelay(db: CoreDb, options: RelayOptions) {
         id,
         farmId,
         accountId: account.id,
-        accountKind: account.kind,
         model: prepared.model,
         allowance: entitlement.voiceSecondsAllowance,
         startedAt: now().getTime(),
@@ -174,11 +172,7 @@ export function createVoiceRelay(db: CoreDb, options: RelayOptions) {
           data.ticking = true;
           try {
             await persist(data);
-            const current = await entitlements(
-              db,
-              { kind: data.accountKind, id: data.accountId },
-              now(),
-            );
+            const current = await entitlements(db, data.accountId, now());
             const { voiceSecondsUsed } = await usageThisMonth(
               db,
               data.accountId,

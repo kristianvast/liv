@@ -1,15 +1,18 @@
 import { expect, test } from "bun:test";
 import { eq } from "drizzle-orm";
-import { farmMembers, users, voiceUsage } from "../src/db";
+import { farmMembers, farmSubscriptions, voiceUsage } from "../src/db";
 import { FARM, NOW } from "./billing-fixture";
 import { multiUserFixture } from "./multi-user-fixture";
 import { deferred, serveAgent, socketEvent } from "./voice-agent-fixture";
 
 const { db, person, memberHeaders, join } = multiUserFixture();
+const subscribePerson = () =>
+  db.insert(farmSubscriptions).values({ farmId: person.id, plan: "orion", status: "trialing" });
 
 test.each([false, true])(
   "voice without farm permission meters personal seconds with farm header %s",
   async (farm) => {
+    await subscribePerson();
     if (farm) await join();
     let clock = NOW.getTime();
     const upstreamClosed = deferred<void>();
@@ -57,6 +60,7 @@ test.each([false, true])(
 );
 
 test("voice uses the personal account's exhausted allowance without a farm", async () => {
+  await subscribePerson();
   await db.insert(voiceUsage).values({
     accountId: person.id,
     userId: person.id,
@@ -74,8 +78,7 @@ test("voice uses the personal account's exhausted allowance without a farm", asy
   }
 });
 
-test("a personal free month requires a confirmed email before voice access", async () => {
-  await db.update(users).set({ emailVerifiedAt: null }).where(eq(users.id, person.id));
+test("a verified personal account without a subscription cannot start cloud voice", async () => {
   const gateway = serveAgent(db, { now: () => NOW });
   try {
     const response = await fetch(gateway.url, { headers: memberHeaders(false) });

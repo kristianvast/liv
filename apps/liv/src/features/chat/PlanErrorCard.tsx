@@ -117,7 +117,7 @@ export function PlanErrorCard({ code, surface = "chat", onDismiss }: PlanErrorCa
           data-testid="chat-plan-error-see-plans"
         >
           {code === "model_required"
-            ? t("chat.planError.startTrial")
+            ? t("chat.planError.createAccount")
             : t("chat.planError.seePlans")}
         </Button>
       </div>

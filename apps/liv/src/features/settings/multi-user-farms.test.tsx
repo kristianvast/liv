@@ -588,12 +588,14 @@ describe("BillingSection usage source switch, dual allowances, and account routi
       farm: {
         plan: "cam2",
         trialEndsAt: null,
+        trialAvailable: false,
         tokensUsed: 300_000,
         tokenAllowance: 3_000_000,
       },
       personal: {
         plan: "orion",
         trialEndsAt: "2026-12-01T00:00:00Z",
+        trialAvailable: false,
         tokensUsed: 15_000,
         tokenAllowance: 2_000_000,
       },
@@ -617,7 +619,8 @@ describe("BillingSection usage source switch, dual allowances, and account routi
     expect(screen.getByTestId("billing-allowance-personal-tokens")).toHaveTextContent(
       "15,000 / 2,000,000 tokens",
     );
-    expect(screen.getByTestId("billing-allowance-personal-trial")).toBeInTheDocument();
+    expect(screen.getByTestId("billing-allowance-personal-trial")).toHaveTextContent("Trial ends");
+    expect(screen.queryByTestId("billing-allowance-farm-trial")).not.toBeInTheDocument();
     expect(screen.getByTestId("billing-member-usage")).toHaveTextContent("42,000 / 100,000 tokens");
 
     fireEvent.click(screen.getByTestId("billing-portal-button"));

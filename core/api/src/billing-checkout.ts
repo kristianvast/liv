@@ -7,6 +7,7 @@ import {
   hardware,
   type PaidPlanId,
   planFor,
+  trialDays,
 } from "./plans";
 import {
   BillingError,
@@ -131,6 +132,32 @@ export function checkoutCurrency(value: unknown = defaultCurrency): Currency {
   return currency;
 }
 
+/** Called under the account lock. Stripe still knows the history before a webhook arrives. */
+export async function prepareTrialCheckout(stripe: StripeClient, customer: string) {
+  const open = await stripe(
+    `checkout/sessions?${new URLSearchParams({ customer, status: "open", limit: "100" })}`,
+  );
+  if (!Array.isArray(open.data) || open.has_more === true)
+    throw new BillingError(502, "stripe_error", "Unable to check for open Checkout sessions");
+  for (const item of open.data) {
+    const session = object(item);
+    if (object(session.metadata ?? {}).liv_trial === "true") {
+      // If the buyer completed this session concurrently, expiry fails rather than offering
+      // a second trial. A retry will see the completed subscription.
+      await stripe(
+        `checkout/sessions/${encodeURIComponent(string(session.id, "session id"))}/expire`,
+        new URLSearchParams(),
+      );
+    }
+  }
+  const subscriptions = await stripe(
+    `subscriptions?${new URLSearchParams({ customer, status: "all", limit: "1" })}`,
+  );
+  if (!Array.isArray(subscriptions.data))
+    throw new BillingError(502, "stripe_error", "Unable to check previous subscriptions");
+  return subscriptions.data.length === 0;
+}
+
 /**
  * The website quotes every plan per month, also when yearly billing is picked. A yearly
  * checkout says so next to the pay button: what is due today, that it covers a year, and
@@ -142,6 +169,7 @@ export function addYearlyNote(
     readonly plan: PaidPlanId;
     readonly currency: Currency;
     readonly hardware: ReturnType<typeof hardwareSelection>;
+    readonly trial: boolean;
   },
   options: StripeOptions,
 ) {
@@ -154,12 +182,16 @@ export function addYearlyNote(
   }).format;
   const hardwareTotal =
     selection.box * hardware[0].price[currency] + selection.cameras * hardware[1].price[currency];
-  const due = money(yearly[currency] + hardwareTotal) + (options.automaticTax ? " before VAT" : "");
+  const taxNote = options.automaticTax ? " before VAT" : "";
+  const due = money((order.trial ? 0 : yearly[currency]) + hardwareTotal) + taxNote;
   const covers =
     hardwareTotal > 0 ? "a year of your plan plus your hardware" : "a year of your plan";
+  const dueToday = order.trial
+    ? `Due today: ${due}${hardwareTotal > 0 ? " for your hardware" : ""}. Your plan is free for ${trialDays} days, then ${money(yearly[currency])}${taxNote} is due for the first year.`
+    : `Due today: ${due}, for ${covers}.`;
   form.set(
     "custom_text[submit][message]",
-    `Due today: ${due}, for ${covers}. The pricing page showed ${name} at ${money(yearly[currency] / 12)} a month; here it is billed yearly at ${money(yearly[currency])}. To pay ${money(
+    `${dueToday} The pricing page showed ${name} at ${money(yearly[currency] / 12)} a month; here it is billed yearly at ${money(yearly[currency])}. To pay ${money(
       monthly[currency],
     )} every month instead, go back to the previous page and pick Monthly.`,
   );

@@ -38,11 +38,11 @@ test("checkout resolves a lookup price and attaches the farm to session and subs
         observed.lookup = url.searchParams.get("lookup_keys[]");
         return Response.json({ data: [{ id: "price_cam2" }] });
       }
-      if (url.pathname === "/v1/checkout/sessions") {
+      if (url.pathname === "/v1/checkout/sessions" && init?.method === "POST") {
         checkout = new URLSearchParams(String(init?.body));
         return Response.json({ url: "https://checkout.stripe.test/session" });
       }
-      throw new TypeError(`Unexpected Stripe request ${url}`);
+      return stripeFake([])(input, init);
     },
   });
   const response = await a.request("/v1/billing/checkout", {

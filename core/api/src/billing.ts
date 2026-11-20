@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { Hono } from "hono";
 import type { Principal } from "./auth";
 import {
@@ -8,9 +8,11 @@ import {
   checkoutCurrency,
   hardwareCheckout,
   hardwareSelection,
+  prepareTrialCheckout,
   redirectUrl,
 } from "./billing-checkout";
 import { billingStatus, checkoutAccount } from "./billing-status";
+import { subscriptionFor, trialAvailable } from "./billing-subscription";
 import { billingWebhook } from "./billing-webhook";
 import { billingCustomers, type CoreDb, users } from "./db";
 import { currencies, hardware, isPaidPlan, lookupKey, plans, trialDays } from "./plans";
@@ -35,6 +37,7 @@ export function registerBillingRoutes(app: Hono<FarmEnv>, db: CoreDb, options: S
       currency,
       locked: false,
       trialDays,
+      trialRequiresCard: true,
       plans: plans.map(({ monthly, yearly, ...plan }) => ({
         ...plan,
         monthly: monthly[currency],
@@ -110,7 +113,6 @@ export function registerBillingRoutes(app: Hono<FarmEnv>, db: CoreDb, options: S
     });
     addTaxFields(form, options);
     await addHardware(form, selection, stripe);
-    if (interval === "year") addYearlyNote(form, { plan, currency, hardware: selection }, options);
     if (options.automaticTax) {
       form.set("customer_update[address]", "auto");
       form.set("customer_update[name]", "auto");
@@ -125,7 +127,22 @@ export function registerBillingRoutes(app: Hono<FarmEnv>, db: CoreDb, options: S
       form.set(`metadata[${key}]`, value);
       form.set(`subscription_data[metadata][${key}]`, value);
     }
-    const session = await stripe("checkout/sessions", form);
+    const stripeCustomerId = customer.stripeCustomerId;
+    const session = await db.transaction(async (tx) => {
+      await tx.execute(sql`select pg_advisory_xact_lock(hashtext(${account.id}))`);
+      const trial =
+        trialAvailable(await subscriptionFor(tx, account.id)) &&
+        (await prepareTrialCheckout(stripe, stripeCustomerId));
+      if (trial) {
+        form.set("subscription_data[trial_period_days]", String(trialDays));
+        form.set("payment_method_collection", "always");
+        form.set("payment_method_types[0]", "card");
+        form.set("metadata[liv_trial]", "true");
+      }
+      if (interval === "year")
+        addYearlyNote(form, { plan, currency, hardware: selection, trial }, options);
+      return stripe("checkout/sessions", form);
+    });
     options.capture?.({
       event: "checkout_started",
       distinct_id: userId,

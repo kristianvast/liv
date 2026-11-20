@@ -178,17 +178,16 @@ the provisioning placeholder never enables the admin routes.
 
 ## Billing and Gemini
 
-`GET /v1/billing/plans?currency=nok` returns `{currency:"nok",currencies:["eur","nok"],locked:false,trialDays:30,plans,hardware}` publicly.
+`GET /v1/billing/plans?currency=nok` returns `{currency:"nok",currencies:["eur","nok"],locked:false,trialDays:30,trialRequiresCard:true,plans,hardware}` publicly.
 Omit `currency` for EUR. The catalog and both checkout routes accept only `eur` or `nok`; other values return 400.
 Amounts are whole units of the selected currency, before tax, not exchange-rate conversions.
 The plan fields `monthly` and `yearly` are full-term prices; `hardware[].price` is per unit.
 `api/src/plans.ts` owns prices and allowances. Stripe receives minor units. Paid allowances reset at the UTC calendar month start.
-Each farm gets one free Liv pool (10 million tokens and 60 voice minutes) for 30 days from
-the earliest account creation date among its owners. During this month its plan remains `free`
-and usage counts from that date, across calendar month boundaries. The month is granted only once
-that owner's email address is confirmed; until then the gateway answers 402 `plan_required` with
-a confirm-your-email message. Farms without an owner have no free month. A paid active or
-trialing subscription supersedes it.
+Signing up does not grant a cloud allowance. Use Liv locally with your own model key, or
+choose a paid plan in Stripe Checkout with a verified email. A farm or personal billing
+account without previous subscriptions gets 30 days free with a card required, then Stripe
+bills the plan after the trial unless canceled. A trialing subscription gets its paid plan's
+normal monthly allowances.
 
 Set `STRIPE_SECRET_KEY` and run `bun run --filter '@core/api' stripe:setup` once per Stripe
 account. It idempotently creates products and lookup prices with EUR as the default and a fixed NOK option. Rerun setup before releasing a price change. Configure Stripe to send
@@ -199,12 +198,17 @@ Signatures expire after five minutes; event claims and subscription effects comm
 
 Session routes take `Authorization: Bearer <session>` and `x-liv-farm`:
 
-- `POST /v1/billing/checkout`: `{plan:"orion"|"cam2"|"cam4"|"cam6"|"cam8"|"cam12"|"cam16",interval:"month"|"year",currency?,box?,cameras?,successUrl?,cancelUrl?}`.
+- `POST /v1/billing/checkout`: `{plan:"orion"|"cam2"|"cam4"|"cam6"|"cam8"|"cam12"|"cam16",interval:"month"|"year",account?:"farm"|"personal",currency?,box?,cameras?,successUrl?,cancelUrl?}`.
   Hardware quantities are whole numbers (`box` 0–2, `cameras` 0–16). Nonzero quantities add
-  one-time hardware to the same subscription Checkout Session and collect shipping.
-- `POST /v1/billing/portal`: `{returnUrl?}`. Checkout and portal require owner or manager.
+  one-time hardware to the same subscription Checkout Session and collect shipping. Hardware
+  is charged at Checkout, even when the plan starts with a trial.
+- `POST /v1/billing/portal`: `{account?:"farm"|"personal",returnUrl?}`. Farm checkout and portal require owner or manager.
 - `GET /v1/billing/status`: subscription state, purchased `currency` (null without a subscription), plus token and voice usage for any member.
-  `trialEndsAt` is an ISO timestamp during the free month, otherwise null.
+  `trialEndsAt` is the Stripe trial end as an ISO timestamp while the subscription is `trialing`,
+  otherwise null. `trialAvailable` is true when Core has no recorded paid subscription for
+  the account. Canceled subscriptions still count as history, and Checkout also checks Stripe
+  directly in case the webhook hasn't arrived yet. Top-level fields refer to the effective usage
+  account; `farm` and `personal` show trial eligibility and dates for each account separately.
 - `POST /v1/billing/hardware-checkout`: `{box:0,cameras:1,currency?,successUrl?,cancelUrl?}` with shipping
   collection. Requires a user session, with no farm header. Buyer email comes from the session.
   Paid hardware orders and receipts are recorded once for either session mode.
@@ -220,7 +224,7 @@ until 60 seconds before expiration. Auth uses GCP metadata on Cloud Run, then a
 `gcloud auth application-default print-access-token`.
 
 Active or trialing paid subscriptions supply token allowances; `farm_budgets` overrides
-the token allowance. After the free month, no paid plan returns 402 `plan_required`; the farmer
+the token allowance. With no plan or override, Core returns 402 `plan_required`; the farmer
 can subscribe to Liv or a camera plan, or use their own provider key. A consumed allowance
 returns 429 `budget_exceeded`. Legacy API-token principals keep the historical
 `LLM_MONTHLY_TOKEN_BUDGET` fallback and farm override behavior for existing installs.
@@ -229,8 +233,8 @@ returns 429 `budget_exceeded`. Legacy API-token principals keep the historical
 frames. Core forces `VOICE_MODEL=gemini-3.8-live` and `VOICE_LOCATION=us-central1`; clients
 send BidiGenerateContent setup, audio and tool-response frames. OAuth stays in the upstream
 authorization header. Connected seconds persist to `voice_usage` every second and on close;
-concurrent connections share the allowance, including the free month's single pool.
-Reaching it closes with 4402. A farm without a paid plan or free month receives HTTP 402
+concurrent connections share the allowance.
+Reaching it closes with 4402. An account without an active or trialing plan receives HTTP 402
 before upgrade. Upstream disconnection ends the client connection.
 
 `GET /v1/voice/agent` uses the same session, farm membership and voice allowance checks.

@@ -97,12 +97,18 @@ const as = (token: string, farm?: string) => ({
   ...(farm ? { "x-liv-farm": farm } : {}),
 });
 
-async function memberWith(a: App, ownerToken: string, email: string, role: string) {
+async function memberWith(
+  a: App,
+  ownerToken: string,
+  email: string,
+  role: string,
+  useFarmPlan = false,
+) {
   const invite = await call(
     a,
     "POST",
     `/v1/farms/${FARM}/invites`,
-    { email, role },
+    { email, role, useFarmPlan },
     as(ownerToken),
   );
   expect(invite.status).toBe(201);
@@ -800,7 +806,7 @@ describe("farm data with user sessions", () => {
       },
     });
     const owner = await ownerOfFarm(a);
-    const viewer = await memberWith(a, owner.token, "v@farm.test", "viewer");
+    const viewer = await memberWith(a, owner.token, "v@farm.test", "viewer", true);
     await db
       .insert(farmSubscriptions)
       .values({ farmId: FARM, plan: "cam2", interval: "month", status: "active" });

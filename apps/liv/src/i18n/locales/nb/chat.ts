@@ -217,14 +217,14 @@ export const chat: Catalog<typeof en> = {
   "planError.planRequiredTitle": "Livs skymodell krever en plan eller din egen nøkkel",
   "planError.budgetExceededTitle": "Liv-kvoten er brukt opp for denne perioden",
   "planError.planRequiredBody":
-    "Liv har åpen kildekode og er gratis når du kobler til din egen KI-nøkkel eller et abonnement under Leverandører, eller du kan velge en Binge- eller Fjøs-plan for å kjøre Liv i Agrointels sky.",
+    "Velg en plan for å bruke Liv i skyen. Den første planen gir 30 dager gratis med betalingskort. For å bruke Liv lokalt kan du legge til din egen KI-nøkkel under Leverandører.",
   "planError.budgetExceededBody":
     "Gården har brukt opp det inkluderte Liv-forbruket for denne perioden. Koble til din egen KI-nøkkel under Leverandører eller endre planen i Innstillinger.",
   "planError.modelRequiredTitle": "Sett opp en KI-modell for Liv",
   "planError.modelRequiredBody":
-    "Liv trenger en KI-modell for å svare. Lag en gratis Liv-konto og få 30 gratis dager, eller legg til din egen KI-nøkkel i Innstillinger, og send meldingen på nytt.",
+    "Liv trenger en KI-modell for å svare. Legg til din egen KI-nøkkel i Innstillinger, eller opprett en konto og velg en plan. Den første planen gir 30 dager gratis med betalingskort.",
   "planError.setUpModel": "Sett opp en modell",
   "planError.useOwnKey": "Bruk egen nøkkel",
   "planError.seePlans": "Se planer",
-  "planError.startTrial": "Start 30 dager gratis",
+  "planError.createAccount": "Opprett en konto",
 };

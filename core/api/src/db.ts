@@ -189,6 +189,7 @@ export const farmSubscriptions = pgTable("farm_subscriptions", {
   status: text("status").notNull(),
   stripeSubscriptionId: text("stripe_subscription_id").unique(),
   currentPeriodEnd: ts("current_period_end"),
+  trialEnd: ts("trial_end"),
   cancelAtPeriodEnd: boolean("cancel_at_period_end").notNull().default(false),
   updatedAt: ts("updated_at").notNull().defaultNow(),
   /** `created` of the Stripe event last applied; older events never overwrite newer state. */
