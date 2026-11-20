@@ -15,26 +15,18 @@ const fontFaces = `
   @font-face { font-family: Switzer; font-weight: 600; src: url(${await font("switzer-600-normal.woff2")}) format("woff2"); }
 `;
 
-const ink = "#181612";
-const paper = "#f4f0e6";
-const ember = "#e88245";
-const field = "#5ec28f";
-const muted = "#a99f8c";
+const ink = "#0a0f1c";
+const paper = "#f2f5ef";
+const ember = "#86de28";
+const field = "#34d399";
+const muted = "#8e98aa";
 
-// The app icon (icons/icon.svg) as a reusable 512x512 group.
-const mark = (id: string) => `
-  <mask id="${id}-cut">
-    <rect width="512" height="512" fill="#fff"/>
-    <g transform="rotate(-28 256 256)"><path d="M 54 256 A 202 70 0 0 0 458 256" fill="none" stroke="#000" stroke-width="32" stroke-linecap="round"/></g>
-  </mask>
-  <g id="${id}">
-    <rect width="512" height="512" rx="114" fill="${ink}"/>
-    <g transform="rotate(-28 256 256)"><path d="M 54 256 A 202 70 0 0 1 458 256" fill="none" stroke="${ember}" stroke-opacity="0.38" stroke-width="12" stroke-linecap="round"/></g>
-    <path d="M 143 132 A 50 50 0 0 1 243 132 L 243 324 L 319 324 A 50 50 0 0 1 319 424 L 193 424 A 50 50 0 0 1 143 374 Z" fill="${paper}" mask="url(#${id}-cut)"/>
-    <g transform="rotate(-28 256 256)"><path d="M 54 256 A 202 70 0 0 0 458 256" fill="none" stroke="${ember}" stroke-width="15" stroke-linecap="round"/></g>
-    <circle cx="434" cy="161" r="24" fill="${ink}"/><circle cx="434" cy="161" r="17" fill="${ember}"/>
-    <circle cx="78" cy="351" r="15" fill="${ink}"/><circle cx="78" cy="351" r="10" fill="${field}"/>
-  </g>`;
+// The app icon (icons/icon.svg, drawn by scripts/generate-icons.ts) as a reusable 512x512 group.
+const icon = Buffer.from(await Bun.file(`${here}/../icons/icon.png`).arrayBuffer()).toString(
+  "base64",
+);
+const mark = (id: string) =>
+  `<image id="${id}" width="512" height="512" href="data:image/png;base64,${icon}" xlink:href="data:image/png;base64,${icon}"/>`;
 
 const svg = (w: number, h: number, defs: string, body: string) =>
   `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
