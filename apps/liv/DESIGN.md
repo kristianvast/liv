@@ -2,8 +2,8 @@
 
 ## 0. Research Log & Design Read
 
-- **Design Read:** Operational desktop farm command shell for non-technical cattle or horse farmers, with a warm, high-contrast "Observatory Ledger" (`U1`) palette (limestone paper, iron ink, terracotta accent; charcoal and lantern amber at night), the **Kepler Monogram (`L2`)** brand mark, and the **Agrointel brand type system**: Tanker all-caps poster display over Switzer UI text. Layout stays quiet: flat panels, hairline rules instead of boxes, one prominent action per screen, and a silent sync indicator that appears only when offline or out of sync for >= 3 minutes. Big 44px hit targets, either-or species language ("Cattle" or "Horses" — never combined "Cows & Horses"), and two themes (`light` for bright barn offices, `dark` for night checks).
-- **Redesign log (2026-11-05):** removed every region boxed as a bordered + shadowed card, stat tiles and bordered rows nested inside cards, a subtitle under every heading, pill badges on static labels, sparkle icons on suggestion chips, three equal stat cards, an explanatory "Data Safety" filler card, an icon-in-orange-tile logo, and a broken 390px shell. The owner kept the original warm palette and asked for the Agrointel website fonts (`pecorva-website/shared/tokens.css`).
+- **Design Read:** Operational desktop farm command shell for non-technical cattle or horse farmers, with the high-contrast Agrointel palette from agrointel.no (pale field-green paper, navy ink, lime buttons; navy and bull-mark lime at night), the **Kepler Monogram (`L2`)** brand mark, and the **Agrointel brand type system**: Tanker all-caps poster display over Switzer UI text. Layout stays quiet: flat panels, hairline rules instead of boxes, one prominent action per screen, and a silent sync indicator that appears only when offline or out of sync for >= 3 minutes. Big 44px hit targets, either-or species language ("Cattle" or "Horses" — never combined "Cows & Horses"), and two themes (`light` for bright barn offices, `dark` for night checks).
+- **Redesign log (2026-11-05):** removed every region boxed as a bordered + shadowed card, stat tiles and bordered rows nested inside cards, a subtitle under every heading, pill badges on static labels, sparkle icons on suggestion chips, three equal stat cards, an explanatory "Data Safety" filler card, an icon-in-orange-tile logo, and a broken 390px shell. The owner asked for the Agrointel website fonts (`pecorva-website/shared/tokens.css`); on 2026-11-20 the warm palette gave way to the agrointel.no colours.
 - **Domain Invariant:** A cow or horse wears **at most ONE active wearable sensor** at a time (a collar **OR** a bolus **OR** an ear tag sensor, never stacked or combined). UI copy and components always present wearables as mutually exclusive choices.
 - **Languages:** All UI copy goes through `t()` from `src/i18n` (English source catalogs in `src/i18n/locales/en/<namespace>.ts`, Norwegian Bokmål in `locales/nb/`; a missing translation is a type error). Never hard-code user-visible strings in components; data from Liv or the database (animal names, notes) is shown as-is. Users pick the language in Settings; the default follows the OS language.
 - **Anti-Slop Guard:** No purple gradients, no glassmorphism (`backdrop-filter`), no emoji icons, no coloured edge stripes on cards, no 2px accent outlines on rounded cards, no cards inside cards, no marketing fluff ("seamlessly", "effortlessly", "smart").
@@ -31,37 +31,37 @@ All fonts are self-hosted WOFF2 files in `apps/liv/public/fonts/`; licences are 
 
 ## 2. Color System (Light & Dark Themes)
 
-The original Liv palette: warm limestone neutrals, iron ink, one terracotta / lantern-amber accent, four semantic status hues. Primary buttons use the accent (`--action-*` tokens alias it).
+The Agrointel palette from agrointel.no (`barnstar-website/shared/agrointel-colors.css`): pale field-green neutrals and navy ink by day, navy grounds by night, and the lime of the Agrointel bull mark (`#86de28`) as the filled-button colour in both themes with navy text on it. On light grounds the text accent is a darker green. Four semantic status hues stay as they were.
 
 ### Light Theme ("Daylight Barn Office" - default `:root` & `[data-theme="light"]`)
 
-| Role                | Token                                                      | Value                                         | Contrast                 |
-| ------------------- | ---------------------------------------------------------- | --------------------------------------------- | ------------------------ |
-| Canvas              | `--bg-canvas`                                              | `#f6f3ec`                                     |                          |
-| Surface             | `--bg-surface`                                             | `#ffffff`                                     |                          |
-| Rail / tonal panel  | `--bg-elevated`                                            | `#efeae0`                                     |                          |
-| Hover / pressed     | `--bg-subtle` / `--bg-hover`                               | `#e5dfd2` / `#dbd3c3`                         |                          |
-| Ink                 | `--text-primary` / `--text-secondary` / `--text-muted`     | `#181612` / `#433e34` / `#645d4f`             | muted 5.4:1 on canvas    |
-| Accent (terracotta) | `--accent-primary` / `-hover`                              | `#b84a14` / `#9c3d0e`                         | 4.9:1 on canvas          |
-| Primary action      | `--action-bg` / `--action-fg`                              | `#b84a14` / `#fcfaf5`                         | 5.0:1                    |
-| Pasture green       | `--accent-secondary`                                       | `#1f5c3f`                                     |                          |
-| Status              | `--status-ok` / `warn` / `danger` / `info`                 | `#19673e` / `#8c4d04` / `#b42318` / `#175cd3` | all > 5:1                |
-| Borders             | `--border-subtle` / `--border-strong` / `--border-control` | `#dcd5c7` / `#bab09d` / `#8a806e`             | control 3.9:1 on surface |
-| Focus               | `--border-focus`                                           | `#b84a14`                                     |                          |
+| Role                 | Token                                                      | Value                                         | Contrast                 |
+| -------------------- | ---------------------------------------------------------- | --------------------------------------------- | ------------------------ |
+| Canvas               | `--bg-canvas`                                              | `#f5f7f2`                                     |                          |
+| Surface              | `--bg-surface`                                             | `#ffffff`                                     |                          |
+| Rail / tonal panel   | `--bg-elevated`                                            | `#ebefe6`                                     |                          |
+| Hover / pressed      | `--bg-subtle` / `--bg-hover`                               | `#dfe5d6` / `#d3dbc7`                         |                          |
+| Ink                  | `--text-primary` / `--text-secondary` / `--text-muted`     | `#0b1020` / `#3e4656` / `#636c7e`             | muted 4.9:1 on canvas    |
+| Accent (field green) | `--accent-primary` / `-hover`                              | `#3f7f0c` / `#346a09`                         | 4.6:1 on canvas          |
+| Primary action       | `--action-bg` / `--action-fg`                              | `#86de28` / `#0b1020`                         | 11.3:1                   |
+| Pasture green        | `--accent-secondary`                                       | `#0f8a63`                                     |                          |
+| Status               | `--status-ok` / `warn` / `danger` / `info`                 | `#19673e` / `#8c4d04` / `#b42318` / `#175cd3` | all > 5:1                |
+| Borders              | `--border-subtle` / `--border-strong` / `--border-control` | `#d8dfd0` / `#b2bcaa` / `#7c8596`             | control 3.7:1 on surface |
+| Focus                | `--border-focus`                                           | `#3f7f0c`                                     |                          |
 
 ### Dark Theme ("Night Watch" - `[data-theme="dark"]`)
 
 | Role                    | Token                                                      | Value                                         | Contrast                 |
 | ----------------------- | ---------------------------------------------------------- | --------------------------------------------- | ------------------------ |
-| Canvas / surface / rail | `--bg-canvas` / `--bg-surface` / `--bg-elevated`           | `#111310` / `#191c18` / `#21251f`             |                          |
-| Hover / pressed         | `--bg-subtle` / `--bg-hover`                               | `#2a2f28` / `#353b32`                         |                          |
-| Ink                     | `--text-primary` / `--text-secondary` / `--text-muted`     | `#f3f0e6` / `#c9c3b5` / `#9a9383`             | muted > 5:1 on surface   |
-| Accent (lantern amber)  | `--accent-primary` / `-hover`                              | `#e88245` / `#f2955e`                         |                          |
-| Primary action          | `--action-bg` / `--action-fg`                              | `#e88245` / `#111310`                         | 6.9:1                    |
-| Night meadow green      | `--accent-secondary`                                       | `#5ec28f`                                     |                          |
+| Canvas / surface / rail | `--bg-canvas` / `--bg-surface` / `--bg-elevated`           | `#0a0f1c` / `#0f1626` / `#151d30`             |                          |
+| Hover / pressed         | `--bg-subtle` / `--bg-hover`                               | `#1c2539` / `#253049`                         |                          |
+| Ink                     | `--text-primary` / `--text-secondary` / `--text-muted`     | `#f2f5ef` / `#b9c1ce` / `#8e98aa`             | muted > 5:1 on surface   |
+| Accent (bull-mark lime) | `--accent-primary` / `-hover`                              | `#86de28` / `#9be84a`                         |                          |
+| Primary action          | `--action-bg` / `--action-fg`                              | `#86de28` / `#0a0f1c`                         | 11.4:1                   |
+| Night meadow green      | `--accent-secondary`                                       | `#34d399`                                     |                          |
 | Status                  | `--status-ok` / `warn` / `danger` / `info`                 | `#57cc8a` / `#f5b14c` / `#f97066` / `#68a8ff` |                          |
-| Borders                 | `--border-subtle` / `--border-strong` / `--border-control` | `#2c3129` / `#434a3e` / `#76705f`             | control 3.5:1 on surface |
-| Focus                   | `--border-focus`                                           | `#e88245`                                     |                          |
+| Borders                 | `--border-subtle` / `--border-strong` / `--border-control` | `#252e42` / `#3c4760` / `#6b7690`             | control 4.0:1 on surface |
+| Focus                   | `--border-focus`                                           | `#86de28`                                     |                          |
 
 ## 3. Spacing, Radius, Elevation & Motion
 

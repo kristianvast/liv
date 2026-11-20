@@ -12,18 +12,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
 private val day = lightColorScheme(
-    primary = Color(0xffb84a14), onPrimary = Color(0xfffcfaf5),
-    background = Color(0xfff6f3ec), onBackground = Color(0xff181612),
-    surface = Color(0xfff6f3ec), onSurface = Color(0xff181612),
-    surfaceVariant = Color(0xffefeae0), onSurfaceVariant = Color(0xff433e34),
-    outline = Color(0xff8a806e), error = Color(0xffb42318)
+    primary = Color(0xff3f7f0c), onPrimary = Color(0xfffbfcf9),
+    background = Color(0xfff5f7f2), onBackground = Color(0xff0b1020),
+    surface = Color(0xfff5f7f2), onSurface = Color(0xff0b1020),
+    surfaceVariant = Color(0xffebefe6), onSurfaceVariant = Color(0xff3e4656),
+    outline = Color(0xff7c8596), error = Color(0xffb42318)
 )
 private val night = darkColorScheme(
-    primary = Color(0xffe88245), onPrimary = Color(0xff111310),
-    background = Color(0xff111310), onBackground = Color(0xfff3f0e6),
-    surface = Color(0xff111310), onSurface = Color(0xfff3f0e6),
-    surfaceVariant = Color(0xff21251f), onSurfaceVariant = Color(0xffc9c3b5),
-    outline = Color(0xff9a9383), error = Color(0xfff97066)
+    primary = Color(0xff86de28), onPrimary = Color(0xff0a0f1c),
+    background = Color(0xff0a0f1c), onBackground = Color(0xfff2f5ef),
+    surface = Color(0xff0a0f1c), onSurface = Color(0xfff2f5ef),
+    surfaceVariant = Color(0xff151d30), onSurfaceVariant = Color(0xffb9c1ce),
+    outline = Color(0xff8e98aa), error = Color(0xfff97066)
 )
 
 // The TTF files in res/font are Fontshare's own downloads; the ITF FFL forbids converting formats.

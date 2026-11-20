@@ -2,8 +2,8 @@
     <style name="Theme.Liv" parent="android:style/Theme.Material.Light.NoActionBar">
         <item name="android:fontFamily">sans</item>
         <item name="android:windowLightStatusBar">true</item>
-        <item name="android:colorAccent">#b84a14</item>
+        <item name="android:colorAccent">#3f7f0c</item>
         <item name="android:windowActionModeOverlay">true</item>
-        <item name="android:windowBackground">#f6f3ec</item>
+        <item name="android:windowBackground">#f5f7f2</item>
     </style>
 </resources>

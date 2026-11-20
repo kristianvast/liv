@@ -42,7 +42,7 @@ if (!credential) {
   const text = live ? "Signing in to Liv..." : "This sign-in has expired. Start again from Liv.";
   return `<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><title>Liv sign-in</title>
-<style>body{font-family:system-ui,sans-serif;background:#f6f3ec;color:#2b2722;display:grid;place-items:center;min-height:100vh;margin:0}p{max-width:28rem;padding:1.5rem;font-size:1.1rem;line-height:1.5;text-align:center}</style>
+<style>body{font-family:system-ui,sans-serif;background:#f5f7f2;color:#0b1020;display:grid;place-items:center;min-height:100vh;margin:0}p{max-width:28rem;padding:1.5rem;font-size:1.1rem;line-height:1.5;text-align:center}</style>
 </head><body><p id="msg" role="status">${text}</p>${script}</body></html>`;
 }
 
