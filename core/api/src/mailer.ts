@@ -149,11 +149,16 @@ interface Content {
 }
 
 const SUPPORT = "kristian@agrointel.no";
-const INK = "#1b1915";
-const BODY = "#4a443b";
-const MUTED = "#8a8275";
-const AMBER = "#b4611d";
-const LINE = "#e8e1d4";
+// The agrointel.no light palette (apps/liv/src/design/tokens.css): navy ink, lime from the bull mark
+// for the button (navy text on it), and a darker green for links and accents on white.
+const INK = "#0b1020";
+const BODY = "#3e4656";
+const MUTED = "#636c7e";
+const FAINT = "#7c8596";
+const LIME = "#86de28";
+const GREEN = "#3f7f0c";
+const LINE = "#d8dfd0";
+const PAGE = "#ebefe6";
 // Single quotes only: these stacks sit inside double-quoted style attributes.
 const FONT = `-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif`;
 const MONO = `ui-monospace,SFMono-Regular,Menlo,Consolas,monospace`;
@@ -182,7 +187,7 @@ const inlineHtml = (parts: Inline[]) =>
     .map((part) =>
       typeof part === "string"
         ? escapeHtml(part)
-        : `<a href="${escapeHtml(part.href)}" style="color:${AMBER};text-decoration:underline;">${escapeHtml(part.text)}</a>`,
+        : `<a href="${escapeHtml(part.href)}" style="color:${GREEN};text-decoration:underline;">${escapeHtml(part.text)}</a>`,
     )
     .join("");
 
@@ -216,17 +221,17 @@ function renderBlock(block: Block): string {
       return `<p style="margin:0 0 4px;font-family:${FONT};font-size:14px;line-height:22px;color:${MUTED};">${inlineHtml(block.parts)}</p>`;
     case "button": {
       const href = escapeHtml(block.href);
-      return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 28px;"><tr><td bgcolor="${AMBER}" style="border-radius:10px;background:${AMBER};"><a href="${href}" target="_blank" style="display:inline-block;padding:15px 30px;font-family:${FONT};font-size:16px;font-weight:600;line-height:20px;color:#ffffff;text-decoration:none;border-radius:10px;">${escapeHtml(block.label)}&nbsp;&rarr;</a></td></tr></table>
+      return `<table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 28px;"><tr><td bgcolor="${LIME}" style="border-radius:10px;background:${LIME};"><a href="${href}" target="_blank" style="display:inline-block;padding:15px 30px;font-family:${FONT};font-size:16px;font-weight:600;line-height:20px;color:${INK};text-decoration:none;border-radius:10px;">${escapeHtml(block.label)}&nbsp;&rarr;</a></td></tr></table>
 <p style="margin:0 0 24px;font-family:${FONT};font-size:13px;line-height:20px;color:${MUTED};">Button not working? Paste this link into your browser:<br><a href="${href}" style="color:${MUTED};word-break:break-all;">${href}</a></p>`;
     }
     case "code":
       return `<p style="margin:0 0 8px;font-family:${FONT};font-size:12px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:${MUTED};">${escapeHtml(block.label)}</p>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px;"><tr><td align="center" style="padding:20px 16px;background:#f6f1e7;border:1px dashed #d9cdb8;border-radius:12px;font-family:${MONO};font-size:24px;font-weight:600;letter-spacing:3px;color:${INK};word-break:break-all;">${escapeHtml(block.value)}</td></tr></table>`;
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 28px;"><tr><td align="center" style="padding:20px 16px;background:#f5f7f2;border:1px dashed #b2bcaa;border-radius:12px;font-family:${MONO};font-size:24px;font-weight:600;letter-spacing:3px;color:${INK};word-break:break-all;">${escapeHtml(block.value)}</td></tr></table>`;
     case "steps":
       return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:0 0 24px;">${block.items
         .map(
           (item, i) =>
-            `<tr><td valign="top" width="40" style="padding:0 0 16px;"><div style="width:28px;height:28px;border-radius:14px;background:#fbefe2;border:1px solid #efd3b6;font-family:${FONT};font-size:13px;font-weight:700;line-height:28px;text-align:center;color:${AMBER};">${i + 1}</div></td><td valign="top" style="padding:3px 0 16px;font-family:${FONT};font-size:15px;line-height:23px;color:${BODY};">${inlineHtml(item)}</td></tr>`,
+            `<tr><td valign="top" width="40" style="padding:0 0 16px;"><div style="width:28px;height:28px;border-radius:14px;background:#effbe3;border:1px solid #d1f2ad;font-family:${FONT};font-size:13px;font-weight:700;line-height:28px;text-align:center;color:${GREEN};">${i + 1}</div></td><td valign="top" style="padding:3px 0 16px;font-family:${FONT};font-size:15px;line-height:23px;color:${BODY};">${inlineHtml(item)}</td></tr>`,
         )
         .join("")}</table>`;
     case "facts":
@@ -254,7 +259,7 @@ function renderHtml(content: Content, links: EmailLinks, subject: string): strin
 <style>
   :root { color-scheme: light only; }
   body { margin:0; padding:0; -webkit-text-size-adjust:100%; }
-  a { color:${AMBER}; }
+  a { color:${GREEN}; }
   @media (max-width:620px) {
     .shell { padding:20px 12px !important; }
     .card { padding:32px 24px 28px !important; border-radius:16px !important; }
@@ -262,15 +267,15 @@ function renderHtml(content: Content, links: EmailLinks, subject: string): strin
   }
 </style>
 </head>
-<body style="margin:0;padding:0;background:#f3eee5;">
+<body style="margin:0;padding:0;background:${PAGE};">
 <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeHtml(content.preheader)}${"&#8199;&#65279;&#847; ".repeat(30)}</div>
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f3eee5" style="background:#f3eee5;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="${PAGE}" style="background:${PAGE};">
 <tr><td align="center" class="shell" style="padding:40px 16px;">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
 <tr><td style="padding:0 4px 24px;"><a href="${escapeHtml(site)}" target="_blank" style="text-decoration:none;"><img src="${escapeHtml(site)}/shared/logo/agrointel-wordmark-light.png" width="156" height="34" alt="Agrointel" style="display:block;width:156px;height:auto;border:0;outline:none;"></a></td></tr>
-<tr><td class="card" bgcolor="#ffffff" style="background:#ffffff;border-radius:20px;padding:44px 44px 36px;border:1px solid ${LINE};box-shadow:0 1px 2px rgba(27,25,21,0.04),0 12px 32px rgba(27,25,21,0.06);">
-<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:0 0 24px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="28" height="3" bgcolor="${AMBER}" style="font-size:0;line-height:0;background:${AMBER};border-radius:2px;">&nbsp;</td><td width="6" style="font-size:0;">&nbsp;</td><td width="14" height="3" bgcolor="#2f9a5c" style="font-size:0;line-height:0;background:#2f9a5c;border-radius:2px;">&nbsp;</td></tr></table></td></tr></table>
-<p style="margin:0 0 10px;font-family:${FONT};font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:${AMBER};">${escapeHtml(content.eyebrow)}</p>
+<tr><td class="card" bgcolor="#ffffff" style="background:#ffffff;border-radius:20px;padding:44px 44px 36px;border:1px solid ${LINE};box-shadow:0 1px 2px rgba(11,16,32,0.04),0 12px 32px rgba(11,16,32,0.06);">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding:0 0 24px;"><table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr><td width="28" height="3" bgcolor="${LIME}" style="font-size:0;line-height:0;background:${LIME};border-radius:2px;">&nbsp;</td><td width="6" style="font-size:0;">&nbsp;</td><td width="14" height="3" bgcolor="${INK}" style="font-size:0;line-height:0;background:${INK};border-radius:2px;">&nbsp;</td></tr></table></td></tr></table>
+<p style="margin:0 0 10px;font-family:${FONT};font-size:12px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:${GREEN};">${escapeHtml(content.eyebrow)}</p>
 <h1 class="heading" style="margin:0 0 20px;font-family:${FONT};font-size:30px;font-weight:700;line-height:36px;letter-spacing:-0.6px;color:${INK};">${escapeHtml(content.heading)}</h1>
 ${content.blocks.map(renderBlock).join("\n")}
 </td></tr>
@@ -278,8 +283,8 @@ ${content.blocks.map(renderBlock).join("\n")}
 Cameras that know every animal. An open app that builds what you ask.<br>
 Questions? Reply to this email or write to <a href="mailto:${SUPPORT}" style="color:${BODY};text-decoration:underline;">${SUPPORT}</a>.
 </td></tr>
-<tr><td style="padding:16px 8px 0;font-family:${FONT};font-size:12px;line-height:19px;color:#a89f90;">
-Agrointel AS &middot; Finn&oslash;y, Norway &middot; <a href="${escapeHtml(site)}" style="color:#a89f90;text-decoration:underline;">${host}</a>
+<tr><td style="padding:16px 8px 0;font-family:${FONT};font-size:12px;line-height:19px;color:${FAINT};">
+Agrointel AS &middot; Finn&oslash;y, Norway &middot; <a href="${escapeHtml(site)}" style="color:${FAINT};text-decoration:underline;">${host}</a>
 </td></tr>
 </table>
 </td></tr>
