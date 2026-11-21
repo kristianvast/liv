@@ -2,6 +2,50 @@
   "version": 1,
   "skills": [
     {
+      "name": "calving-watch",
+      "version": "0.1.0",
+      "description": "Experimental: warn some hours before a cow calves, from how little she lies down in a calving pen watched by a camera. Tested on one calving so far. Use only when the farmer wants to try camera calving warnings and a posture feed is running on the farm's own computer.",
+      "keywords": [
+        "calving",
+        "calving pen",
+        "birth",
+        "camera",
+        "lying",
+        "posture",
+        "experimental"
+      ],
+      "files": [
+        {
+          "path": "AGENTS.md",
+          "sha256": "0f7cde902005d025501600019897edaf2ef57aeef25fcce32b6c1f5dc1dd0ddb"
+        },
+        {
+          "path": "SKILL.md",
+          "sha256": "aa4e09b6e5bd37e641449b633d4381518a46e4dbfcb23f8a30f47925897be526"
+        },
+        {
+          "path": "connector/README.md",
+          "sha256": "3d3a49f8e706f8a9894c4a582dbc2e5d3f4f0effd97dfea492308987ce1ca08c"
+        },
+        {
+          "path": "connector/connector.ts",
+          "sha256": "c0e8d59a793f00e35050f887f11ac28ba0ed04527a810cc1ba473bdeb202a796"
+        },
+        {
+          "path": "connector/package.json",
+          "sha256": "71052c62a90e1372306dbfd0dd92efa52c349e32b71184cddf82d1d46de7ca4f"
+        },
+        {
+          "path": "connector/rule.ts",
+          "sha256": "29f35c0d8d4fce3bcb0cf058b85f955d50144729c02fbc4449f859dc4653f199"
+        },
+        {
+          "path": "skill.json",
+          "sha256": "cf3c55c6253a2677de756bbf46a226319fed25c3f8208d3a3705b626279ef40a"
+        }
+      ]
+    },
+    {
       "name": "delaval-delpro",
       "version": "1.0.0",
       "description": "Import animals, milkings and daily weights from a DeLaval DelPro herd management server (SQL Server on the farm network). Use when the farmer has DeLaval milking equipment or DelPro and wants its data in Liv.",

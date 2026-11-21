@@ -1,0 +1,16 @@
+{
+  "name": "calving-watch",
+  "version": "0.1.0",
+  "keywords": ["calving", "calving pen", "birth", "camera", "lying", "posture", "experimental"],
+  "connector": {
+    "dir": "connector",
+    "vendor": "custom",
+    "kind": "local_api",
+    "config": {
+      "url": "http://127.0.0.1:8780",
+      "zones": {},
+      "baselineHours": 48,
+      "windowHours": 6
+    }
+  }
+}
