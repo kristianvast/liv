@@ -12,7 +12,7 @@
     },
     "apps/liv": {
       "name": "@liv/app",
-      "version": "0.1.11",
+      "version": "0.1.12",
       "dependencies": {
         "@elevenlabs/client": "^1.36.0",
         "@liv/protocol": "workspace:*",
@@ -77,7 +77,7 @@
     },
     "packages/liv": {
       "name": "@liv/agent",
-      "version": "0.1.11",
+      "version": "0.1.12",
       "bin": {
         "liv": "./src/main.ts",
       },

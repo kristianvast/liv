@@ -17,8 +17,8 @@ android {
         applicationId = "no.agrointel.liv"
         minSdk = 28
         targetSdk = 36
-        versionCode = 111
-        versionName = "0.1.11"
+        versionCode = 112
+        versionName = "0.1.12"
         for (key in listOf("appId", "apiKey", "projectId", "senderId")) {
             buildConfigField("String", "FIREBASE_" + key.uppercase(), quoted(local.getProperty("liv.firebase.$key", "")))
         }
